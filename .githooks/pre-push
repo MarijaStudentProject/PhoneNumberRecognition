@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#check clang tidy
+run-clang-tidy -quiet
+if [ $? -ne 0 ]; then
+  echo "clang-tidy failed"
+  exit 1
+fi
+
+exit 0
+
