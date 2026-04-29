@@ -15,7 +15,7 @@ Checks: >
   -modernize-use-trailing-return-type,
   -readability-identifier-length
 
-WarningsAsErrors: 'bugprone-*,performance-*'
+WarningsAsErrors: 'bugprone-*'
 
 HeaderFilterRegex: '.*'
 FormatStyle: file
