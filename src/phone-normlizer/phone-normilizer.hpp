@@ -12,7 +12,7 @@ private:
     NumberingPlanRepo repo;
 
     bool tryParseCountryCode(const std::string& phoneNumber, int& countryCode, std::string& nationalNumber);
-    bool tryParseInternationalPrefix(const std::string& phoneNumber, std::string& truncNumber);
+    bool tryParseInternationalPrefix(const std::string& phoneNumber, std::string& truncNumber, int n);
 public:
     std::string normalize(const std::string& phoneNumber);
     std::string normalize(const std::string& phoneNumber, std::string isoCountry);

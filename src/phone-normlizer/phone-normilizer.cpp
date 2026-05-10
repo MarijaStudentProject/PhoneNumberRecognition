@@ -3,13 +3,13 @@
 
 bool PhoneNormalizer::tryParseCountryCode(const std::string &phoneNumber, int &countryCode, std::string &nationalNumber) {
     int currentCountryCode = 0;
-    for (int i = 0; i < 3; i++)
+    for (int i = 3; i > 0; i--)
     {
-        currentCountryCode = currentCountryCode * 10 + (phoneNumber[i] - '0');
+        currentCountryCode = std::stoi(phoneNumber.substr(0,i));
 
         if (repo.doesCountryCodeExist(currentCountryCode)) {
             countryCode = currentCountryCode;
-            nationalNumber = phoneNumber.substr(i + 1);
+            nationalNumber = phoneNumber.substr(i);
             return true;
         }
     }
@@ -17,14 +17,11 @@ bool PhoneNormalizer::tryParseCountryCode(const std::string &phoneNumber, int &c
     return false;
 }
 
-bool PhoneNormalizer::tryParseInternationalPrefix(const std::string &phoneNumber, std::string &truncNumber) {
-    if (phoneNumber[0] == '+') {
-        truncNumber = phoneNumber.substr(1);
+bool PhoneNormalizer::tryParseInternationalPrefix(const std::string &phoneNumber, std::string &truncNumber, int n) {
+    if(repo.doesInternationalPrefixExist(phoneNumber.substr(0, n))){
+        truncNumber = phoneNumber.substr(n);
         return true;
     }
-    
-    //TODO try other international prefixes 
-
     return false;
 }
 
@@ -41,30 +38,31 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, std::stri
     std::string nationalNumber;
 
     std::string truncNumber;
-    if (tryParseInternationalPrefix(phoneNumber, truncNumber)) {
-        if(tryParseCountryCode(truncNumber, countryCode, nationalNumber)) { //TODO optimize by not creating substrings
-            plan = repo.getForCountryCode(countryCode);
-            normalizedNumber = plan.internationalPrefix + nationalNumber;
-            return normalizedNumber;
+
+    if (phoneNumber[0] == '+') {
+         return phoneNumber;
+    }else{
+        int n = 3;
+        while(n>0){
+            if(tryParseInternationalPrefix(phoneNumber,truncNumber, n)){
+                if(tryParseCountryCode(truncNumber, countryCode, nationalNumber)){
+                    plan = repo.getForCountryCode(countryCode);
+                    normalizedNumber = "+" + truncNumber;
+                    return normalizedNumber;
+                }else{
+                    n--;
+                }
+            }else{
+                n--;
+            }
         }
-        else {
-            std::cerr << "Failed to parse country code \n";
-            return "";
-        }
-        
-    }
-    else {
+        // We dont have + and internationalPrefix, so it means that we got number in format 066 555 555 (if we are in Serbia,
+        // so we need to put default country Code) 
         plan = repo.getForIsoCountry(assumedIsoCountry);
-        
-        if (phoneNumber.substr(0, plan.nationalPrefix.size()) == plan.nationalPrefix) {
-            nationalNumber = phoneNumber.substr(plan.nationalPrefix.size());
-        
-            normalizedNumber = "+" + plan.countryCode + nationalNumber;        
-        }
-        else {
-            std::cerr << "Failed to parse national number \n";
-            return "";
-        }
-    }
+        normalizedNumber = "+" + plan.countryCode + phoneNumber.substr(plan.nationalPrefix.size());
+        return normalizedNumber;
+    }   
+    
+
     return std::string();
 }

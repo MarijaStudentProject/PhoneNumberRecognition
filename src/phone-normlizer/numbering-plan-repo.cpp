@@ -26,9 +26,11 @@ void NumberingPlanRepo::load(const std::string &filename) {
             item["internationalPrefix"].get<std::string>()
         };
 
+        isoPlanMap[p.isoCountryName] = &p;
+        countryCodePlanMap[p.countryCode] = &p;
+        internationalPrefixPlanSet.insert(p.internationalPrefix); 
+
         plans.push_back(std::move(p));
-        isoPlanMap[plans.back().isoCountryName] = &plans.back();
-        countryCodePlanMap[plans.back().countryCode] = &plans.back();
     }
 }
 
@@ -40,6 +42,9 @@ bool NumberingPlanRepo::doesCountryCodeExist(int countryCode) const {
     return countryCodePlanMap.find(countryCode) != countryCodePlanMap.end(); 
 }
 
+bool NumberingPlanRepo::doesInternationalPrefixExist(std::string internationalPrefix) const { 
+    return internationalPrefixPlanSet.find(internationalPrefix) != internationalPrefixPlanSet.end(); 
+}
 NumberingPlan NumberingPlanRepo::getForCountryCode(int countryCode) const {
     return *countryCodePlanMap.at(countryCode);
 }
