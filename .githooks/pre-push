@@ -1,5 +1,22 @@
 #!/bin/sh
 
+#check branch name
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "Checking branch name: $BRANCH"
+
+# allowed pattern type/short-description
+if [[ ! "$BRANCH" =~ ^(feature|bugfix|chore|refactor|docs|test)/[a-z0-9-]+(/[a-z0-9-]+)*$ ]]; then
+  echo "  Invalid branch name: $BRANCH"
+  echo "Allowed format:"
+  echo "  feature/description"
+  echo "  bugfix/description"
+  echo "  chore/description"
+  exit 1
+fi
+
+echo "  Branch name OK"
+exit 0
+
 #check clang tidy
 run-clang-tidy -quiet
 if [ $? -ne 0 ]; then
