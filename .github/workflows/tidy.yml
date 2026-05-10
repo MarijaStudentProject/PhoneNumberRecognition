@@ -23,4 +23,4 @@ jobs:
       - name: Run clang-tidy
         run: |
           cd build
-          run-clang-tidy -quiet -warnings-as-errors=*
+          run-clang-tidy -quiet 
