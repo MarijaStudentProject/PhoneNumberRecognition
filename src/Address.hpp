@@ -1,3 +1,5 @@
+#ifndef ADDRESS_HPP
+#define ADDRESS_HPP
 #include <string>
 
 class Address {
@@ -22,3 +24,4 @@ public:
 
     bool operator==(const Address& other) const;
 };
+#endif
