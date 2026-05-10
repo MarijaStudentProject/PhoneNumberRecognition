@@ -25,3 +25,4 @@ if(CLANG_FORMAT)
     )
 endif()
 
+file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
