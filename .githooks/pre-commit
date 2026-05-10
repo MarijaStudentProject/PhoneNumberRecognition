@@ -1,33 +1,33 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|c|h)$')
+  FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|c|h)$')
 
-#file naming
-echo "Checking file naming conventions..."
+  #file naming
+  echo "Checking file naming conventions..."
 
-BAD_FILES=0
-for file in $FILES; do
-  filename=$(basename "$file")
+  BAD_FILES=0
+  for file in $FILES; do
+    filename=$(basename "$file")
 
-  # snake_case only
-  if [[ ! "$filename" =~ ^[a-z0-9_]+\.(cpp|hpp|c|h)$ ]]; then
-    echo "   Invalid file name: $file"
-    echo "   Use snake_case (example: phone_parser.cpp)"
-    BAD_FILES=1
+    # snake_case only
+    if [[ ! "$filename" =~ ^[a-z0-9_]+\.(cpp|hpp|c|h)$ ]]; then
+      echo "   Invalid file name: $file"
+      echo "   Use snake_case (example: phone_parser.cpp)"
+      BAD_FILES=1
+    fi
+  done
+
+  if [ "$BAD_FILES" -ne 0 ]; then
+    echo "Commit blocked due to file naming violations."
+    exit 1
   fi
-done
-
-if [ "$BAD_FILES" -ne 0 ]; then
-  echo "Commit blocked due to file naming violations."
-  exit 1
-fi
 
 
-#format 
-echo "Running clang-format..."
-for file in $FILES; do
-  clang-format -i "$file"
-  git add "$file"
-done
+  #format 
+  echo "Running clang-format..."
+  for file in $FILES; do
+    clang-format -i "$file"
+    git add "$file"
+  done
 
-exit 0
+  exit 0

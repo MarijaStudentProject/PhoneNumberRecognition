@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #check branch name
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -13,12 +13,10 @@ if [[ ! "$BRANCH" =~ ^(feature|bugfix|chore|refactor|docs|test)/[a-z0-9-]+(/[a-z
   echo "  chore/description"
   exit 1
 fi
-
 echo "  Branch name OK"
-exit 0
 
 #check clang tidy
-run-clang-tidy -quiet
+run-clang-tidy -quiet -p build/ # assumes compile_commands.json is in build/ change if needed
 if [ $? -ne 0 ]; then
   echo "clang-tidy failed"
   exit 1
