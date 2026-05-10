@@ -1,6 +1,6 @@
 #include "numbering-plan-repo.hpp"
 #define JSMN_STATIC
-#include "../libs/nlohmannjson/jsmn.h"
+#include "../../libs/jsmn/jsmn.h"
 #include <cstring>
 #include <fstream>
 #include <iostream>
