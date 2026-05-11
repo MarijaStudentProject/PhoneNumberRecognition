@@ -31,7 +31,8 @@ bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &
 // Tries to match any known international dialling prefix at the start of phoneNumber.
 // On success, sets truncNumber to the portion after the prefix (i.e. country code + national number)
 // and returns true. A country-code check is performed to filter out false positives.
-bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const {
+bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber,
+                                                     std::string_view &truncNumber) const {
     for (int n = 4; n > 0; n--) { // maximal prefix is 4 digits
                                   // start from longest 0011 australia first then european 00
         if (m_repo.doesInternationalPrefixExist(std::string(phoneNumber.substr(0, n)))) {
@@ -50,7 +51,8 @@ bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumbe
 }
 
 // check against local plans international prefix
-bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) {
+bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNumber,
+                                                        std::string_view &truncNumber) const {
     if (!m_localRegionIso.empty()) {
         return false;
     }

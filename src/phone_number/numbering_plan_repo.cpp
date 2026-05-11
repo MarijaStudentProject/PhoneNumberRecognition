@@ -1,11 +1,11 @@
 #include "phone_number/numbering_plan_repo.hpp"
 #define JSMN_STATIC
-#include <jsmn/jsmn.h>
 #include <array>
 #include <charconv>
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <jsmn/jsmn.h>
 #include <string_view>
 
 void NumberingPlanRepo::loadPlans(const std::string &filename) {

@@ -18,7 +18,7 @@ class PhoneNormalizer {
 
     bool tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode, std::string_view &nationalNumber) const;
     bool tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
-    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber);
+    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
 
   public:
     std::string normalize(const std::string &phoneNumber, bool strict = false) const;
