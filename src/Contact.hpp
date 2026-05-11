@@ -26,6 +26,6 @@ public:
 
     std::string getFullName() const;
     bool hasAddress() const;
-    void addPhoneNumber(PhoneNumber PhoneNumber);
+    void addPhoneNumber(const PhoneNumber& phoneNumber);
 };
 #endif
