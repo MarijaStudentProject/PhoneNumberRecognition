@@ -1,4 +1,5 @@
 #include "phone_number/contact.hpp"
+#include "contact.hpp"
 
 Contact::Contact(const std::string &name, const std::string &surname,
                  const std::vector<PhoneNumber> &phoneNumbers, const std::string &email,
@@ -12,9 +13,18 @@ std::string Contact::getSurname() const { return m_surname; }
 
 const std::vector<PhoneNumber> &Contact::getPhoneNumbers() const { return m_phoneNumbers; }
 
+bool Contact::hasPhoneNumbers() const { return !m_phoneNumbers.empty(); }
+
 std::string Contact::getEmail() const { return m_email; }
 
 const Address &Contact::getAddress() const { return m_address; }
+
+PhoneNumber Contact::getPrimaryPhoneNumber() const {
+    if (m_phoneNumbers.empty()) {
+        return {};
+    }
+    return m_phoneNumbers[0];
+}
 
 std::string Contact::getFullName() const {
     if (m_name.empty())
