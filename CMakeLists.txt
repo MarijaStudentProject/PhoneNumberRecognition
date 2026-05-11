@@ -29,4 +29,16 @@ if(CLANG_FORMAT)
     )
 endif()
 
-file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
+add_custom_target(copy_resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resources
+        ${CMAKE_BINARY_DIR}/resources
+    COMMENT "Copying resources to build directory"
+)
+
+add_custom_command(TARGET dummy POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resources
+        ${CMAKE_BINARY_DIR}/resources
+    COMMENT "Syncing resources after build"
+)
