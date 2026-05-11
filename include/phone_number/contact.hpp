@@ -15,10 +15,8 @@ class Contact {
     Address m_address;
 
   public:
-    Contact(const std::string &name, const std::string &surname,
-            const std::vector<PhoneNumber> &phoneNumbers, const std::string &email = "",
-            const Address &address = {});
-    ~Contact() = default;
+    Contact(std::string name, std::string surname, const std::vector<PhoneNumber> &phoneNumbers, std::string email = "",
+            Address address = {});
 
     std::string getName() const;
     std::string getSurname() const;

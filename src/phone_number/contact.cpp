@@ -1,9 +1,10 @@
 #include "phone_number/contact.hpp"
 
-Contact::Contact(const std::string &name, const std::string &surname,
-                 const std::vector<PhoneNumber> &phoneNumbers, const std::string &email,
-                 const Address &address)
-    : m_name(name), m_surname(surname), m_phoneNumbers(phoneNumbers), m_email(email),
+#include <utility>
+
+Contact::Contact(std::string name, std::string surname, const std::vector<PhoneNumber> &phoneNumbers, std::string email,
+                 Address address)
+    : m_name(std::move(name)), m_surname(std::move(surname)), m_phoneNumbers(phoneNumbers), m_email(std::move(email)),
       m_address(std::move(address)) {}
 
 std::string Contact::getName() const { return m_name; }
@@ -46,6 +47,4 @@ void Contact::addPhoneNumber(const PhoneNumber &phoneNumber) {
         }
     }
     m_phoneNumbers.push_back(phoneNumber);
-
-    return;
 }

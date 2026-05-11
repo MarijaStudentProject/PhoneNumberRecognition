@@ -112,6 +112,7 @@ chmod +x .githooks/pre-push
 chmod +x .githooks/commit-msg
 git config core.hooksPath .githooks
 ```
+Requires bash and clang-tidy installed. Assumes compile_commands.json is in build/ adjust if needed
 Hook prerequisites:
 - `bash`
 - `clang-format`

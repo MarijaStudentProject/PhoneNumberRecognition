@@ -24,10 +24,18 @@ fi
 
 
 #format 
+BAD_FORMAT=0
 echo "Running clang-format..."
 for file in $FILES; do
-  clang-format -i "$file"
-  git add "$file"
+  if ! clang-format --dry-run --Werror "$file" ; then
+    echo "   $file needs to be formatted!"
+    BAD_FORMAT=1
+  fi
 done
+
+if [ "$BAD_FORMAT" -ne 0 ]; then
+  echo "Commit blocked due to formatting violations. Use make format to auto format or fix manually"
+  exit 1
+fi
 
 exit 0
