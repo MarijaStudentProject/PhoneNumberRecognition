@@ -26,7 +26,10 @@ fi
 #format 
 echo "Running clang-format..."
 for file in $FILES; do
-  clang-format -i "$file"
+  if clang-format --dry-run --Werror "$file"; then    
+    clang-format -i "$file"
+    echo "$file formatted"
+  fi
   git add "$file"
 done
 
