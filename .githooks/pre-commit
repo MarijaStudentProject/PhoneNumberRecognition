@@ -24,13 +24,18 @@ fi
 
 
 #format 
+BAD_FORMAT=0
 echo "Running clang-format..."
 for file in $FILES; do
-  if clang-format --dry-run --Werror "$file"; then    
-    clang-format -i "$file"
-    echo "$file formatted"
+  if clang-format --dry-run --Werror "$file" ; then
+    echo "   $file needs to be formatted!"
+    BAD_FORMAT=1
   fi
-  git add "$file"
 done
+
+if [ "$BAD_FORMAT" -ne 0 ]; then
+  echo "Commit blocked due to formatting violations."
+  exit 1
+fi
 
 exit 0

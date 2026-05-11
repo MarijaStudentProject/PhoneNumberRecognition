@@ -27,14 +27,15 @@ bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &
 
 bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber,
                                                      std::string_view &truncNumber) {
-    for (int n = 4; n > 0; n--) { // maximal prefix is 4 digits, start from longest 0011 australia
-                                  // first then european 00
+    for (int n = 4; n > 0; n--) { // maximal prefix is 4 digits 
+                                  // start from longest 0011 australia first then european 00
         if (repo.doesInternationalPrefixExist(std::string(phoneNumber.substr(0, n)))) {
             truncNumber = phoneNumber.substr(n);
             std::string_view nationalNumberStub;
             int countryCodeStub;
-            // we check for country code to prevent false positives, for example 011 65 555 555
-            // Serbian local number
+
+            // we check for country code to prevent false positives, 
+                // for example 011 69 355 555 Serbian local number
             if (tryParseAnyCountryCode(truncNumber, countryCodeStub, nationalNumberStub)) {
                 return true;
             }
@@ -80,8 +81,8 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
 
     // no + or internationalPrefix, so we assume local format
     if (startsWith(phoneNumberView, localNumberPlan.nationalPrefix)) {
-        // Italy has a weird numbering plan where national prefix is not removed, for example 066
-        // 555 555 -> +39 066 555 555
+        // Italy has a weird numbering plan where national prefix is not removed
+        // for example 066 555 555 -> +39 066 555 555
         nationalNumber = localRegionIso == "IT"
                              ? phoneNumberView
                              : phoneNumberView.substr(localNumberPlan.nationalPrefix.size());
@@ -89,6 +90,7 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
     }
 
     return phoneNumber; // we dont know how to parse it, return as is
+    
 } // TODO consider adding length check
 
 PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path,
