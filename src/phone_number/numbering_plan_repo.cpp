@@ -7,6 +7,11 @@
 #include <iostream>
 
 void NumberingPlanRepo::loadPlans(const std::string &filename) {
+    m_plans.clear();
+    m_isoPlanMap.clear();
+    m_countryCodePlanMap.clear();
+    m_internationalPrefixSet.clear();
+
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Failed to open file\n";

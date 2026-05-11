@@ -6,6 +6,8 @@ namespace {
 bool startsWith(std::string_view str, std::string_view prefix) { return str.substr(0, prefix.size()) == prefix; }
 } // namespace
 
+// Tries to parse a country code from the start of phoneNumber (up to 3 digits).
+// On success, sets countryCode and nationalNumber (the remainder after the code) and returns true.
 bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode,
                                              std::string_view &nationalNumber) {
     int currentCountryCode = 0;
@@ -25,6 +27,9 @@ bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &
     return false;
 }
 
+// Tries to match any known international dialling prefix at the start of phoneNumber.
+// On success, sets truncNumber to the portion after the prefix (i.e. country code + national number)
+// and returns true. A country-code check is performed to filter out false positives.
 bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) {
     for (int n = 4; n > 0; n--) { // maximal prefix is 4 digits
                                   // start from longest 0011 australia first then european 00
@@ -43,10 +48,11 @@ bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumbe
     return false;
 }
 
-// we expect phone number to already be cleaned and only contains digits
-// default region is used for local number parsing without country code
-// strict true uses only the local region's international prefix,
-// recommended for local contacts, for incoming calls use false
+// Normalizes phoneNumber to E.164 format (e.g. "+381601234567").
+// phoneNumber should be pre-cleaned (digits only, or a single leading '+' for already-international numbers).
+// default region is used for local number parsing without country code.
+// strict=true uses only the local region's international prefix (recommended for local contacts);
+// use strict=false for incoming calls where any known international prefix is accepted.
 std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool strict) {
     if (phoneNumber.empty()) {
         return phoneNumber;
@@ -93,12 +99,15 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
 
 } // TODO consider adding length check
 
+// Constructs a PhoneNormalizer that loads numbering-plan metadata from metadata_path
+// and sets the default local region to localRegionIsoCountry (e.g. "RS", "DE").
 PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path, std::string localRegionIsoCountry)
     : m_localRegionIso(std::move(localRegionIsoCountry)) {
     m_repo.loadPlans(metadata_path);
     m_localNumberPlan = m_repo.getForIsoCountry(m_localRegionIso);
 }
 
+// Updates the default local region used for parsing numbers without a country code or international prefix.
 void PhoneNormalizer::setLocalRegionIso(const std::string &isoCountry) {
     m_localRegionIso = isoCountry;
     m_localNumberPlan = m_repo.getForIsoCountry(m_localRegionIso);
