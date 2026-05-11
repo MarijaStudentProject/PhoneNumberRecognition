@@ -24,28 +24,33 @@ std::string Address::getCountry() const {
 }
 
 std::string Address::format() const {
-    if (isEmpty()) 
+    if (isEmpty()) {
         return "";
+    }
 
     std::string result;
 
-    if (!street.empty())
+    if (!street.empty()) {
         result += street;
+    }
 
     if (postalCode != 0 || !city.empty()) {
-        if (!result.empty()) 
+        if (!result.empty()) {
             result += ", ";
+        }
 
-        if (postalCode != 0) 
+        if (postalCode != 0) {
             result += std::to_string(postalCode) + " ";
-        
+        }
+
         result += city;
     }
 
     if (!country.empty()) {
-        if (!result.empty()) 
+        if (!result.empty()) {
             result += ", ";
-        
+        }
+
         result += country;
     }
 
