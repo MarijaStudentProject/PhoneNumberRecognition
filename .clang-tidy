@@ -7,17 +7,21 @@ Checks: >
   cppcoreguidelines-*,
 
   # Disable noisy / impractical ones
+  -readability-identifier-length,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-magic-numbers,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -cppcoreguidelines-pro-type-vararg,
   -modernize-use-trailing-return-type,
-  -readability-identifier-length
+  -readability-identifier-length,
+  -bugprone-easily-swappable-parameters,
+  -modernize-use-nodiscard
 
 WarningsAsErrors: 'bugprone-*'
 
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '(src|include|tests)/.*'
+
 FormatStyle: file
 
 CheckOptions:
