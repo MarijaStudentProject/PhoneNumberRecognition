@@ -5,15 +5,14 @@ namespace {
 std::string cleanPhoneNumber(const std::string &phoneNumber) {
     std::string cleaned;
     for (char c : phoneNumber) {
-        if (isdigit(c) || c == '+' && cleaned.empty()) {
+        if ((isdigit(c) != 0) || c == '+' && cleaned.empty()) {
             cleaned += c;
         }
     }
     return cleaned;
 }
 
-void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &normalizer,
-                              bool strict = true) {
+void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &normalizer, bool strict = true) {
     std::string cleaned = cleanPhoneNumber(phoneNumber);
     std::string normalizedNumber = normalizer.normalize(cleaned, strict);
     std::cout << "Original: " << phoneNumber << "\n";
@@ -26,32 +25,30 @@ void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &n
 int main() {
     PhoneNormalizer normalizer{"../resources/min_filtered_metadata.json", "RS"};
 
-    std::string phone_number = "066 555 555";
-    testNormalizePhoneNumber(phone_number, normalizer);
+    std::string phoneNumber = "066 555 555";
+    testNormalizePhoneNumber(phoneNumber, normalizer);
 
-    std::string phone_number2 = "+381 66 555 555";
-    testNormalizePhoneNumber(phone_number2, normalizer);
+    std::string phoneNumber2 = "+381 66 555 555";
+    testNormalizePhoneNumber(phoneNumber2, normalizer);
 
-    std::string phone_number3 = "00381 66 555 555";
-    testNormalizePhoneNumber(phone_number3, normalizer);
+    std::string phoneNumber3 = "00381 66 555 555";
+    testNormalizePhoneNumber(phoneNumber3, normalizer);
 
-    std::string phone_number4 = "011 66 555 555";
-    testNormalizePhoneNumber(
-        phone_number4, normalizer,
-        false); // +66 is tailand, strict=false should match it as international
+    std::string phoneNumber4 = "011 66 555 555";
+    testNormalizePhoneNumber(phoneNumber4, normalizer,
+                             false); // +66 is tailand, strict=false should match it as international
 
-    std::string phone_number5 = "011 66 555 555";
-    testNormalizePhoneNumber(phone_number5, normalizer, true); // strict matches local
+    std::string phoneNumber5 = "011 66 555 555";
+    testNormalizePhoneNumber(phoneNumber5, normalizer, true); // strict matches local
 
-    std::string phone_number6 = "011 693 555 555"; // strict matches local
-    testNormalizePhoneNumber(phone_number6, normalizer, true);
+    std::string phoneNumber6 = "011 693 555 555"; // strict matches local
+    testNormalizePhoneNumber(phoneNumber6, normalizer, true);
 
-    std::string phone_number7 =
-        "011 693 555 555"; // +693 does not exist, should match local even in non strict mode
-    testNormalizePhoneNumber(phone_number7, normalizer, false);
+    std::string phoneNumber7 = "011 693 555 555"; // +693 does not exist, should match local even in non strict mode
+    testNormalizePhoneNumber(phoneNumber7, normalizer, false);
 
-    std::string phone_number8 = "+1 (202) 555-0173";
-    testNormalizePhoneNumber(phone_number8, normalizer);
+    std::string phoneNumber8 = "+1 (202) 555-0173";
+    testNormalizePhoneNumber(phoneNumber8, normalizer);
 
     return 0;
 }

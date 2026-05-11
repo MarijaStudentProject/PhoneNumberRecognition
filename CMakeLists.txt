@@ -20,6 +20,10 @@ if(CLANG_TIDY)
         COMMAND ${CLANG_TIDY} -p ${CMAKE_BINARY_DIR} ${ALL_CPP_FILES}
         COMMENT "Running clang-tidy"
     )
+    add_custom_target(tidy-fix
+        COMMAND ${CLANG_TIDY} -p ${CMAKE_BINARY_DIR} --fix ${ALL_CPP_FILES}
+        COMMENT "Running clang-tidy with --fix"
+    )
 endif()
 
 find_program(CLANG_FORMAT clang-format)

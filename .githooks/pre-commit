@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CLANF_FORMAT_FILE="../.clang-format" #adjust manually if you move this script
+CLANG_FORMAT_FILE="../.clang-format" #adjust manually if you move this script
 
 FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|c|h)$')
 
@@ -29,14 +29,14 @@ fi
 BAD_FORMAT=0
 echo "Running clang-format..."
 for file in $FILES; do
-  if ! clang-format -style="$CLANG_FORMAT_FILE" --dry-run --Werror "$file" ; then
+  if ! clang-format --dry-run --Werror "$file" ; then
     echo "   $file needs to be formatted!"
     BAD_FORMAT=1
   fi
 done
 
 if [ "$BAD_FORMAT" -ne 0 ]; then
-  echo "Commit blocked due to formatting violations."
+  echo "Commit blocked due to formatting violations. Use make format to auto format or fix manually"
   exit 1
 fi
 
