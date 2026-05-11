@@ -114,6 +114,15 @@ git config core.hooksPath .githooks
 ```
 Requires bash and clang-tidy installed. Assumes compile_commands.json is in build/ adjust if needed
 
+### Bypass hooks 
+
+You can use `--no-verify` to bypass hooks, but this is not recommended. Fix the errors or the hooks themselves instead.
+
+```
+git commit --no-verify
+git push --no-verify
+```
+
 ### Custom helper target
  
 There are targets in place for running tidy check and auto format, you can use: 
