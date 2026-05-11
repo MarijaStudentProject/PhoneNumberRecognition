@@ -10,9 +10,9 @@
 class NumberingPlanRepo {
   private:
     std::vector<NumberingPlan> m_plans;
-    std::map<std::string, NumberingPlan *> m_isoPlanMap;
-    std::map<int, NumberingPlan *> m_countryCodePlanMap;
-    std::set<std::string> m_internationalPrefixSet;
+    std::map<std::string, NumberingPlan *> m_isoPlanMap; // RS DE US, etc to plan
+    std::map<int, NumberingPlan *> m_countryCodePlanMap; // 381, 49, etc to plan
+    std::set<std::string> m_internationalPrefixSet;      // set of all prefixes for quick lookup
 
   public:
     NumberingPlanRepo() = default;
@@ -23,10 +23,9 @@ class NumberingPlanRepo {
     NumberingPlanRepo(NumberingPlanRepo &&) = delete;
     NumberingPlanRepo &operator=(NumberingPlanRepo &&) = delete;
 
-    void load(const std::string &filename);
-    NumberingPlan
-    getForIsoCountry(const std::string &isoCountry) const;  // RS DE US, etc, if not found return empty plan
-    NumberingPlan getForCountryCode(int countryCode) const; // 381, 49, return empty if not found
+    void loadPlans(const std::string &filename);
+    NumberingPlan getForIsoCountry(const std::string &isoCountry) const; // RS DE US, return empty if not found
+    NumberingPlan getForCountryCode(int countryCode) const;              // 381, 49, return empty if not found
     bool doesCountryCodeExist(int countryCode) const;
     bool doesInternationalPrefixExist(const std::string &internationalPrefix) const;
 };

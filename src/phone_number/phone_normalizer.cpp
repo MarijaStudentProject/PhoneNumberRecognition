@@ -95,7 +95,7 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
 
 PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path, std::string localRegionIsoCountry)
     : m_localRegionIso(std::move(localRegionIsoCountry)) {
-    m_repo.load(metadata_path);
+    m_repo.loadPlans(metadata_path);
     m_localNumberPlan = m_repo.getForIsoCountry(m_localRegionIso);
 }
 
