@@ -4,10 +4,10 @@
 
 class Address {
 private:
-    std::string street;
-    int postalCode;
-    std::string city;
-    std::string country;
+    std::string m_street;
+    int m_postalCode;
+    std::string m_city;
+    std::string m_country;
 
 public:
     Address(const std::string& street = "", int postalCode = 0, const std::string& city = "", const std::string& country = "");
