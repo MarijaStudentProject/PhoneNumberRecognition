@@ -37,7 +37,7 @@ int main() {
 
     std::string phoneNumber4 = "011 66 555 555";
     testNormalizePhoneNumber(phoneNumber4, normalizer,
-                             false); // +66 is tailand, strict=false should match it as international
+                             false); // +66 is Thailand, strict=false should match it as international
 
     std::string phoneNumber5 = "011 66 555 555";
     testNormalizePhoneNumber(phoneNumber5, normalizer, true); // strict matches local

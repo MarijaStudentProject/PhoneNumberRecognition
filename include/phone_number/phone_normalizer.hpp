@@ -16,12 +16,12 @@ class PhoneNormalizer {
 
     NumberingPlanRepo m_repo;
 
-    bool tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode, std::string_view &nationalNumber);
-    bool tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber);
+    bool tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode, std::string_view &nationalNumber) const;
+    bool tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
     bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber);
 
   public:
-    std::string normalize(const std::string &phoneNumber, bool strict = false);
+    std::string normalize(const std::string &phoneNumber, bool strict = false) const;
     PhoneNormalizer(const std::string &metadata_path, std::string localRegionIsoCountry);
     void setLocalRegionIso(const std::string &isoCountry);
 };

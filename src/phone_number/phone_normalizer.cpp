@@ -10,7 +10,7 @@ bool startsWith(std::string_view str, std::string_view prefix) { return str.subs
 // Tries to parse a country code from the start of phoneNumber (up to 3 digits).
 // On success, sets countryCode and nationalNumber (the remainder after the code) and returns true.
 bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode,
-                                             std::string_view &nationalNumber) {
+                                             std::string_view &nationalNumber) const {
     int currentCountryCode = 0;
     for (int n = 3; n > 0; n--) {
         if (phoneNumber.size() < n) {
@@ -31,7 +31,7 @@ bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &
 // Tries to match any known international dialling prefix at the start of phoneNumber.
 // On success, sets truncNumber to the portion after the prefix (i.e. country code + national number)
 // and returns true. A country-code check is performed to filter out false positives.
-bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) {
+bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const {
     for (int n = 4; n > 0; n--) { // maximal prefix is 4 digits
                                   // start from longest 0011 australia first then european 00
         if (m_repo.doesInternationalPrefixExist(std::string(phoneNumber.substr(0, n)))) {
@@ -70,7 +70,7 @@ bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNu
 // default region is used for local number parsing without country code.
 // strict=true uses only the local region's international prefix (recommended for local contacts);
 // use strict=false for incoming calls where any known international prefix is accepted.
-std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool strict) {
+std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool strict) const {
     if (phoneNumber.empty()) {
         return phoneNumber;
     }
