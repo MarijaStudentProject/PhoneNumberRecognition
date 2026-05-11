@@ -1,7 +1,22 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+#check branch name
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "Checking branch name: $BRANCH"
+
+# allowed pattern type/short-description
+if [[ ! "$BRANCH" =~ ^(feature|bugfix|chore|refactor|docs|test)/[a-z0-9-]+(/[a-z0-9-]+)*$ ]]; then
+  echo "  Invalid branch name: $BRANCH"
+  echo "Allowed format:"
+  echo "  feature/description"
+  echo "  bugfix/description"
+  echo "  chore/description"
+  exit 1
+fi
+echo "  Branch name OK"
 
 #check clang tidy
-run-clang-tidy -quiet
+run-clang-tidy -quiet -p build/ # assumes compile_commands.json is in build/ change if needed
 if [ $? -ne 0 ]; then
   echo "clang-tidy failed"
   exit 1

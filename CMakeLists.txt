@@ -4,3 +4,40 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(dummy src/phone_number/address.cpp src/phone_number/phone_number.cpp src/phone_number/contact.cpp) 
 target_include_directories(dummy PUBLIC "${CMAKE_SOURCE_DIR}/include" )
+
+find_program(CLANG_TIDY clang-tidy)
+if(CLANG_TIDY)
+    file(GLOB_RECURSE ALL_CPP_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.cpp
+        ${CMAKE_SOURCE_DIR}/tests/*.cpp
+    )
+    add_custom_target(tidy
+        COMMAND ${CLANG_TIDY} -p ${CMAKE_BINARY_DIR} ${ALL_CPP_FILES}
+        COMMENT "Running clang-tidy"
+    )
+endif()
+
+find_program(CLANG_FORMAT clang-format)
+if(CLANG_FORMAT)
+    file(GLOB_RECURSE ALL_SOURCE_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.cpp
+        ${CMAKE_SOURCE_DIR}/tests/*.cpp
+        ${CMAKE_SOURCE_DIR}/include/*.hpp
+    )
+    add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i ${ALL_SOURCE_FILES}
+        COMMENT "Running clang-format"
+    )
+endif()
+
+set(RESOURCE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
+set(RESOURCE_OUTPUT_DIR ${CMAKE_BINARY_DIR}/resources)
+
+add_custom_target(copy_resources
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RESOURCE_SOURCE_DIR}
+        ${RESOURCE_OUTPUT_DIR}
+    COMMENT "Copying resources to build directory"
+)
+
