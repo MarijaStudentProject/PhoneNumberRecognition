@@ -33,15 +33,9 @@ set(RESOURCE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
 set(RESOURCE_OUTPUT_DIR ${CMAKE_BINARY_DIR}/resources)
 
 add_custom_target(copy_resources
+    ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${RESOURCE_SOURCE_DIR}
         ${RESOURCE_OUTPUT_DIR}
     COMMENT "Copying resources to build directory"
-)
-
-add_custom_command(TARGET dummy POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${RESOURCE_SOURCE_DIR}
-        ${RESOURCE_OUTPUT_DIR}
-    COMMENT "Syncing resources after build"
 )
