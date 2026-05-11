@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-CLANG_FORMAT_FILE="../.clang-format" #adjust manually if you move this script
-
 FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|c|h)$')
 
 #file naming

@@ -9,6 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
     src/phone_number/numbering_plan_repo.cpp
     src/phone_number/phone_normalizer.cpp
+    src/phone_number/address.cpp 
+    src/phone_number/phone_number.cpp 
+    src/phone_number/contact.cpp
 )
 
 add_library(phone_normalizer STATIC ${SOURCES})
@@ -44,11 +47,15 @@ if(CLANG_FORMAT)
 endif()
 
 file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
-add_custom_target(copy_resources ALL
+set(RESOURCE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
+set(RESOURCE_OUTPUT_DIR ${CMAKE_BINARY_DIR}/resources)
+
+add_custom_target(copy_resources
+    ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/resources
-        ${CMAKE_BINARY_DIR}/resources
-    COMMENT "Copying resources"
+        ${RESOURCE_SOURCE_DIR}
+        ${RESOURCE_OUTPUT_DIR}
+    COMMENT "Copying resources to build directory"
 )
 
 add_subdirectory(tests)

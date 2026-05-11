@@ -113,6 +113,32 @@ chmod +x .githooks/commit-msg
 git config core.hooksPath .githooks
 ```
 Requires bash and clang-tidy installed. Assumes compile_commands.json is in build/ adjust if needed
+Hook prerequisites:
+- `bash`
+- `clang-format`
+- `clang-tidy`
+- `run-clang-tidy` (usually provided by `clang-tools`)
+
+The tidy hooks also assume `compile_commands.json` is available in `build/`. Adjust the hook paths if your build directory is different.
+
+### Bypass hooks 
+
+You can use `--no-verify` to bypass hooks, but this is not recommended. Fix the errors or the hooks themselves instead.
+
+```
+git commit --no-verify
+git push --no-verify
+```
+
+### Custom helper target
+ 
+There are targets in place for running tidy check and auto format, you can use: 
+
+```
+make tidy
+make tidy-fix
+make format
+``` 
 
 ## Pull Requests
 
