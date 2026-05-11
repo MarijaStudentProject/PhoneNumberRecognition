@@ -18,7 +18,7 @@ public:
     std::string getCity() const;
     std::string getCountry() const;
 
-    std::string format() const;
+    std::string getFormatted() const;
     bool isEmpty() const;
 
     bool operator==(const Address& other) const;

@@ -1,6 +1,4 @@
-#include "PhoneNumber.hpp"
-
-// NOLINT(bugprone-easily-swappable-parameters)
+#include "phone_number/phone_number.hpp"
 
 PhoneNumber::PhoneNumber(const std::string& m_rawValue, unsigned int m_countryCode, const std::string& m_nationalNumber, const std::string& m_normalizedValue)
     : m_rawValue(m_rawValue), m_normalizedValue(m_normalizedValue), m_countryCode(m_countryCode), m_nationalNumber(m_nationalNumber) {}
