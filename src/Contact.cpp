@@ -1,6 +1,7 @@
 #include "Contact.hpp"
+#include <cstddef>
 
-Contact::Contact(const std::string& name, const std::string& surname, std::list<PhoneNumber>& phoneNumbers, const std::string& email, Address* address)
+Contact::Contact(const std::string& name, const std::string& surname, std::list<PhoneNumber> phoneNumbers, const std::string& email, Address address)
     : name(name)
     , surname(surname)
     , phoneNumbers(phoneNumbers)
@@ -17,7 +18,7 @@ std::string Contact::getSurname() const {
     return surname;
 }
 
-std::list<PhoneNumber>& Contact::getPhoneNumbers() {
+std::list<PhoneNumber> Contact::getPhoneNumbers() {
     return phoneNumbers;
 }
 
@@ -25,7 +26,7 @@ std::string Contact::getEmail() const {
     return email;        
 }
 
-Address* Contact::getAddress() const { 
+Address Contact::getAddress() const { 
     return address;      
 }
 
@@ -40,7 +41,7 @@ std::string Contact::getFullName() const {
 }
 
 bool Contact::hasAddress() const {
-    return address != nullptr && !address->isEmpty();
+    return !address.isEmpty();
 }
 
 void Contact::addPhoneNumber(PhoneNumber phoneNumber) {
