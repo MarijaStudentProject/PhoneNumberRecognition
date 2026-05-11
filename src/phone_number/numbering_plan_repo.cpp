@@ -2,9 +2,11 @@
 #define JSMN_STATIC
 #include <jsmn/jsmn.h>
 #include <array>
+#include <charconv>
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <string_view>
 
 void NumberingPlanRepo::loadPlans(const std::string &filename) {
     m_plans.clear();
@@ -28,8 +30,15 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
     // tokenize it
     jsmn_parser parser;
     jsmn_init(&parser);
-    if (jsmn_parse(&parser, js, len, tokens.data(), tokens.size()) < 0) {
-        std::cerr << "Failed to parse JSON\n";
+    int numTokensParsed = jsmn_parse(&parser, js, len, tokens.data(), tokens.size());
+    if (numTokensParsed < 0) {
+        std::cerr << "Failed to parse JSON in '" << filename << "': error code " << numTokensParsed << "\n";
+        return;
+    }
+
+    // Validate minimum structure: tokens[0]=root obj, tokens[1]="countries" key, tokens[2]=countries obj
+    if (numTokensParsed < 3 || tokens[0].type != JSMN_OBJECT || tokens[2].type != JSMN_OBJECT) {
+        std::cerr << "Unexpected JSON structure in '" << filename << "'\n";
         return;
     }
 
@@ -44,10 +53,27 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
     // Iso key: array token callingCode, intlPrefix, natPrefix
     int i = 3;
     for (int c = 0; c < numCountries;
-         c++, i += 5) { // stride 5: array token, iso key, country code, intl prefix, nat prefix
+         c++, i += 5) { // stride 5: iso key, array token, country code, intl prefix, nat prefix
+        // Validate we have enough tokens for this entry
+        if (i + 4 >= numTokensParsed) {
+            std::cerr << "Truncated JSON in '" << filename << "': expected " << numCountries
+                      << " countries but ran out of tokens at entry " << c << "\n";
+            break;
+        }
+
         auto idx = i;
         std::string isoCode = tokstr(tokens.at(idx));
-        int countryCode = std::stoi(tokstr(tokens.at(idx + 2)));
+
+        // Use from_chars for safe, non-throwing country code parsing
+        std::string ccStr = tokstr(tokens.at(idx + 2));
+        int countryCode = 0;
+        auto result = std::from_chars(ccStr.data(), ccStr.data() + ccStr.size(), countryCode);
+        if (result.ec != std::errc{}) {
+            std::cerr << "Invalid country code '" << ccStr << "' for '" << isoCode << "' in '" << filename
+                      << "', skipping entry\n";
+            continue;
+        }
+
         std::string intlPrefix = tokstr(tokens.at(idx + 3));
         std::string natPrefix = tokstr(tokens.at(idx + 4));
 
