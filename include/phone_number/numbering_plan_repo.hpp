@@ -9,6 +9,7 @@
 
 class NumberingPlanRepo {
   private:
+    inline static const NumberingPlan emptyPlan{};
     std::vector<NumberingPlan> m_plans;
     std::map<std::string, NumberingPlan *> m_isoPlanMap; // RS DE US, etc to plan
     std::map<int, NumberingPlan *> m_countryCodePlanMap; // 381, 49, etc to plan
@@ -24,8 +25,8 @@ class NumberingPlanRepo {
     NumberingPlanRepo &operator=(NumberingPlanRepo &&) = delete;
 
     void loadPlans(const std::string &filename);
-    NumberingPlan getForIsoCountry(const std::string &isoCountry) const; // RS DE US, return empty if not found
-    NumberingPlan getForCountryCode(int countryCode) const;              // 381, 49, return empty if not found
+    const NumberingPlan &getForIsoCountry(const std::string &isoCountry) const; // RS DE US, return empty if not found
+    const NumberingPlan &getForCountryCode(int countryCode) const;              // 381, 49, return empty if not found
     bool doesCountryCodeExist(int countryCode) const;
     bool doesInternationalPrefixExist(const std::string &internationalPrefix) const;
 };
