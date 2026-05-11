@@ -53,7 +53,7 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
     // Iso key: array token callingCode, intlPrefix, natPrefix
     int i = 3;
     for (int c = 0; c < numCountries;
-         c++, i += 5) { // stride 5: iso key, array token, country code, intl prefix, nat prefix
+         c++, i += 5) { // stride 5: iso key, array token (skipped), country code, intl prefix, nat prefix
         // Validate we have enough tokens for this entry
         if (i + 4 >= numTokensParsed) {
             std::cerr << "Truncated JSON in '" << filename << "': expected " << numCountries
