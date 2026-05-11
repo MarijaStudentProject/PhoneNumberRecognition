@@ -6,8 +6,6 @@ Checks: >
   readability-*,
   cppcoreguidelines-*,
 
-  # Disable noisy / impractical ones
-  -readability-identifier-length,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-magic-numbers,
@@ -15,11 +13,12 @@ Checks: >
   -cppcoreguidelines-pro-type-vararg,
   -modernize-use-trailing-return-type,
   -bugprone-easily-swappable-parameters,
-  -modernize-use-nodiscard
+  -modernize-use-nodiscard,
+  -readability-identifier-length
 
 WarningsAsErrors: 'bugprone-*'
 
-HeaderFilterRegex: '(src|include|tests)/.*'
+HeaderFilterRegex: '.*(src|include|tests)/.*'
 
 FormatStyle: file
 

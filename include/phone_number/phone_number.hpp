@@ -11,10 +11,9 @@ class PhoneNumber {
     std::string m_nationalNumber;
 
   public:
-    PhoneNumber(const std::string &rawValue, unsigned int countryCode, const std::string &nationalNumber,
-                const std::string &normalizedValue);
+    PhoneNumber(std::string rawValue, unsigned int countryCode, std::string nationalNumber,
+                std::string normalizedValue);
     PhoneNumber() = default;
-    ~PhoneNumber() = default;
 
     std::string getRawValue() const;
     std::string getNormalizedValue() const;

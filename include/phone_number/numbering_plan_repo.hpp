@@ -9,7 +9,7 @@
 
 class NumberingPlanRepo {
   private:
-    inline static const NumberingPlan emptyPlan{};
+    inline static const NumberingPlan EmptyPlan{};
     std::vector<NumberingPlan> m_plans;
     std::map<std::string, NumberingPlan *> m_isoPlanMap; // RS DE US, etc to plan
     std::map<int, NumberingPlan *> m_countryCodePlanMap; // 381, 49, etc to plan

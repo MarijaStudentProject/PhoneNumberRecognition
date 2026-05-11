@@ -67,7 +67,7 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
         // Use from_chars for safe, non-throwing country code parsing
         std::string ccStr = tokstr(tokens.at(idx + 2));
         int countryCode = 0;
-        auto result = std::from_chars(ccStr.data(), ccStr.data() + ccStr.size(), countryCode);
+        auto result = std::from_chars(ccStr.data(), ccStr.data() + ccStr.size(), countryCode); // NOLINT
         if (result.ec != std::errc{}) {
             std::cerr << "Invalid country code '" << ccStr << "' for '" << isoCode << "' in '" << filename
                       << "', skipping entry\n";
@@ -87,7 +87,7 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
 
 const NumberingPlan &NumberingPlanRepo::getForIsoCountry(const std::string &isoCountry) const {
     if (m_isoPlanMap.find(isoCountry) == m_isoPlanMap.end()) {
-        return emptyPlan;
+        return EmptyPlan;
     }
     return *m_isoPlanMap.at(isoCountry);
 }
@@ -102,7 +102,7 @@ bool NumberingPlanRepo::doesInternationalPrefixExist(const std::string &internat
 
 const NumberingPlan &NumberingPlanRepo::getForCountryCode(int countryCode) const {
     if (m_countryCodePlanMap.find(countryCode) == m_countryCodePlanMap.end()) {
-        return emptyPlan;
+        return EmptyPlan;
     }
     return *m_countryCodePlanMap.at(countryCode);
 }

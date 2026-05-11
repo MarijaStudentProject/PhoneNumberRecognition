@@ -10,9 +10,7 @@ class Address {
     std::string m_country;
 
   public:
-    Address(const std::string &street = "", int postalCode = 0, const std::string &city = "",
-            const std::string &country = "");
-    ~Address() = default;
+    Address(std::string street = "", int postalCode = 0, std::string city = "", std::string country = "");
 
     std::string getStreet() const;
     int getPostalCode() const;

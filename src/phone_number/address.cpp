@@ -1,7 +1,9 @@
 #include "phone_number/address.hpp"
 
-Address::Address(const std::string &street, int postalCode, const std::string &city, const std::string &country)
-    : m_street(street), m_postalCode(postalCode), m_city(city), m_country(country) {}
+#include <utility>
+
+Address::Address(std::string street, int postalCode, std::string city, std::string country)
+    : m_street(std::move(street)), m_postalCode(postalCode), m_city(std::move(city)), m_country(std::move(country)) {}
 
 std::string Address::getStreet() const { return m_street; }
 

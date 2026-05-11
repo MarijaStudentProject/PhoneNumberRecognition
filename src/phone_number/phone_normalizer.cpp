@@ -87,7 +87,7 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
         if (tryParseAnyCountryCode(phoneNumberView.substr(1), countryCode, nationalNumber)) {
             return phoneNumber;
         }
-        return phoneNumber;
+
     } else { // if not, try international prefix with country code, for example 00381 66 555 555,
              // 0011 49 555 555 (australia calling germany)
         std::string_view truncNumber;
