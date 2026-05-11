@@ -1,5 +1,4 @@
 #include "Contact.hpp"
-#include <cstddef>
 
 Contact::Contact(const std::string& name, const std::string& surname, std::list<PhoneNumber> phoneNumbers, const std::string& email, Address address)
     : name(name)
