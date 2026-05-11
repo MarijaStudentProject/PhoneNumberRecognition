@@ -48,7 +48,7 @@ bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumbe
     return false;
 }
 
-// Normalizes phoneNumber to E.164 format (e.g. "+381601234567").
+// Normalizes phoneNumber to E.164 format (e.g. "+38160123456").
 // phoneNumber should be pre-cleaned (digits only, or a single leading '+' for already-international numbers).
 // default region is used for local number parsing without country code.
 // strict=true uses only the local region's international prefix (recommended for local contacts);
