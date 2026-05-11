@@ -8,11 +8,11 @@
 
 class Contact {
 private:
-    std::string name;
-    std::string surname;
-    std::list<PhoneNumber> phoneNumbers;
-    std::string email;
-    Address address;
+    std::string m_name;
+    std::string m_surname;
+    std::list<PhoneNumber> m_phoneNumbers;
+    std::string m_email;
+    Address m_address;
 
 public:
     Contact(const std::string& name, const std::string& surname, std::list<PhoneNumber> phoneNumbers, const std::string& email = "", Address address = Address());
