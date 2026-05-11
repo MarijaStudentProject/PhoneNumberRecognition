@@ -1,4 +1,4 @@
-#include "numbering-plan-repo.hpp"
+#include "phone_number/numbering_plan_repo.hpp"
 #define JSMN_STATIC
 #include "../../libs/jsmn/jsmn.h"
 #include <cstring>
@@ -12,10 +12,12 @@ void NumberingPlanRepo::load(const std::string &filename) {
         return;
     }
 
+    // read file
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     const char *js = content.c_str();
     std::size_t len = content.size();
 
+    // tokenize it
     jsmntok_t tokens[4096];
     jsmn_parser parser;
     jsmn_init(&parser);
@@ -24,13 +26,13 @@ void NumberingPlanRepo::load(const std::string &filename) {
         return;
     }
 
-    auto tokstr = [](const char *json, const jsmntok_t *tok) {
+    auto tokstr = [](const char *json, const jsmntok_t *tok) { // helper to convert to string
         return std::string(json + tok->start, tok->end - tok->start);
     };
 
-    // tokens[0]=root obj, tokens[1]="countries", tokens[2]=countries obj, skipped
+    // we skip tokens[0]=root obj, tokens[1]="countries", tokens[2]=countries obj
 
-    int num_countries = tokens[2].size;
+    int num_countries = tokens[2].size; // token of array, number of coutry entries
     plans.reserve(num_countries);
 
     // Iso key: array token callingCode, intlPrefix, natPrefix
@@ -42,15 +44,19 @@ void NumberingPlanRepo::load(const std::string &filename) {
         std::string intlPrefix = tokstr(js, &tokens[i + 3]);
         std::string nationalPrefix = tokstr(js, &tokens[i + 4]);
 
+
         NumberingPlan p{countryCode, isoCode, nationalPrefix, intlPrefix};
-        isoPlanMap[p.isoCountryName] = &p;
-        countryCodePlanMap[p.countryCode] = &p;
-        internationalPrefixPlanSet.insert(p.internationalPrefix);
-        plans.push_back(std::move(p));
+        plans.push_back(p);
+        isoPlanMap[p.isoCountryName] = &plans.back();
+        countryCodePlanMap[p.countryCode] = &plans.back();
+        internationalPrefixSet.insert(p.internationalPrefix);
     }
 }
 
 NumberingPlan NumberingPlanRepo::getForIsoCountry(const std::string &isoCountry) const {
+    if (isoPlanMap.find(isoCountry) == isoPlanMap.end()) {
+        return NumberingPlan();
+    }
     return *isoPlanMap.at(isoCountry);
 }
 
@@ -58,10 +64,13 @@ bool NumberingPlanRepo::doesCountryCodeExist(int countryCode) const {
     return countryCodePlanMap.find(countryCode) != countryCodePlanMap.end();
 }
 
-bool NumberingPlanRepo::doesInternationalPrefixExist(std::string internationalPrefix) const {
-    return internationalPrefixPlanSet.find(internationalPrefix) != internationalPrefixPlanSet.end();
+bool NumberingPlanRepo::doesInternationalPrefixExist(const std::string& internationalPrefix) const {
+    return internationalPrefixSet.find(internationalPrefix) != internationalPrefixSet.end();
 }
 
 NumberingPlan NumberingPlanRepo::getForCountryCode(int countryCode) const {
+    if (countryCodePlanMap.find(countryCode) == countryCodePlanMap.end()) {
+        return NumberingPlan();
+    }
     return *countryCodePlanMap.at(countryCode);
 }
