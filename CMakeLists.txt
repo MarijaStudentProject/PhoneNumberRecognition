@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(MyProject)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(dummy src/dummy.cpp)
+add_executable(dummy src/phone_number/address.cpp src/phone_number/phone_number.cpp src/phone_number/contact.cpp) 
+target_include_directories(dummy PUBLIC "${CMAKE_SOURCE_DIR}/include" )
 
 find_program(CLANG_TIDY clang-tidy)
 if(CLANG_TIDY)
@@ -39,3 +40,4 @@ add_custom_target(copy_resources
         ${RESOURCE_OUTPUT_DIR}
     COMMENT "Copying resources to build directory"
 )
+
