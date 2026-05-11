@@ -4,6 +4,7 @@
 #include "numbering_plan.hpp"
 #include "numbering_plan_repo.hpp"
 #include <string>
+#include <string_view>
 
 class PhoneNormalizer {
   private:
@@ -17,6 +18,7 @@ class PhoneNormalizer {
 
     bool tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode, std::string_view &nationalNumber);
     bool tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber);
+    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber);
 
   public:
     std::string normalize(const std::string &phoneNumber, bool strict = false);

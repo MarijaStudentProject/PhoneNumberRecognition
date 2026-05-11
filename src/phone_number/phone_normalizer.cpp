@@ -1,5 +1,6 @@
 #include "phone_number/phone_normalizer.hpp"
 #include <iostream>
+#include <string_view>
 #include <utility>
 
 namespace {
@@ -48,6 +49,22 @@ bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumbe
     return false;
 }
 
+// check against local plans international prefix
+bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) {
+    if (!m_localRegionIso.empty()) {
+        return false;
+    }
+    if (startsWith(phoneNumber, m_localNumberPlan.m_internationalPrefix)) {
+        truncNumber = phoneNumber.substr(m_localNumberPlan.m_internationalPrefix.size());
+        int countryCodeStub = 0;
+        std::string_view nationalNumberStub;
+        if (tryParseAnyCountryCode(truncNumber, countryCodeStub, nationalNumberStub)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Normalizes phoneNumber to E.164 format (e.g. "+38160123456").
 // phoneNumber should be pre-cleaned (digits only, or a single leading '+' for already-international numbers).
 // default region is used for local number parsing without country code.
@@ -68,31 +85,27 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
         if (tryParseAnyCountryCode(phoneNumberView.substr(1), countryCode, nationalNumber)) {
             return phoneNumber;
         }
+        return phoneNumber;
     } else { // if not, try international prefix with country code, for example 00381 66 555 555,
              // 0011 49 555 555 (australia calling germany)
         std::string_view truncNumber;
-        if (strict) { // check against local plans international prefix
-            if (startsWith(phoneNumberView, m_localNumberPlan.m_internationalPrefix)) {
-                truncNumber = phoneNumberView.substr(m_localNumberPlan.m_internationalPrefix.size());
-                if (tryParseAnyCountryCode(truncNumber, countryCode, nationalNumber)) {
-                    return '+' + std::string(truncNumber);
-                }
-            }
-        } else {
-            if (tryParseAnyInternationalPrefix(phoneNumberView, truncNumber)) {
-                tryParseAnyCountryCode(truncNumber, countryCode, nationalNumber);
-                return '+' + std::string(truncNumber);
-            }
+        if ((strict && tryParseStrictInternationalPrefix(phoneNumberView, truncNumber)) ||
+            (!strict && tryParseAnyInternationalPrefix(phoneNumberView, truncNumber))) {
+            tryParseAnyCountryCode(truncNumber, countryCode, nationalNumber);
+            return '+' + std::string(truncNumber);
         }
     }
 
     // no + or internationalPrefix, so we assume local format
-    if (startsWith(phoneNumberView, m_localNumberPlan.m_nationalPrefix)) {
-        // Italy has a weird numbering plan where national prefix is not removed
-        // for example 066 555 555 -> +39 066 555 555
-        nationalNumber = m_localRegionIso == "IT" ? phoneNumberView
-                                                  : phoneNumberView.substr(m_localNumberPlan.m_nationalPrefix.size());
-        return "+" + std::to_string(m_localNumberPlan.m_countryCode) + std::string(nationalNumber);
+    if (!m_localRegionIso.empty()) {
+        if (startsWith(phoneNumberView, m_localNumberPlan.m_nationalPrefix)) {
+            // Italy has a weird numbering plan where national prefix is not removed
+            // for example 066 555 555 -> +39 066 555 555
+            nationalNumber = m_localRegionIso == "IT"
+                                 ? phoneNumberView
+                                 : phoneNumberView.substr(m_localNumberPlan.m_nationalPrefix.size());
+            return "+" + std::to_string(m_localNumberPlan.m_countryCode) + std::string(nationalNumber);
+        }
     }
 
     return phoneNumber; // we dont know how to parse it, return as is

@@ -1,5 +1,3 @@
-
-
-add_executable(test test.cpp)
-target_link_libraries(test phone_normalizer)
+add_executable(normalizer_test test.cpp)
+target_link_libraries(normalizer_test phone_normalizer)
 

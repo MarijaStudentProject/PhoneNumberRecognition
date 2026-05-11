@@ -1,4 +1,5 @@
 #include "phone_number/phone_normalizer.hpp"
+#include <cctype>
 #include <iostream>
 
 namespace {
