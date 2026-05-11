@@ -114,6 +114,16 @@ git config core.hooksPath .githooks
 ```
 Requires bash and clang-tidy installed. Assumes compile_commands.json is in build/ adjust if needed
 
+### Custom helper target
+ 
+There are targets in place for running tidy check and auto format, you can use: 
+
+```
+make tidy
+make tidy-fix
+make format
+``` 
+
 ## Pull Requests
 
 - Ensure all tests pass
