@@ -1,6 +1,6 @@
 #include "phone_number/numbering_plan_repo.hpp"
 #define JSMN_STATIC
-#include "../../libs/jsmn/jsmn.h"
+#include <jsmn/jsmn.h>
 #include <array>
 #include <cstring>
 #include <fstream>
