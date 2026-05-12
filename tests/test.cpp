@@ -2,9 +2,6 @@
 #include <cctype>
 #include <iostream>
 
-#include "text_io.h"
-#include "vcard.h"
-
 #include "phone_number/vcf_parser.hpp"
 
 namespace {

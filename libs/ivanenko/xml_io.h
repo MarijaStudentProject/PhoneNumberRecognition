@@ -19,31 +19,31 @@
 #ifndef VCARD_XML_IO_H
 #define VCARD_XML_IO_H
 
-#include <istream>
 #include "vcard.h"
+#include <istream>
 
 class XmlWriter {
-public:
-    XmlWriter(std::ostream& os /*, vCvCardEncoding code = UTF_8*/): m_os(&os) {}
+  public:
+    XmlWriter(std::ostream &os /*, vCvCardEncoding code = UTF_8*/) : m_os(&os) {}
     ~XmlWriter() {}
 
-    XmlWriter & operator << (vCard & vCard);
-    XmlWriter & operator << (std::vector<vCard> & cards);
-    XmlWriter & operator << (vCardProperty & prop);
-    XmlWriter & operator << (vCardParamMap & param);
+    XmlWriter &operator<<(vCard &vCard);
+    XmlWriter &operator<<(std::vector<vCard> &cards);
+    XmlWriter &operator<<(vCardProperty &prop);
+    XmlWriter &operator<<(vCardParamMap &param);
 
-protected:
+  protected:
     std::ostream *m_os;
 
     std::string get_property_type(std::string property_name, int count);
 };
 
 class XmlReader {
-public:
+  public:
     XmlReader() {}
     ~XmlReader() {}
 
     std::vector<vCard> parseCards(std::istream *is);
 };
 
-#endif //VCARD_XML_IO_H
+#endif // VCARD_XML_IO_H

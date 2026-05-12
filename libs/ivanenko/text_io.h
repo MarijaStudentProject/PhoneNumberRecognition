@@ -19,45 +19,42 @@
 #ifndef VCARD_TEXT_IO_H
 #define VCARD_TEXT_IO_H
 
+#include "vcard.h"
 #include <iosfwd>
 #include <istream>
-#include "vcard.h"
 
-enum vCardEncoding {
-    UTF_8 = 0,
-    UTF_16
-};
+enum vCardEncoding { UTF_8 = 0, UTF_16 };
 
 class TextReader {
-public:
-    TextReader(std::istream& is, vCardEncoding code = UTF_8): m_is(&is) {}
+  public:
+    TextReader(std::istream &is, vCardEncoding code = UTF_8) : m_is(&is) {}
     ~TextReader() {}
 
     static vCardParamMap parseParams(std::string line);
     static vCardProperty parseProperty(std::string line);
     std::vector<vCard> parseCards();
 
-    TextReader & operator >> (vCard & vCard);
-    TextReader & operator >> (std::vector<vCard> & cards);
-    //TextReader & operator >> (vCardProperty & prop);
-    //TextReader & operator >> (vCardParamMap & param);
+    TextReader &operator>>(vCard &vCard);
+    TextReader &operator>>(std::vector<vCard> &cards);
+    // TextReader & operator >> (vCardProperty & prop);
+    // TextReader & operator >> (vCardParamMap & param);
 
-protected:
+  protected:
     std::istream *m_is;
 };
 
 class TextWriter {
-public:
-    TextWriter(std::ostream& os, vCardEncoding code = UTF_8): m_os(&os) {}
+  public:
+    TextWriter(std::ostream &os, vCardEncoding code = UTF_8) : m_os(&os) {}
     ~TextWriter() {}
 
-    TextWriter & operator << (vCard & vCard);
-    TextWriter & operator << (std::vector<vCard> & cards);
-    TextWriter & operator << (vCardProperty & prop);
-    TextWriter & operator << (vCardParamMap & param);
+    TextWriter &operator<<(vCard &vCard);
+    TextWriter &operator<<(std::vector<vCard> &cards);
+    TextWriter &operator<<(vCardProperty &prop);
+    TextWriter &operator<<(vCardParamMap &param);
 
-protected:
+  protected:
     std::ostream *m_os;
 };
 
-#endif //VCARD_TEXT_IO_H
+#endif // VCARD_TEXT_IO_H

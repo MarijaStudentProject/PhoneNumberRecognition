@@ -19,9 +19,9 @@
 #ifndef CONTACTS_COMMANDER_VCARD_H
 #define CONTACTS_COMMANDER_VCARD_H
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #define VC_SEPARATOR_TOKEN ';'
 #define VC_END_LINE_TOKEN "\r\n"
@@ -30,40 +30,35 @@
 #define VC_ASSIGNMENT_TOKEN ':'
 #define VC_TYPE_SEP_TOKEN '='
 
-enum vCardVersion
-{
-    VC_VER_2_1,
-    VC_VER_3_0,
-    VC_VER_4_0
-};
+enum vCardVersion { VC_VER_2_1, VC_VER_3_0, VC_VER_4_0 };
 
-#define VC_ADDRESS              "ADR"
-#define VC_AGENT                "AGENT"
-#define VC_BIRTHDAY             "BDAY"
-#define VC_CATEGORIES           "CATEGORIES"
-#define VC_CLASS                "CLASS"
-#define VC_DELIVERY_LABEL       "LABEL"
-#define VC_EMAIL                "EMAIL"
-#define VC_FORMATTED_NAME       "FN"
-#define VC_GEOGRAPHIC_POSITION  "GEO"
-#define VC_KEY                  "KEY"
-#define VC_LOGO                 "LOGO"
-#define VC_MAILER               "MAILER"
-#define VC_NAME                 "N"
-#define VC_NICKNAME             "NICKNAME"
-#define VC_NOTE                 "NOTE"
-#define VC_ORGANIZATION         "ORG"
-#define VC_PHOTO                "PHOTO"
-#define VC_PRODUCT_IDENTIFIER   "PRODID"
-#define VC_REVISION             "REV"
-#define VC_ROLE                 "ROLE"
-#define VC_SORT_STRING          "SORT-STRING"
-#define VC_SOUND                "SOUND"
-#define VC_TELEPHONE            "TEL"
-#define VC_TIME_ZONE            "TZ"
-#define VC_TITLE                "TITLE"
-#define VC_URL                  "URL"
-#define VC_VERSION              "VERSION"
+#define VC_ADDRESS "ADR"
+#define VC_AGENT "AGENT"
+#define VC_BIRTHDAY "BDAY"
+#define VC_CATEGORIES "CATEGORIES"
+#define VC_CLASS "CLASS"
+#define VC_DELIVERY_LABEL "LABEL"
+#define VC_EMAIL "EMAIL"
+#define VC_FORMATTED_NAME "FN"
+#define VC_GEOGRAPHIC_POSITION "GEO"
+#define VC_KEY "KEY"
+#define VC_LOGO "LOGO"
+#define VC_MAILER "MAILER"
+#define VC_NAME "N"
+#define VC_NICKNAME "NICKNAME"
+#define VC_NOTE "NOTE"
+#define VC_ORGANIZATION "ORG"
+#define VC_PHOTO "PHOTO"
+#define VC_PRODUCT_IDENTIFIER "PRODID"
+#define VC_REVISION "REV"
+#define VC_ROLE "ROLE"
+#define VC_SORT_STRING "SORT-STRING"
+#define VC_SOUND "SOUND"
+#define VC_TELEPHONE "TEL"
+#define VC_TIME_ZONE "TZ"
+#define VC_TITLE "TITLE"
+#define VC_URL "URL"
+#define VC_VERSION "VERSION"
 
 typedef std::multimap<std::string, std::string>::iterator param_iterator;
 
@@ -72,7 +67,7 @@ typedef std::multimap<std::string, std::string>::iterator param_iterator;
  * Based on std::multimap
  */
 class vCardParamMap {
-public:
+  public:
     vCardParamMap() {}
     ~vCardParamMap() {}
 
@@ -91,8 +86,8 @@ public:
      */
     int count(std::string name) const { return m_params.count(name); }
 
-    param_iterator begin() {return m_params.begin(); }
-    param_iterator end() {return m_params.end(); }
+    param_iterator begin() { return m_params.begin(); }
+    param_iterator end() { return m_params.end(); }
 
     void addParam(std::string name, std::string value);
     void setParam(std::string name, std::string value);
@@ -113,9 +108,9 @@ public:
      * @return string value of the parameter
      * @throws std::runtime_error Is thrown if parameter not found
      */
-    std::string& operator[] (std::string name);
+    std::string &operator[](std::string name);
 
-protected:
+  protected:
     std::multimap<std::string, std::string> m_params;
 };
 
@@ -123,18 +118,16 @@ protected:
  * @brief vCard line property
  */
 class vCardProperty {
-public:
-
+  public:
     static const std::map<std::string, std::string> property_types;
 
     /// Used as indexes for ADR property values
-    enum AddressFields
-    {
+    enum AddressFields {
         PostOfficeBox = 0,
         ExtendedAddress,
         Street,
-        Locality,           // e.g. City.
-        Region,             // e.g. State or province.
+        Locality, // e.g. City.
+        Region,   // e.g. State or province.
         PostalCode,
         Country
     };
@@ -146,15 +139,15 @@ public:
     enum GeoPositionFields { Latitude = 0, Longitude };
 
     vCardProperty() {}
-    vCardProperty(const std::string& group, const std::string& name, const std::string& value);
-    vCardProperty(const std::string& name, const std::string& value);
-    vCardProperty(const std::string& name, const std::vector<std::string>& values): m_name(name), m_values(values) {}
-    vCardProperty(const std::string& name, const std::vector<std::string>& values, const vCardParamMap params):
-                    m_name(name), m_values(values), m_params(params) {}
+    vCardProperty(const std::string &group, const std::string &name, const std::string &value);
+    vCardProperty(const std::string &name, const std::string &value);
+    vCardProperty(const std::string &name, const std::vector<std::string> &values) : m_name(name), m_values(values) {}
+    vCardProperty(const std::string &name, const std::vector<std::string> &values, const vCardParamMap params)
+        : m_name(name), m_values(values), m_params(params) {}
     ~vCardProperty() {}
 
-    std::string& getName() { return m_name; }
-    std::string& getGroup() { return m_group; }
+    std::string &getName() { return m_name; }
+    std::string &getGroup() { return m_group; }
 
     /**
      * Returns joined values list in one string
@@ -164,30 +157,33 @@ public:
     /**
      * Returns list of string values
      */
-    std::vector<std::string>& values() {return m_values; }
+    std::vector<std::string> &values() { return m_values; }
 
     void setParams(vCardParamMap params);
-    vCardParamMap& params() { return m_params; }
+    vCardParamMap &params() { return m_params; }
 
     /**
      * Shortcut for adding parameters to property
      * Example: prop << parameters;
      */
-    vCardProperty & operator << (const vCardParamMap &p);
+    vCardProperty &operator<<(const vCardParamMap &p);
 
     /// Static property creators
 
-    static vCardProperty createAddress(const std::string& street, const std::string& locality,
-            const std::string& region, const std::string& postal_code, const std::string& country,
-            const std::string& post_office_box = "", const std::string& ext_address = "",
-            const vCardParamMap& params = vCardParamMap());
+    static vCardProperty createAddress(const std::string &street, const std::string &locality,
+                                       const std::string &region, const std::string &postal_code,
+                                       const std::string &country, const std::string &post_office_box = "",
+                                       const std::string &ext_address = "",
+                                       const vCardParamMap &params = vCardParamMap());
     static vCardProperty createBirthday(const int year, const int month, const int day);
-    static vCardProperty createName(const std::string& firstname, const std::string& lastname,
-            const std::string& additional = "", const std::string& prefix = "",
-            const std::string& suffix = "", const vCardParamMap& params = vCardParamMap());
-    static vCardProperty createOrganization(const std::string& name, const std::vector<std::string>& levels = std::vector<std::string>(), const vCardParamMap& params = vCardParamMap());
+    static vCardProperty createName(const std::string &firstname, const std::string &lastname,
+                                    const std::string &additional = "", const std::string &prefix = "",
+                                    const std::string &suffix = "", const vCardParamMap &params = vCardParamMap());
+    static vCardProperty createOrganization(const std::string &name,
+                                            const std::vector<std::string> &levels = std::vector<std::string>(),
+                                            const vCardParamMap &params = vCardParamMap());
 
-protected:
+  protected:
     std::string m_group;
     std::string m_name;
     std::vector<std::string> m_values;
@@ -198,8 +194,8 @@ protected:
  * @brief vCard object
  */
 class vCard {
-public:
-    vCard(vCardVersion v = VC_VER_4_0): m_version(v)  {}
+  public:
+    vCard(vCardVersion v = VC_VER_4_0) : m_version(v) {}
     ~vCard() {}
 
     /**
@@ -207,14 +203,14 @@ public:
      */
     int count() const { return m_properties.size(); };
 
-    void addProperty(const vCardProperty& property);
+    void addProperty(const vCardProperty &property);
 
     /**
      * Removes all found properties with the specified name
      */
     void removeProperty(std::string name);
 
-    std::vector<vCardProperty>& properties() { return m_properties; }
+    std::vector<vCardProperty> &properties() { return m_properties; }
 
     vCardVersion getVersion() { return m_version; }
     std::string getVersionStr();
@@ -223,17 +219,16 @@ public:
     /**
      * Returns first found property with the specified name
      */
-    vCardProperty& operator[] (std::string name);
+    vCardProperty &operator[](std::string name);
 
     /**
      * Shortcut for adding property to the vCard
      */
-    vCard & operator << (const vCardProperty &p);
+    vCard &operator<<(const vCardProperty &p);
 
-protected:
+  protected:
     std::vector<vCardProperty> m_properties;
     vCardVersion m_version;
 };
 
-
-#endif //CONTACTS_COMMANDER_VCARD_H
+#endif // CONTACTS_COMMANDER_VCARD_H
