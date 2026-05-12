@@ -2,6 +2,9 @@
 #include <cctype>
 #include <iostream>
 
+#include "phone_number/vcf_parser.hpp"
+#include "phone_number/phone_number.hpp"
+
 namespace {
 std::string cleanPhoneNumber(const std::string &phoneNumber) {
     std::string cleaned;
@@ -15,17 +18,26 @@ std::string cleanPhoneNumber(const std::string &phoneNumber) {
 
 void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &normalizer, bool strict = true) {
     std::string cleaned = cleanPhoneNumber(phoneNumber);
-    std::string normalizedNumber = normalizer.normalize(cleaned, strict);
+    PhoneNumber normalizedNumber = normalizer.normalize(phoneNumber, strict);
     std::cout << "Original: " << phoneNumber << "\n";
     std::cout << "Cleaned: " << cleaned << "\n";
-    std::cout << "Normalized: " << normalizedNumber << "\n";
+    std::cout << "Normalized: " << normalizedNumber.getNormalizedValue() << "\n";
     std::cout << "-----------------------------\n";
 }
 } // namespace
 
 int main() {
     PhoneNormalizer normalizer{"../resources/min_filtered_metadata.json", "RS"};
+    VcfParser parser = VcfParser(normalizer);
 
+    std::vector<Contact> contacts = parser.loadFromFile("../resources/test.vcf");
+
+    for(auto &c : contacts){
+        std::cout<<c.getName()<<std::endl;
+        std::cout<<c.getPhoneNumbers()[0].getRawValue()<<std::endl;
+        std::cout<<c.getPhoneNumbers()[0].getNormalizedValue()<<std::endl;
+    }
+   /*
     std::string phoneNumber = "066 555 555";
     testNormalizePhoneNumber(phoneNumber, normalizer);
 
@@ -50,7 +62,7 @@ int main() {
 
     std::string phoneNumber8 = "+1 (202) 555-0173";
     testNormalizePhoneNumber(phoneNumber8, normalizer);
-
+    */
     return 0;
 }
 

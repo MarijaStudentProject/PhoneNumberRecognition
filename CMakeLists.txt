@@ -12,10 +12,15 @@ set(SOURCES
     src/phone_number/address.cpp 
     src/phone_number/phone_number.cpp 
     src/phone_number/contact.cpp
+    src/phone_number/vcf_parser.cpp
 )
+
+find_library(VCARD_LIB vCard REQUIRED)
 
 add_library(phone_normalizer STATIC ${SOURCES})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
+target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
+
 
 find_program(CLANG_TIDY clang-tidy)
 if(CLANG_TIDY)
@@ -39,6 +44,7 @@ if(CLANG_FORMAT)
         ${CMAKE_SOURCE_DIR}/src/*.cpp
         ${CMAKE_SOURCE_DIR}/tests/*.cpp
         ${CMAKE_SOURCE_DIR}/include/*.hpp
+        ${CMAKE_SOURCE_DIR}/libs/*.h
     )
     add_custom_target(format
         COMMAND ${CLANG_FORMAT} -i ${ALL_SOURCE_FILES}
