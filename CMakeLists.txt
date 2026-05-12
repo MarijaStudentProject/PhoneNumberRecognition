@@ -14,8 +14,12 @@ set(SOURCES
     src/phone_number/contact.cpp
 )
 
+find_library(VCARD_LIB vcard REQUIRED)
+
 add_library(phone_normalizer STATIC ${SOURCES})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
+target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
+
 
 find_program(CLANG_TIDY clang-tidy)
 if(CLANG_TIDY)

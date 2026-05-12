@@ -2,6 +2,11 @@
 #include <cctype>
 #include <iostream>
 
+#include "text_io.h"
+#include "vcard.h"
+
+#include "phone_number/vcf_parser.hpp"
+
 namespace {
 std::string cleanPhoneNumber(const std::string &phoneNumber) {
     std::string cleaned;

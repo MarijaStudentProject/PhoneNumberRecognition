@@ -5,6 +5,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <ivanenko/json_io.h>
 #include <jsmn/jsmn.h>
 #include <string_view>
 
