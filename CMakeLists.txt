@@ -13,6 +13,7 @@ set(SOURCES
     src/phone_number/phone_number.cpp 
     src/phone_number/contact.cpp
     src/phone_number/vcf_parser.cpp
+    src/phone_number/phone_matcher.cpp
 )
 
 find_library(VCARD_LIB vCard REQUIRED)
