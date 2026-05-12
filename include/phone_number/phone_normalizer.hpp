@@ -3,6 +3,7 @@
 
 #include "numbering_plan.hpp"
 #include "numbering_plan_repo.hpp"
+#include "phone_number.hpp"
 #include <string>
 #include <string_view>
 
@@ -21,7 +22,7 @@ class PhoneNormalizer {
     bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
 
   public:
-    std::string normalize(const std::string &phoneNumber, bool strict = false) const;
+    PhoneNumber normalize(const std::string &phoneNumber, bool strict = false) const;
     PhoneNormalizer(const std::string &metadata_path, std::string localRegionIsoCountry);
     void setLocalRegionIso(const std::string &isoCountry);
 };

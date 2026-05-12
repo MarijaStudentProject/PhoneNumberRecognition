@@ -1,0 +1,35 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//macOS 26.3.1//EN
+N:Perica;Petrovac;;;
+FN:Petrovac Perica
+TEL;type=CELL;type=VOICE;type=pref:0637561211
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//macOS 26.3.1//EN
+N:Perić;Ivan;;;
+FN:Ivan Perić
+TEL;type=CELL;type=VOICE;type=pref:+381603552313
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//macOS 26.3.1//EN
+N:Peric;Pera;;;
+FN:Pera Peric
+ORG:Zuehlke;
+EMAIL;type=INTERNET;type=HOME;type=pref:test@gmail.com
+TEL;type=CELL;type=VOICE;type=pref:063 5555 555
+item1.ADR;type=HOME;type=pref:;;Takovska;Beograd;;1100;Serbia
+item1.X-ABADR:rs
+BDAY;X-APPLE-OMIT-YEAR=1604:1604-04-24
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Carol Xmas
+N:Xmas;Carol;;;
+ORG:MAXI;
+EMAIL;TYPE=INTERNET;TYPE=HOME:carol@example.com
+TEL;TYPE=CELL:123456777
+TEL;TYPE=WORK:0038169555555
+END:VCARD

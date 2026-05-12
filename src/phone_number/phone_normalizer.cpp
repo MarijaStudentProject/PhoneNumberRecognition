@@ -3,6 +3,17 @@
 #include <string_view>
 #include <utility>
 
+namespace{
+std::string cleanPhoneNumber(const std::string &phoneNumber) {
+    std::string cleaned;
+    for (char c : phoneNumber) {
+        if ((isdigit(c) != 0) || c == '+' && cleaned.empty()) {
+            cleaned += c;
+        }
+    }
+    return cleaned;
+}
+}
 namespace {
 bool startsWith(std::string_view str, std::string_view prefix) { return str.substr(0, prefix.size()) == prefix; }
 } // namespace
@@ -53,7 +64,7 @@ bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumbe
 // check against local plans international prefix
 bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNumber,
                                                         std::string_view &truncNumber) const {
-    if (!m_localRegionIso.empty()) {
+    if (m_localRegionIso.empty()) {
         return false;
     }
     if (startsWith(phoneNumber, m_localNumberPlan.m_internationalPrefix)) {
@@ -72,12 +83,14 @@ bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNu
 // default region is used for local number parsing without country code.
 // strict=true uses only the local region's international prefix (recommended for local contacts);
 // use strict=false for incoming calls where any known international prefix is accepted.
-std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool strict) const {
-    if (phoneNumber.empty()) {
-        return phoneNumber;
+PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, bool strict) const {
+    std::string clPhoneNumber = cleanPhoneNumber(phoneNumber);
+    if (clPhoneNumber.empty()) {
+        return PhoneNumber(phoneNumber, 0, "", phoneNumber);
     }
-
-    std::string_view phoneNumberView(phoneNumber);
+    
+    
+    std::string_view phoneNumberView(clPhoneNumber);
     int countryCode = 0;
     std::string normalizedNumber;
     (void)normalizedNumber; // we will return this later
@@ -85,7 +98,7 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
 
     if (phoneNumberView[0] == '+') { // already in international format no normalization needed
         if (tryParseAnyCountryCode(phoneNumberView.substr(1), countryCode, nationalNumber)) {
-            return phoneNumber;
+            return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), clPhoneNumber);
         }
 
     } else { // if not, try international prefix with country code, for example 00381 66 555 555,
@@ -93,24 +106,27 @@ std::string PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
         std::string_view truncNumber;
         if ((strict && tryParseStrictInternationalPrefix(phoneNumberView, truncNumber)) ||
             (!strict && tryParseAnyInternationalPrefix(phoneNumberView, truncNumber))) {
+
             tryParseAnyCountryCode(truncNumber, countryCode, nationalNumber);
-            return '+' + std::string(truncNumber);
+            return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), '+' + std::string(truncNumber));
         }
     }
-
     // no + or internationalPrefix, so we assume local format
     if (!m_localRegionIso.empty()) {
         if (startsWith(phoneNumberView, m_localNumberPlan.m_nationalPrefix)) {
             // Italy has a weird numbering plan where national prefix is not removed
             // for example 066 555 555 -> +39 066 555 555
+           
+            
             nationalNumber = m_localRegionIso == "IT"
                                  ? phoneNumberView
                                  : phoneNumberView.substr(m_localNumberPlan.m_nationalPrefix.size());
-            return "+" + std::to_string(m_localNumberPlan.m_countryCode) + std::string(nationalNumber);
+            return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), "+" + std::to_string(m_localNumberPlan.m_countryCode) + std::string(nationalNumber));
         }
     }
+    
 
-    return phoneNumber; // we dont know how to parse it, return as is
+    return PhoneNumber(clPhoneNumber, 0, "", clPhoneNumber); // we dont know how to parse it, return as is
 
 } // TODO consider adding length check
 
