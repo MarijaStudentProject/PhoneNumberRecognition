@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cctype>
 
+std::map<std::string, Contact> PhoneMatcher::contactMap;
+
+
 bool PhoneMatcher::isMatch(const PhoneNumber &first, const PhoneNumber &second) const {
     if (first.getNormalizedValue().empty() || second.getNormalizedValue().empty()) {
         return false;
@@ -10,7 +13,7 @@ bool PhoneMatcher::isMatch(const PhoneNumber &first, const PhoneNumber &second) 
     return first.getNormalizedValue() == second.getNormalizedValue();
 }
 
-std::optional<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
+std::vector<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
                                                const std::vector<Contact> &contacts) const {
     for (const auto &contact : contacts) {
         if (!contact.hasPhoneNumbers()) {
@@ -18,11 +21,16 @@ std::optional<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
         }
         for (const auto &contactPhone : contact.getPhoneNumbers()) {
             if (isMatch(phoneNumber, contactPhone)) {
-                return contact;
+                return std::vector<Contact>{contact};
             }
         }
     }
-    return std::nullopt;
+    // if we're here it means that the (normalized) match for a given number doesn't exist
+    // we check for a naive substring partial match
+    std::string reversedNumberForSearch = phoneNumber.getRawValue();
+    std::reverse(reversedNumberForSearch.begin(), reversedNumberForSearch.end());
+    auto results = findByPrefix(reversedNumberForSearch);
+    return results;
 }
 
 std::vector<Contact> PhoneMatcher::findMatchByName(const std::string &name, const std::vector<Contact> &contacts) {
@@ -63,4 +71,19 @@ int PhoneMatcher::editDistance(const std::string& a, const std::string& b) {
 std::string PhoneMatcher::toLower(std::string s) {
     std::transform(s.begin(), s.end(), s.begin(), ::tolower);
     return s;
+}
+
+std::vector<Contact> PhoneMatcher::findByPrefix(const std::string& number) {
+    std::string prefix = number.substr(0, 5); // first 5 characters
+
+    std::vector<Contact> results;
+
+    auto it = PhoneMatcher::contactMap.lower_bound(prefix);
+
+    while (it != PhoneMatcher::contactMap.end() && it->first.substr(0, 5) == prefix) {
+        results.push_back(it->second);
+        ++it;
+    }
+
+    return results;
 }
