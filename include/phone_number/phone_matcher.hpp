@@ -1,11 +1,9 @@
 #ifndef PHONE_MATCHER_HPP
 #define PHONE_MATCHER_HPP
 
-#include "contact.hpp"
 #include "phone_number/contact.hpp"
 #include "phone_number/phone_number.hpp"
 
-#include <optional>
 #include <vector>
 #include <map>
 class PhoneMatcher {

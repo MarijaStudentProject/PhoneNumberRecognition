@@ -1,7 +1,7 @@
 #include "phone_number/phone_matcher.hpp"
-#include <vector>
 #include <algorithm>
 #include <cctype>
+#include <set>
 
 std::map<std::string, Contact> PhoneMatcher::contactMap;
 
@@ -26,7 +26,7 @@ std::vector<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
         }
     }
     // if we're here it means that the (normalized) match for a given number doesn't exist
-    // we check for a naive substring partial match
+    // we check for a naive substring partial match, we check if there is phone numbers that have the same last 5 digits as the given number
     std::string reversedNumberForSearch = phoneNumber.getRawValue();
     std::reverse(reversedNumberForSearch.begin(), reversedNumberForSearch.end());
     auto results = findByPrefix(reversedNumberForSearch);
@@ -77,11 +77,14 @@ std::vector<Contact> PhoneMatcher::findByPrefix(const std::string& number) {
     std::string prefix = number.substr(0, 5); // first 5 characters
 
     std::vector<Contact> results;
-
+    std::set<Contact> uniqueContacts; // for no duplicates
     auto it = PhoneMatcher::contactMap.lower_bound(prefix);
 
     while (it != PhoneMatcher::contactMap.end() && it->first.substr(0, 5) == prefix) {
-        results.push_back(it->second);
+            if (uniqueContacts.find(it->second) == uniqueContacts.end()) {
+            uniqueContacts.insert(it->second);
+            results.push_back(it->second);
+        }
         ++it;
     }
 

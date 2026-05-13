@@ -1,9 +1,9 @@
 #include <phone_number/vcf_parser.hpp>
+#include <phone_number/phone_matcher.hpp>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
 #include <ivanenko/text_io.h>
-#include <phone_number/phone_matcher.hpp>
 
 VcfParser::VcfParser(const PhoneNormalizer &normalizer)
     :m_normalizer(normalizer){}
