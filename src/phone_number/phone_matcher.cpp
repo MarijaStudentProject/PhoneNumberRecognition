@@ -13,6 +13,9 @@ bool PhoneMatcher::isMatch(const PhoneNumber &first, const PhoneNumber &second) 
 std::optional<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
                                                const std::vector<Contact> &contacts) const {
     for (const auto &contact : contacts) {
+        if (!contact.hasPhoneNumbers()) {
+            continue;
+        }
         for (const auto &contactPhone : contact.getPhoneNumbers()) {
             if (isMatch(phoneNumber, contactPhone)) {
                 return contact;
@@ -24,12 +27,13 @@ std::optional<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
 
 std::vector<Contact> PhoneMatcher::findMatchByName(const std::string &name, const std::vector<Contact> &contacts) {
     std::vector<Contact> possibleMatches;
+    std::string lowerName = toLower(name);
     for(const auto &contact : contacts) {
-        if(editDistance(toLower(name), toLower(contact.getFullName())) <= 2) {
+        if(editDistance(lowerName, toLower(contact.getFullName())) <= 2) {
             possibleMatches.push_back(contact);
-        } else if(editDistance(toLower(name), toLower(contact.getName())) <= 2) {
+        } else if(editDistance(lowerName, toLower(contact.getName())) <= 2) {
             possibleMatches.push_back(contact);
-        } else if(editDistance(toLower(name), toLower(contact.getSurname())) <= 2) {
+        } else if(editDistance(lowerName, toLower(contact.getSurname())) <= 2) {
             possibleMatches.push_back(contact);
         }
     
