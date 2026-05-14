@@ -5,6 +5,8 @@
 
 std::map<std::string, Contact> PhoneMatcher::contactMap;
 
+PhoneMatcher::PhoneMatcher(const PhoneNormalizer &normalizer)
+    : m_normalizer(normalizer){}
 
 bool PhoneMatcher::isMatch(const PhoneNumber &first, const PhoneNumber &second) const {
     if (first.getNormalizedValue().empty() || second.getNormalizedValue().empty()) {
@@ -13,21 +15,22 @@ bool PhoneMatcher::isMatch(const PhoneNumber &first, const PhoneNumber &second) 
     return first.getNormalizedValue() == second.getNormalizedValue();
 }
 
-std::vector<Contact> PhoneMatcher::findMatch(const PhoneNumber &phoneNumber,
+std::vector<Contact> PhoneMatcher::findMatch(const std::string& phoneNumber,
                                                const std::vector<Contact> &contacts) const {
+    PhoneNumber number = m_normalizer.normalize(phoneNumber, false);                                            
     for (const auto &contact : contacts) {
         if (!contact.hasPhoneNumbers()) {
             continue;
         }
         for (const auto &contactPhone : contact.getPhoneNumbers()) {
-            if (isMatch(phoneNumber, contactPhone)) {
+            if (isMatch(number, contactPhone)) {
                 return std::vector<Contact>{contact};
             }
         }
     }
     // if we're here it means that the (normalized) match for a given number doesn't exist
     // we check for a naive substring partial match, we check if there is phone numbers that have the same last 5 digits as the given number
-    std::string reversedNumberForSearch = phoneNumber.getRawValue();
+    std::string reversedNumberForSearch = number.getRawValue();
     std::reverse(reversedNumberForSearch.begin(), reversedNumberForSearch.end());
     auto results = findByPrefix(reversedNumberForSearch);
     return results;
