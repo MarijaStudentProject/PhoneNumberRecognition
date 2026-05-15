@@ -23,6 +23,7 @@ compile_commands.json
 *.exe
 *.out
 
+.qtcreator/
 .vscode/
 .idea/
 
