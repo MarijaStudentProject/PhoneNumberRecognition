@@ -10,11 +10,13 @@
 
 class VcfParser {
   public:
-    VcfParser(const PhoneNormalizer &normalizer);
+    // uses parsing region to detect local numbres and international prefixes
+    VcfParser(const PhoneNormalizer &normalizer, const std::string& parsingRegion);
 
     std::vector<Contact> loadFromFile(const std::string &filePath) const;
 
   private:
+    std::string m_parsingRegion;
     const PhoneNormalizer &m_normalizer;
 
     Contact cardToContact(vCard &card) const;

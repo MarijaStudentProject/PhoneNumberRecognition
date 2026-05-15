@@ -4,6 +4,7 @@
 #include <utility>
 
 namespace{
+
 std::string cleanPhoneNumber(const std::string &phoneNumber) {
     std::string cleaned;
     for (char c : phoneNumber) {
@@ -18,8 +19,6 @@ namespace {
 bool startsWith(std::string_view str, std::string_view prefix) { return str.substr(0, prefix.size()) == prefix; }
 } // namespace
 
-// Tries to parse a country code from the start of phoneNumber (up to 3 digits).
-// On success, sets countryCode and nationalNumber (the remainder after the code) and returns true.
 bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode,
                                              std::string_view &nationalNumber) const {
     int currentCountryCode = 0;
@@ -39,20 +38,18 @@ bool PhoneNormalizer::tryParseAnyCountryCode(std::string_view phoneNumber, int &
     return false;
 }
 
-// Tries to match any known international dialling prefix at the start of phoneNumber.
-// On success, sets truncNumber to the portion after the prefix (i.e. country code + national number)
-// and returns true. A country-code check is performed to filter out false positives.
+// On success, sets truncNumber to the portion after the prefix and returns true
 bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumber,
                                                      std::string_view &truncNumber) const {
-    for (int n = 4; n > 0; n--) { // maximal prefix is 4 digits
-                                  // start from longest 0011 australia first then european 00
+    for (int n = 4; n > 0; n--) { // start from longest 0011 australia first then european 00
+                                  
         if (m_repo.doesInternationalPrefixExist(std::string(phoneNumber.substr(0, n)))) {
             truncNumber = phoneNumber.substr(n);
             std::string_view nationalNumberStub;
             int countryCodeStub = 0;
 
             // we check for country code to prevent false positives,
-            // for example 011 69 355 555 Serbian local number
+            // for example 011 69 355 555 is Serbian local number not international call
             if (tryParseAnyCountryCode(truncNumber, countryCodeStub, nationalNumberStub)) {
                 return true;
             }
@@ -61,14 +58,17 @@ bool PhoneNormalizer::tryParseAnyInternationalPrefix(std::string_view phoneNumbe
     return false;
 }
 
-// check against local plans international prefix
+
 bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNumber,
-                                                        std::string_view &truncNumber) const {
-    if (m_localRegionIso.empty()) {
+                                                        std::string_view &truncNumber,
+                                                        const std::string& isoCountry) const {
+    if (isoCountry.empty()) {
         return false;
     }
-    if (startsWith(phoneNumber, m_localNumberPlan.m_internationalPrefix)) {
-        truncNumber = phoneNumber.substr(m_localNumberPlan.m_internationalPrefix.size());
+    const NumberingPlan& plan=m_repo.getForIsoCountry(isoCountry);
+    
+    if (startsWith(phoneNumber, plan.internationalPrefix)) {
+        truncNumber = phoneNumber.substr(plan.internationalPrefix.size());
         int countryCodeStub = 0;
         std::string_view nationalNumberStub;
         if (tryParseAnyCountryCode(truncNumber, countryCodeStub, nationalNumberStub)) {
@@ -78,50 +78,48 @@ bool PhoneNormalizer::tryParseStrictInternationalPrefix(std::string_view phoneNu
     return false;
 }
 
-// Normalizes phoneNumber to E.164 format (e.g. "+38160123456").
-// phoneNumber should be pre-cleaned (digits only, or a single leading '+' for already-international numbers).
-// default region is used for local number parsing without country code.
-// strict=true uses only the local region's international prefix (recommended for local contacts);
-// use strict=false for incoming calls where any known international prefix is accepted.
-PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, bool strict) const {
+// Normalizes phoneNumber to E.164 format ("+38160123456").
+// we use origin country for local number parsing without country code and international prefix for international calls
+// if strict true only origins country is used, if its false we check to find any that fits
+PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std::string& orginCountryIso, bool strict) const {
     std::string clPhoneNumber = cleanPhoneNumber(phoneNumber);
     if (clPhoneNumber.empty()) {
         return PhoneNumber(phoneNumber, 0, "", phoneNumber);
     }
     
-    
     std::string_view phoneNumberView(clPhoneNumber);
     int countryCode = 0;
     std::string normalizedNumber;
-    (void)normalizedNumber; // we will return this later
     std::string_view nationalNumber;
 
-    if (phoneNumberView[0] == '+') { // already in international format no normalization needed
+    if (phoneNumberView[0] == '+') { 
         if (tryParseAnyCountryCode(phoneNumberView.substr(1), countryCode, nationalNumber)) {
             return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), clPhoneNumber);
         }
 
-    } else { // if not, try international prefix with country code, for example 00381 66 555 555,
+    } else { // try international prefix with country code, for example 00381 66 555 555,
              // 0011 49 555 555 (australia calling germany)
         std::string_view truncNumber;
-        if ((strict && tryParseStrictInternationalPrefix(phoneNumberView, truncNumber)) ||
+        if ((strict && tryParseStrictInternationalPrefix(phoneNumberView, truncNumber,orginCountryIso)) ||
             (!strict && tryParseAnyInternationalPrefix(phoneNumberView, truncNumber))) {
 
             tryParseAnyCountryCode(truncNumber, countryCode, nationalNumber);
             return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), '+' + std::string(truncNumber));
         }
     }
+
     // no + or internationalPrefix, so we assume local format
-    if (!m_localRegionIso.empty()) {
-        if (startsWith(phoneNumberView, m_localNumberPlan.m_nationalPrefix)) {
+    if (!orginCountryIso.empty()) {
+        const NumberingPlan& plan= m_repo.getForIsoCountry(orginCountryIso); 
+        if (startsWith(phoneNumberView,plan.nationalPrefix)) {
             // Italy has a weird numbering plan where national prefix is not removed
             // for example 066 555 555 -> +39 066 555 555
            
             
-            nationalNumber = m_localRegionIso == "IT"
+            nationalNumber = orginCountryIso == "IT"
                                  ? phoneNumberView
-                                 : phoneNumberView.substr(m_localNumberPlan.m_nationalPrefix.size());
-            return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), "+" + std::to_string(m_localNumberPlan.m_countryCode) + std::string(nationalNumber));
+                                 : phoneNumberView.substr(plan.nationalPrefix.size());
+            return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), "+" + std::to_string(plan.countryCode) + std::string(nationalNumber));
         }
     }
     
@@ -131,15 +129,6 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, bool stri
 } // TODO consider adding length check
 
 // Constructs a PhoneNormalizer that loads numbering-plan metadata from metadata_path
-// and sets the default local region to localRegionIsoCountry (e.g. "RS", "DE").
-PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path, std::string localRegionIsoCountry)
-    : m_localRegionIso(std::move(localRegionIsoCountry)) {
+PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path){
     m_repo.loadPlans(metadata_path);
-    m_localNumberPlan = m_repo.getForIsoCountry(m_localRegionIso);
-}
-
-// Updates the default local region used for parsing numbers without a country code or international prefix.
-void PhoneNormalizer::setLocalRegionIso(const std::string &isoCountry) {
-    m_localRegionIso = isoCountry;
-    m_localNumberPlan = m_repo.getForIsoCountry(m_localRegionIso);
 }
