@@ -31,7 +31,9 @@ class Contact {
     void addPhoneNumber(const PhoneNumber &phoneNumber);
 
     bool operator<(const Contact& other) const {
-        if (m_name != other.m_name) return m_name < other.m_name;
+        if (m_name != other.m_name) {
+            return m_name < other.m_name;
+        }
         return m_surname < other.m_surname;
     }
 };

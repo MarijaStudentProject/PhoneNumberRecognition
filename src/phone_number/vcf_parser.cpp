@@ -8,7 +8,6 @@
 VcfParser::VcfParser(const PhoneNormalizer &normalizer)
     :m_normalizer(normalizer){}
 std::vector<Contact> VcfParser::loadFromFile(const std::string &filePath) const {
-    PhoneMatcher::contactMap.clear(); // in case we're loading the vcf file multiple times, we need to clean the previously stored records
     
     std::ifstream file;
     file.open(filePath);
@@ -25,13 +24,7 @@ std::vector<Contact> VcfParser::loadFromFile(const std::string &filePath) const 
     try {
         std::vector<vCard> cards = tr.parseCards();
         for (auto &card : cards) {
-            Contact newContact = cardToContact(card);
-            for(const auto &phoneNumber : newContact.getPhoneNumbers()) {
-                std::string numberToReverse = phoneNumber.getRawValue();
-                std::reverse(numberToReverse.begin(), numberToReverse.end());
-                PhoneMatcher::contactMap.insert({numberToReverse, newContact});
-            }
-            contacts.push_back(newContact);
+            contacts.push_back(cardToContact(card));
         }
     } catch (const std::exception &e) {
         std::cerr << "Error parsing vCard file: " << e.what() << std::endl;

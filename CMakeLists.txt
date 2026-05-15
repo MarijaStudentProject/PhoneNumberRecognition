@@ -18,9 +18,11 @@ set(SOURCES
 
 find_library(VCARD_LIB vCard REQUIRED)
 
-add_library(phone_normalizer STATIC ${SOURCES})
+file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
+add_library(phone_normalizer STATIC ${SOURCES} ${HEADERS})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
 target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
+
 
 
 find_program(CLANG_TIDY clang-tidy)
