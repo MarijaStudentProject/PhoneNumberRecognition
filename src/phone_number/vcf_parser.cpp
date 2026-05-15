@@ -1,6 +1,8 @@
 #include <phone_number/vcf_parser.hpp>
+#include <phone_number/phone_matcher.hpp>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include <ivanenko/text_io.h>
 
 
@@ -8,7 +10,6 @@ VcfParser::VcfParser(const PhoneNormalizer &normalizer, const std::string& defau
     :m_normalizer(normalizer), m_parsingRegion(defaultRegion) {}
 
 std::vector<Contact> VcfParser::loadFromFile(const std::string &filePath) const {
-
     
     std::ifstream file;
     file.open(filePath);
