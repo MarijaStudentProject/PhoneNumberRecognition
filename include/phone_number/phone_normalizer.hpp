@@ -9,22 +9,17 @@
 
 class PhoneNormalizer {
   private:
-    // default region for phone parsing, if not specified otherwise
-    // we will assume number belongs to this region to remove ambiguity
-    // set to phone owner's country
-    std::string m_localRegionIso;
-    NumberingPlan m_localNumberPlan;
-
+    
     NumberingPlanRepo m_repo;
 
     bool tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode, std::string_view &nationalNumber) const;
     bool tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
-    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
+    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber, const std::string& isoCountry) const;
 
   public:
-    PhoneNumber normalize(const std::string &phoneNumber, bool strict = false) const;
-    PhoneNormalizer(const std::string &metadata_path, std::string localRegionIsoCountry);
-    void setLocalRegionIso(const std::string &isoCountry);
+  
+    PhoneNumber normalize(const std::string &phoneNumber,const std::string& orginCountryIso="RS", bool strict = false) const;
+    PhoneNormalizer(const std::string &metadata_path);
 };
 
 #endif

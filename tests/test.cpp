@@ -18,7 +18,7 @@ std::string cleanPhoneNumber(const std::string &phoneNumber) {
 
 void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &normalizer, bool strict = true) {
     std::string cleaned = cleanPhoneNumber(phoneNumber);
-    PhoneNumber normalizedNumber = normalizer.normalize(phoneNumber, strict);
+    PhoneNumber normalizedNumber = normalizer.normalize(phoneNumber,"RS",strict);
     std::cout << "Original: " << phoneNumber << "\n";
     std::cout << "Cleaned: " << cleaned << "\n";
     std::cout << "Normalized: " << normalizedNumber.getNormalizedValue() << "\n";
@@ -27,8 +27,8 @@ void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &n
 } // namespace
 
 int main() {
-    PhoneNormalizer normalizer{"../resources/min_filtered_metadata.json", "RS"};
-    VcfParser parser = VcfParser(normalizer);
+    PhoneNormalizer normalizer{"../resources/min_filtered_metadata.json"};
+    VcfParser parser = VcfParser(normalizer, "RS");
 
     std::vector<Contact> contacts = parser.loadFromFile("../resources/test.vcf");
 

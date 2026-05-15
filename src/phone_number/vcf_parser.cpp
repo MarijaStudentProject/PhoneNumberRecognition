@@ -4,8 +4,9 @@
 #include <ivanenko/text_io.h>
 
 
-VcfParser::VcfParser(const PhoneNormalizer &normalizer)
-    :m_normalizer(normalizer){}
+VcfParser::VcfParser(const PhoneNormalizer &normalizer, const std::string& defaultRegion)
+    :m_normalizer(normalizer), m_parsingRegion(defaultRegion) {}
+
 std::vector<Contact> VcfParser::loadFromFile(const std::string &filePath) const {
 
     
@@ -36,7 +37,6 @@ std::vector<Contact> VcfParser::loadFromFile(const std::string &filePath) const 
 
 Contact VcfParser::cardToContact(vCard &card) const {
 
-    // Contact contact;
     std::string name;
     std::string surname;
     std::vector<PhoneNumber> phoneNumbers;
@@ -55,7 +55,7 @@ Contact VcfParser::cardToContact(vCard &card) const {
         } else if (propName == VC_EMAIL && !values.empty()) {
             email = values[0];
         } else if (propName == VC_TELEPHONE && !values.empty()) {
-            PhoneNumber phoneNumber = m_normalizer.normalize(values[0]);
+            PhoneNumber phoneNumber = m_normalizer.normalize(values[0],m_parsingRegion);
             phoneNumbers.push_back(phoneNumber);
         } else if (propName == VC_ADDRESS) {
             
