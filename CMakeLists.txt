@@ -6,6 +6,24 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+include(FetchContent)
+
+
+find_package(Catch2 3 QUIET)
+
+if(NOT Catch2_FOUND)
+    message(STATUS "Catch2 not found locally — fetching via FetchContent...")
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v3.7.1
+    )
+    FetchContent_MakeAvailable(Catch2)
+else()
+    message(STATUS "Catch2 found locally: ${Catch2_DIR}")
+endif()
+
+
 set(SOURCES
     src/phone_number/numbering_plan_repo.cpp
     src/phone_number/phone_normalizer.cpp
@@ -15,6 +33,8 @@ set(SOURCES
     src/phone_number/vcf_parser.cpp
     src/phone_number/phone_matcher.cpp
 )
+
+
 
 find_library(VCARD_LIB vCard REQUIRED)
 

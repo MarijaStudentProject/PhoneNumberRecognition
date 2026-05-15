@@ -80,9 +80,9 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
 
         NumberingPlan p{countryCode, isoCode, natPrefix, intlPrefix};
         m_plans.push_back(p);
-        m_isoPlanMap[p.m_isoCountryName] = &m_plans.back();
-        m_countryCodePlanMap[p.m_countryCode] = &m_plans.back();
-        m_internationalPrefixSet.insert(p.m_internationalPrefix);
+        m_isoPlanMap[p.isoCountryName] = &m_plans.back();
+        m_countryCodePlanMap[p.countryCode] = &m_plans.back();
+        m_internationalPrefixSet.insert(p.internationalPrefix);
     }
 }
 
