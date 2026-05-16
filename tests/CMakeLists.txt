@@ -7,6 +7,9 @@ set(TEST_SOURCES
     phone_number/normalizer.test.cpp
     phone_number/vcf_parser.test.cpp
     phone_number/matcher.test.cpp
+    phone_number/address.test.cpp        
+    phone_number/phone_number.test.cpp   
+    phone_number/contact.test.cpp        
 )
 
 add_executable(tests ${TEST_SOURCES})
