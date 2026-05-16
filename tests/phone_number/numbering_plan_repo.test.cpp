@@ -157,3 +157,62 @@ TEST_CASE("loadPlans with missing file return empty repo", "[NumberingPlanRepo]"
     REQUIRE(plan.nationalPrefix.empty());
     REQUIRE(plan.internationalPrefix.empty());
 }
+TEST_CASE("loadPlans with empty json return empty repo", "[NumberingPlanRepo]"){
+    TempJsonFile file(R"json(
+        { }
+    )json");
+
+    NumberingPlanRepo repo;
+    repo.loadPlans(file.filename());
+
+    REQUIRE_FALSE(repo.doesCountryCodeExist(381));
+
+    const NumberingPlan& plan = repo.getForIsoCountry("RS");
+    REQUIRE(plan.countryCode == -1);
+    REQUIRE(plan.isoCountryName.empty());
+    REQUIRE(plan.nationalPrefix.empty());
+    REQUIRE(plan.internationalPrefix.empty());
+}
+
+TEST_CASE("loadPlans with missing countryCode, natPref or intPref in json file returns empty repo", "[NumberingPlanRepo]"){
+    TempJsonFile file(R"json(
+        {
+            "countries":{
+                "US": ["1", "1"]
+            }
+        }
+    )json");
+
+    NumberingPlanRepo repo;
+    repo.loadPlans(file.filename());
+
+    REQUIRE_FALSE(repo.doesCountryCodeExist(381));
+
+    const NumberingPlan& plan = repo.getForIsoCountry("US");
+    REQUIRE(plan.countryCode == -1);
+    REQUIRE(plan.isoCountryName.empty());
+    REQUIRE(plan.nationalPrefix.empty());
+    REQUIRE(plan.internationalPrefix.empty());
+   
+}
+TEST_CASE("loadPlans with invalid country code returns empty repo", "[NumberingPlanRepo]"){
+    TempJsonFile file(R"json(
+        {
+            "countries":{
+                "RS": ["Error", "00", "0"]
+            }
+        }
+    )json");
+
+    NumberingPlanRepo repo;
+    repo.loadPlans(file.filename());
+
+    REQUIRE_FALSE(repo.doesCountryCodeExist(381));
+
+    const NumberingPlan& plan = repo.getForIsoCountry("RS");
+    REQUIRE(plan.countryCode == -1);
+    REQUIRE(plan.isoCountryName.empty());
+    REQUIRE(plan.nationalPrefix.empty());
+    REQUIRE(plan.internationalPrefix.empty());
+   
+}
