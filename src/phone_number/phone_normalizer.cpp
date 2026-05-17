@@ -119,6 +119,7 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std
             nationalNumber = orginCountryIso == "IT"
                                  ? phoneNumberView
                                  : phoneNumberView.substr(plan.nationalPrefix.size());
+            countryCode = plan.countryCode;
             return PhoneNumber(clPhoneNumber, countryCode, std::string(nationalNumber), "+" + std::to_string(plan.countryCode) + std::string(nationalNumber));
         }
     }
