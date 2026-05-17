@@ -6,39 +6,14 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
-namespace{
-class TempMetaFile {
-  public:
-    TempMetaFile() {
-        static int counter = 0;
-        path = std::filesystem::temp_directory_path() /
-               ("vcf_meta_test_" + std::to_string(counter++) + ".json");
-        std::ofstream out(path);
-        out << R"json({
-            "countries": {
-                "RS":["381","00","0"],
-                "US": ["1",   "011", "1"],
-                "DE": ["49",  "00",  "0"],
-                "IT": ["39",  "00",  "0"]
-            }
-        })json";
-    }
-    ~TempMetaFile() {
-        std::error_code ec;
-        std::filesystem::remove(path, ec);
-    }
-    std::string filename() const { return path.string(); }
-
-  private:
-    std::filesystem::path path;
-    };
-} 
+#include "test_helper.hpp"
 
 
-TEST_CASE("normalizer international prefix variants", "[normalizer]") {
+TEST_CASE("normalizer international prefix variants - non strict mode, country code known", "[normalizer]") {
+
     TempMetaFile meta;
     PhoneNormalizer normalizer(meta.filename());
-    // non strict mode, country code known
+
     SECTION("+ prefix clean number") {
         auto result = normalizer.normalize("+38166123456", "RS", false);
         REQUIRE(result.getNormalizedValue() == "+38166123456");
@@ -59,7 +34,12 @@ TEST_CASE("normalizer international prefix variants", "[normalizer]") {
         REQUIRE(result.getCountryCode() == 1);
         REQUIRE(result.getNationalNumber() == "5551234567");
     }
-    // non strict mode, country code unknown
+}
+
+TEST_CASE("normalizer international prefix variants - country code uknown, international number", "[normalizer]") {
+    TempMetaFile meta;
+    PhoneNormalizer normalizer(meta.filename());
+
     SECTION("+ prefix clean number") {
         auto result = normalizer.normalize("+38166123456", "", false);
         REQUIRE(result.getNormalizedValue() == "+38166123456");
@@ -105,9 +85,14 @@ TEST_CASE("normalizer input formatting", "[normalizer]") {
         auto result = normalizer.normalize("+38166123456");
         REQUIRE(result.getNormalizedValue() == "+38166123456");
     }
+    // + is not the first character
+    SECTION("idempotent") {
+        auto result = normalizer.normalize("381+66123456");
+        REQUIRE(result.getNormalizedValue() == "38166123456");
+    }
 }
 
-TEST_CASE("normalizer strict mode", "[normalizer]") {
+TEST_CASE("normalizer local number", "[normalizer]") {
     TempMetaFile meta;
     PhoneNormalizer normalizer(meta.filename());
 
@@ -118,10 +103,17 @@ TEST_CASE("normalizer strict mode", "[normalizer]") {
         REQUIRE(result.getCountryCode() == 381); 
         REQUIRE(result.getNationalNumber() == "661234567");
     }
+
     SECTION("local fixed line prefix") {
         auto result = normalizer.normalize("011 66 555 555", "RS", true);
         REQUIRE(result.getNormalizedValue() == "+3811166555555");
         REQUIRE(result.getCountryCode() == 381); 
+
+    }
+    SECTION("local fixed line prefix - non strict") { // even though the origin country is RS since strict is false it sets the country code +66, doesnt recognize it as fixed value
+        auto result = normalizer.normalize("011 66 555 555", "RS", false);
+        REQUIRE(result.getNormalizedValue() == "+66555555");
+        REQUIRE(result.getCountryCode() == 66); 
 
     }
     SECTION("italy - edge case") {
@@ -134,7 +126,19 @@ TEST_CASE("normalizer strict mode", "[normalizer]") {
         REQUIRE(result.getCountryCode() == 0);
         REQUIRE(result.getNationalNumber() == "");
     }
+    SECTION("local number with ambiguous origin no info - depends on strictness") { 
+        //compared to the previous 066 555
+        // strictness doesnt make a difference here because a national prefix with +69 doesnt exist. so it always returns +381 normalized phone number
+        auto result = normalizer.normalize("011 69 3333", "RS", true);
+        REQUIRE(result.getNormalizedValue() == "+38111693333");
+        
+    }
     
+    SECTION("local number with ambiguous origin - depends on strictness") {
+        auto result = normalizer.normalize("011 69 3333", "RS", false);
+        REQUIRE(result.getNormalizedValue() == "+38111693333");
+        
+    }
     SECTION("international number still works in strict mode") {
         auto result = normalizer.normalize("+38166123456", "RS", true);
         REQUIRE(result.getCountryCode() == 381);
@@ -166,23 +170,34 @@ TEST_CASE("normalizer fallback behavior", "[normalizer]") {
         REQUIRE(result.getNationalNumber() == "");
     }
 
-    SECTION("number too short but it recognizes the international prefix given - edge case") {
+    SECTION("number too short but it recognizes the international prefix and the international prefix is found - edge case") {
         auto result = normalizer.normalize("+381");
         REQUIRE(result.getCountryCode() == 381);
         REQUIRE(result.getNationalNumber() == "");
     }
+    SECTION("unknown international prefix - edge case") {
+        // treated as unknown local number, no further information carried with it
+        auto result = normalizer.normalize("+69 33333");
+        REQUIRE(result.getCountryCode() == 0);
+        REQUIRE(result.getNationalNumber() == "");
+        REQUIRE(result.getNormalizedValue() == "+6933333");
+    }
+
 }
 
 TEST_CASE("normalizer local number, non strict mode, origin country unknown - fallback behavior", "[normalizer]") {
     TempMetaFile meta;
     PhoneNormalizer normalizer(meta.filename());
     // with lack of info it returns the same raw number
+    // ambiguous local phone number (italy and serbia)
     SECTION("italy") { 
         auto result = normalizer.normalize("066 555 555", "", false);
         REQUIRE(result.getNormalizedValue() == "066555555");
         REQUIRE(result.getCountryCode() == 0);
 
-    } 
+    }
+    // example of a unique local phone number 
+    // both fail to be recognized with lack of information, which is the expected output 
     SECTION("us") { 
         auto result = normalizer.normalize("(312) 555-0199", "", false);
         REQUIRE(result.getNormalizedValue() == "3125550199");
