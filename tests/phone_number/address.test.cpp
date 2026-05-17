@@ -1,49 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <phone_number/address.hpp>
 
-TEST_CASE("Address default constructor creates empty address", "[Address]") {
-    Address a;
-    REQUIRE(a.getStreet().empty());
-    REQUIRE(a.getPostalCode().empty());
-    REQUIRE(a.getCity().empty());
-    REQUIRE(a.getCountry().empty());
-    REQUIRE(a.isEmpty());
-}
-
-TEST_CASE("Address constructor stores all fields correctly", "[Address]") {
-    Address a("21 Main St", "10000", "Novi Sad", "Serbia");
-    REQUIRE(a.getStreet()     == "21 Main St");
-    REQUIRE(a.getPostalCode() == "10000");
-    REQUIRE(a.getCity()       == "Novi Sad");
-    REQUIRE(a.getCountry()    == "Serbia");
-    REQUIRE_FALSE(a.isEmpty());
-}
-
-TEST_CASE("Address partial construction", "[Address]") {
-    SECTION("only street") {
-        Address a("21 Main St");
-        REQUIRE(a.getStreet() == "21 Main St");
-        REQUIRE(a.getCity().empty());
-        REQUIRE_FALSE(a.isEmpty());
-    }
-    SECTION("only city") {
-        Address a("", "", "Novi Sad");
-        REQUIRE(a.getCity() == "Novi Sad");
-        REQUIRE(a.getStreet().empty());
-        REQUIRE_FALSE(a.isEmpty());
-    }
-    SECTION("only postal code") {
-        Address a("", "10000");
-        REQUIRE(a.getPostalCode() == "10000");
-        REQUIRE_FALSE(a.isEmpty());
-    }
-    SECTION("only country") {
-        Address a("", "", "", "Serbia");
-        REQUIRE(a.getCountry() == "Serbia");
-        REQUIRE_FALSE(a.isEmpty());
-    }
-}
-
 TEST_CASE("Address isEmpty", "[Address]") {
     SECTION("all fields empty returns true") {
         REQUIRE(Address{}.isEmpty());

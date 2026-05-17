@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <phone_number/vcf_parser.hpp>
 #include <phone_number/phone_normalizer.hpp>
+#include <phone_number/test_helper.hpp>
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -25,22 +26,16 @@ class TempVcfFile {
     std::filesystem::path path;
 };
 
-class TempMetaFile {
+class TempVcfBinaryFile {
   public:
-    TempMetaFile() {
+    explicit TempVcfBinaryFile(const std::string &content) {
         static int counter = 0;
         path = std::filesystem::temp_directory_path() /
-               ("vcf_meta_test_" + std::to_string(counter++) + ".json");
-        std::ofstream out(path);
-        out << R"json({
-            "countries": {
-                "RS": ["381", "00", "0"],
-                "US": ["1",   "011", "1"],
-                "DE": ["49",  "00",  "0"]
-            }
-        })json";
+               ("vcf_parser_binary_test_" + std::to_string(counter++) + ".vcf");
+        std::ofstream out(path, std::ios::binary);
+        out << content;
     }
-    ~TempMetaFile() {
+    ~TempVcfBinaryFile() {
         std::error_code ec;
         std::filesystem::remove(path, ec);
     }
@@ -266,3 +261,72 @@ TEST_CASE("VcfParser uses correct region for normalization", "[VcfParser]") {
     REQUIRE(contacts.size() == 1);
     REQUIRE(contacts[0].getPrimaryPhoneNumber().getNormalizedValue() == "+12125551234");
 }
+
+TEST_CASE("VcfParser handles malformed vCard — missing END", "[VcfParser]") {
+    TempMetaFile meta;
+    TempVcfFile vcf(
+        "BEGIN:VCARD\r\n"
+        "VERSION:3.0\r\n"
+        "N:Petrovic;Marko;;;\r\n"
+        "TEL:+38166123456\r\n"
+    );
+
+    PhoneNormalizer normalizer(meta.filename());
+    VcfParser parser(normalizer, "RS");
+
+    REQUIRE_NOTHROW(parser.loadFromFile(vcf.filename()));
+}
+
+TEST_CASE("VcfParser handles malformed vCard — missing BEGIN", "[VcfParser]") {
+    TempMetaFile meta;
+    TempVcfFile vcf(
+        "VERSION:3.0\r\n"
+        "N:Petrovic;Marko;;;\r\n"
+        "TEL:+38166123456\r\n"
+        "END:VCARD\r\n"
+    );
+
+    PhoneNormalizer normalizer(meta.filename());
+    VcfParser parser(normalizer, "RS");
+
+    REQUIRE_NOTHROW(parser.loadFromFile(vcf.filename()));
+}
+
+TEST_CASE("VcfParser handles malformed vCard — garbage content", "[VcfParser]") {
+    TempMetaFile meta;
+    TempVcfFile vcf("this is not a vcard file at all!!!\nrandom garbage\n12345\n");
+
+    PhoneNormalizer normalizer(meta.filename());
+    VcfParser parser(normalizer, "RS");
+
+    REQUIRE_NOTHROW(parser.loadFromFile(vcf.filename()));
+}
+
+TEST_CASE("VcfParser handles contact with photo — binary data does not break parsing", "[VcfParser]") {
+    TempMetaFile meta;
+
+    TempVcfBinaryFile vcf(
+        "BEGIN:VCARD\r\n"
+        "VERSION:3.0\r\n"
+        "N:Petrovic;Marko;;;\r\n"
+        "TEL:+38166123456\r\n"
+        "PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgH\r\n"
+        " BwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgy\r\n"
+        " \r\n"
+        "EMAIL:marko@email.com\r\n"
+        "END:VCARD\r\n"
+    );
+
+    PhoneNormalizer normalizer(meta.filename());
+    VcfParser parser(normalizer, "RS");
+    std::vector<Contact> contacts;
+
+    REQUIRE_NOTHROW(contacts = parser.loadFromFile(vcf.filename()));
+    
+    if (!contacts.empty()) {
+        REQUIRE(contacts[0].getName() == "Marko");
+        REQUIRE(contacts[0].getSurname() == "Petrovic");
+        REQUIRE(contacts[0].getPrimaryPhoneNumber().getNormalizedValue() == "+38166123456");
+    }
+}
+

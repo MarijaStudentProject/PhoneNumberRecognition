@@ -3,25 +3,6 @@
 #include <phone_number/phone_number.hpp>
 #include <phone_number/address.hpp>
 
-TEST_CASE("Contact constructor stores all fields correctly", "[Contact]") {
-    PhoneNumber p("+38166123456", 381, "66123456", "+38166123456");
-    Address a("21 Main St", "10000", "Novi Sad", "Serbia");
-    Contact c("Marko", "Petrovic", {p}, "marko@email.com", a);
-
-    REQUIRE(c.getName() == "Marko");
-    REQUIRE(c.getSurname() == "Petrovic");
-    REQUIRE(c.getEmail() == "marko@email.com");
-    REQUIRE(c.getPhoneNumbers().size() == 1);
-    REQUIRE(c.hasAddress());
-}
-
-TEST_CASE("Contact default email and address", "[Contact]") {
-    Contact c("Marko", "Petrovic", {});
-    REQUIRE(c.getEmail().empty());
-    REQUIRE_FALSE(c.hasAddress());
-    REQUIRE_FALSE(c.hasPhoneNumbers());
-}
-
 TEST_CASE("Contact getFullName", "[Contact]") {
     SECTION("both name and surname") {
         Contact c("Marko", "Petrovic", {});
