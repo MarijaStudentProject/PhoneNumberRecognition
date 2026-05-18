@@ -1,14 +1,13 @@
 add_executable(normalizer_test test.cpp)
 target_link_libraries(normalizer_test phone_normalizer)
 
-
 set(TEST_SOURCES
-    phone_number/numbering_plan_repo.test.cpp
-    phone_number/normalizer.test.cpp
-    phone_number/vcf_parser.test.cpp
-    phone_number/matcher.test.cpp
-    phone_number/address.test.cpp           
-    phone_number/contact.test.cpp        
+    phone_number/numbering_plan_repo_test.cpp
+    phone_number/phone_normalizer_test.cpp
+    phone_number/vcf_parser_test.cpp
+    phone_number/phone_matcher_test.cpp
+    phone_number/address_test.cpp
+    phone_number/contact_test.cpp
 )
 
 add_executable(tests ${TEST_SOURCES})

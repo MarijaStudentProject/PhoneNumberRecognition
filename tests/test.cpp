@@ -2,8 +2,8 @@
 #include <cctype>
 #include <iostream>
 
-#include "phone_number/vcf_parser.hpp"
 #include "phone_number/phone_number.hpp"
+#include "phone_number/vcf_parser.hpp"
 
 namespace {
 std::string cleanPhoneNumber(const std::string &phoneNumber) {
@@ -18,7 +18,7 @@ std::string cleanPhoneNumber(const std::string &phoneNumber) {
 
 void testNormalizePhoneNumber(const std::string &phoneNumber, PhoneNormalizer &normalizer, bool strict = true) {
     std::string cleaned = cleanPhoneNumber(phoneNumber);
-    PhoneNumber normalizedNumber = normalizer.normalize(phoneNumber,"RS",strict);
+    PhoneNumber normalizedNumber = normalizer.normalize(phoneNumber, "RS", strict);
     std::cout << "Original: " << phoneNumber << "\n";
     std::cout << "Cleaned: " << cleaned << "\n";
     std::cout << "Normalized: " << normalizedNumber.getNormalizedValue() << "\n";
@@ -32,37 +32,37 @@ int main() {
 
     std::vector<Contact> contacts = parser.loadFromFile("../resources/test.vcf");
 
-    for(auto &c : contacts){
-        std::cout<<c.getName()<<std::endl;
-        std::cout<<c.getPhoneNumbers()[0].getRawValue()<<std::endl;
-        std::cout<<c.getPhoneNumbers()[0].getNormalizedValue()<<std::endl;
+    for (auto &c : contacts) {
+        std::cout << c.getName() << '\n';
+        std::cout << c.getPhoneNumbers()[0].getRawValue() << '\n';
+        std::cout << c.getPhoneNumbers()[0].getNormalizedValue() << '\n';
     }
-   /*
-    std::string phoneNumber = "066 555 555";
-    testNormalizePhoneNumber(phoneNumber, normalizer);
+    /*
+     std::string phoneNumber = "066 555 555";
+     testNormalizePhoneNumber(phoneNumber, normalizer);
 
-    std::string phoneNumber2 = "+381 66 555 555";
-    testNormalizePhoneNumber(phoneNumber2, normalizer);
+     std::string phoneNumber2 = "+381 66 555 555";
+     testNormalizePhoneNumber(phoneNumber2, normalizer);
 
-    std::string phoneNumber3 = "00381 66 555 555";
-    testNormalizePhoneNumber(phoneNumber3, normalizer);
+     std::string phoneNumber3 = "00381 66 555 555";
+     testNormalizePhoneNumber(phoneNumber3, normalizer);
 
-    std::string phoneNumber4 = "011 66 555 555";
-    testNormalizePhoneNumber(phoneNumber4, normalizer,
-                             false); // +66 is Thailand, strict=false should match it as international
+     std::string phoneNumber4 = "011 66 555 555";
+     testNormalizePhoneNumber(phoneNumber4, normalizer,
+                              false); // +66 is Thailand, strict=false should match it as international
 
-    std::string phoneNumber5 = "011 66 555 555";
-    testNormalizePhoneNumber(phoneNumber5, normalizer, true); // strict matches local
+     std::string phoneNumber5 = "011 66 555 555";
+     testNormalizePhoneNumber(phoneNumber5, normalizer, true); // strict matches local
 
-    std::string phoneNumber6 = "011 693 555 555"; // strict matches local
-    testNormalizePhoneNumber(phoneNumber6, normalizer, true);
+     std::string phoneNumber6 = "011 693 555 555"; // strict matches local
+     testNormalizePhoneNumber(phoneNumber6, normalizer, true);
 
-    std::string phoneNumber7 = "011 693 555 555"; // +693 does not exist, should match local even in non strict mode
-    testNormalizePhoneNumber(phoneNumber7, normalizer, false);
+     std::string phoneNumber7 = "011 693 555 555"; // +693 does not exist, should match local even in non strict mode
+     testNormalizePhoneNumber(phoneNumber7, normalizer, false);
 
-    std::string phoneNumber8 = "+1 (202) 555-0173";
-    testNormalizePhoneNumber(phoneNumber8, normalizer);
-    */
+     std::string phoneNumber8 = "+1 (202) 555-0173";
+     testNormalizePhoneNumber(phoneNumber8, normalizer);
+     */
     return 0;
 }
 

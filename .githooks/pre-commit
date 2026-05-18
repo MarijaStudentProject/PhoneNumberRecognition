@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|c|h)$')
-
+FILES=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '^(src|include)/.*\.(cpp|hpp|c|h)$')
+  
 #file naming
 echo "Checking file naming conventions..."
 

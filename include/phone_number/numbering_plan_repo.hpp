@@ -10,13 +10,14 @@
 class NumberingPlanRepo {
   private:
     inline static const NumberingPlan EmptyPlan{};
-    std::vector<NumberingPlan> m_plans;
-    std::map<std::string, NumberingPlan *> m_isoPlanMap; // RS DE US, etc to plan
-    std::map<int, NumberingPlan *> m_countryCodePlanMap; // 381, 49, etc to plan
-    std::set<std::string> m_internationalPrefixSet;      // set of all prefixes for quick lookup
+    std::map<std::string, NumberingPlan> m_isoPlanMap; // RS DE US, etc to plan
+    std::map<int, NumberingPlan> m_countryCodePlanMap; // 381, 49, etc to plan
+    std::set<std::string> m_internationalPrefixSet;    // set of all prefixes for quick lookup
+    void parsePlans(const std::vector<NumberingPlan> &plans);
 
   public:
     NumberingPlanRepo() = default;
+    NumberingPlanRepo(const std::vector<NumberingPlan> &plans);
     ~NumberingPlanRepo() = default;
 
     NumberingPlanRepo(const NumberingPlanRepo &) = delete;

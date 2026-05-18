@@ -6,8 +6,7 @@ class TempMetaFile {
   public:
     TempMetaFile() {
         static int counter = 0;
-        path = std::filesystem::temp_directory_path() /
-               ("vcf_meta_test_" + std::to_string(counter++) + ".json");
+        path = std::filesystem::temp_directory_path() / ("vcf_meta_test_" + std::to_string(counter++) + ".json");
         std::ofstream out(path);
         out << R"json({
             "countries": {

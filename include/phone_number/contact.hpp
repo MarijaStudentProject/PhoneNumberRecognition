@@ -30,7 +30,7 @@ class Contact {
     bool hasAddress() const;
     void addPhoneNumber(const PhoneNumber &phoneNumber);
 
-    bool operator<(const Contact& other) const {
+    bool operator<(const Contact &other) const {
         if (m_name != other.m_name) {
             return m_name < other.m_name;
         }

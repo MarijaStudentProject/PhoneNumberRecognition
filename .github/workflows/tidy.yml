@@ -23,4 +23,7 @@ jobs:
       - name: Run clang-tidy
         run: |
           cd build
-          run-clang-tidy -quiet 
+          FILES=$(find ../src ../include -type f | grep -E '\.(cpp|hpp|c|h)$')
+          for f in $FILES; do
+            clang-tidy "$f" -quiet
+          done
