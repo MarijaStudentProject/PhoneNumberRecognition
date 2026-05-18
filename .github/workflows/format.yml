@@ -19,7 +19,7 @@ jobs:
 
       - name: Check formatting
         run: |
-          FILES=$(find . -regex '.*\.\(cpp\|hpp\|c\|h\)')
+          FILES=$(find ../src ../include -type f | grep -E '\.(cpp|hpp|c|h)$')
           for f in $FILES; do
             clang-format --dry-run --Werror "$f"
           done
