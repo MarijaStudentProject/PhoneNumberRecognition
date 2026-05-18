@@ -43,6 +43,30 @@ add_library(phone_normalizer STATIC ${SOURCES} ${HEADERS})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
 target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
 
+find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
+qt_add_executable(PhoneNumberApp
+    src/main.cpp
+)
+
+set_target_properties(PhoneNumberApp PROPERTIES
+    AUTOMOC ON
+)
+
+qt_add_qml_module(PhoneNumberApp
+    URI PhoneApp
+    VERSION 1.0
+    QML_FILES
+        ui/Main.qml
+        ui/ContactsView.qml
+        ui/DialView.qml
+)
+
+target_link_libraries(PhoneNumberApp PRIVATE
+    Qt6::Gui
+    Qt6::Quick
+    Qt6::QuickControls2
+    phone_normalizer
+)
 
 
 find_program(CLANG_TIDY clang-tidy)
