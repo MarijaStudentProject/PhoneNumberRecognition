@@ -3,7 +3,7 @@
 #include <utility>
 
 Address::Address(std::string street, std::string postalCode, std::string city, std::string country)
-    : m_street(std::move(street)), m_postalCode(std::move(std::move(postalCode))), m_city(std::move(city)),
+    : m_street(std::move(street)), m_postalCode(std::move(postalCode)), m_city(std::move(city)),
       m_country(std::move(country)) {}
 
 std::string Address::getStreet() const { return m_street; }
