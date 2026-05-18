@@ -5,16 +5,29 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
-#include <ivanenko/json_io.h>
 #include <jsmn/jsmn.h>
 #include <string_view>
 
-void NumberingPlanRepo::loadPlans(const std::string &filename) {
-    m_plans.clear();
+NumberingPlanRepo::NumberingPlanRepo(const std::vector<NumberingPlan> &plans) { parsePlans(plans); }
+
+void NumberingPlanRepo::parsePlans(const std::vector<NumberingPlan> &plans) {
     m_isoPlanMap.clear();
     m_countryCodePlanMap.clear();
     m_internationalPrefixSet.clear();
 
+    for (const auto &p : plans) {
+        m_isoPlanMap[p.isoCountryName] = p;
+        m_countryCodePlanMap[p.countryCode] = p;
+        m_internationalPrefixSet.insert(p.internationalPrefix);
+    }
+}
+
+void NumberingPlanRepo::loadPlans(const std::string &filename) {
+    m_isoPlanMap.clear();
+    m_countryCodePlanMap.clear();
+    m_internationalPrefixSet.clear();
+
+    std::vector<NumberingPlan> plans;
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Failed to open file\n";
@@ -49,7 +62,6 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
 
     // we skip tokens[0]=root obj, tokens[1]="countries", tokens[2]=countries obj
     int numCountries = tokens.at(2).size; // token of array, number of country entries
-    m_plans.reserve((numCountries));
 
     // Iso key: array token callingCode, intlPrefix, natPrefix
     int i = 3;
@@ -79,18 +91,16 @@ void NumberingPlanRepo::loadPlans(const std::string &filename) {
         std::string natPrefix = tokstr(tokens.at(idx + 4));
 
         NumberingPlan p{countryCode, isoCode, natPrefix, intlPrefix};
-        m_plans.push_back(p);
-        m_isoPlanMap[p.isoCountryName] = &m_plans.back();
-        m_countryCodePlanMap[p.countryCode] = &m_plans.back();
-        m_internationalPrefixSet.insert(p.internationalPrefix);
+        plans.push_back(p);
     }
+    parsePlans(plans);
 }
 
 const NumberingPlan &NumberingPlanRepo::getForIsoCountry(const std::string &isoCountry) const {
     if (m_isoPlanMap.find(isoCountry) == m_isoPlanMap.end()) {
         return EmptyPlan;
     }
-    return *m_isoPlanMap.at(isoCountry);
+    return m_isoPlanMap.at(isoCountry);
 }
 
 bool NumberingPlanRepo::doesCountryCodeExist(int countryCode) const {
@@ -105,5 +115,5 @@ const NumberingPlan &NumberingPlanRepo::getForCountryCode(int countryCode) const
     if (m_countryCodePlanMap.find(countryCode) == m_countryCodePlanMap.end()) {
         return EmptyPlan;
     }
-    return *m_countryCodePlanMap.at(countryCode);
+    return m_countryCodePlanMap.at(countryCode);
 }

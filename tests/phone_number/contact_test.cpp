@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
+#include <phone_number/address.hpp>
 #include <phone_number/contact.hpp>
 #include <phone_number/phone_number.hpp>
-#include <phone_number/address.hpp>
 
 TEST_CASE("Contact getFullName", "[Contact]") {
     SECTION("both name and surname") {
@@ -80,8 +80,8 @@ TEST_CASE("Contact addPhoneNumber", "[Contact]") {
         REQUIRE(c.getPhoneNumbers().size() == 1);
     }
     SECTION("raw differs but normalized same — treated as duplicate") {
-        PhoneNumber local("066111111",    381, "66111111", "+38166111111");
-        PhoneNumber intl("+38166111111",  381, "66111111", "+38166111111");
+        PhoneNumber local("066111111", 381, "66111111", "+38166111111");
+        PhoneNumber intl("+38166111111", 381, "66111111", "+38166111111");
         c.addPhoneNumber(local);
         c.addPhoneNumber(intl);
         REQUIRE(c.getPhoneNumbers().size() == 1);
@@ -115,10 +115,10 @@ TEST_CASE("Contact getAddress returns correct address", "[Contact]") {
     Address a("21 Main St", "10000", "Novi Sad", "Serbia");
     Contact c("Marko", "Petrovic", {}, "", a);
 
-    REQUIRE(c.getAddress().getStreet()     == "21 Main St");
+    REQUIRE(c.getAddress().getStreet() == "21 Main St");
     REQUIRE(c.getAddress().getPostalCode() == "10000");
-    REQUIRE(c.getAddress().getCity()       == "Novi Sad");
-    REQUIRE(c.getAddress().getCountry()    == "Serbia");
+    REQUIRE(c.getAddress().getCity() == "Novi Sad");
+    REQUIRE(c.getAddress().getCountry() == "Serbia");
 }
 
 TEST_CASE("Contact with empty name and surname", "[Contact]") {

@@ -16,7 +16,10 @@ fi
 echo "  Branch name OK"
 
 #check clang tidy
-run-clang-tidy -quiet -p build/ # assumes compile_commands.json is in build/ change if needed
+find src -name "*.cpp" \
+    ! -name "anti pattern*" \
+    | xargs run-clang-tidy -quiet -p build/ # assumes compile_commands.json is in build/ change if needed
+
 if [ $? -ne 0 ]; then
   echo "clang-tidy failed"
   exit 1

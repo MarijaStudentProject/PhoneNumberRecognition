@@ -7,18 +7,20 @@ class PhoneNumber {
   private:
     std::string m_rawValue;
     std::string m_normalizedValue;
-    unsigned int m_countryCode = 0;
+    int m_countryCode = 0;
     std::string m_nationalNumber;
 
   public:
-    PhoneNumber(std::string rawValue, unsigned int countryCode, std::string nationalNumber,
-                std::string normalizedValue);
+    PhoneNumber(std::string rawValue, int countryCode, std::string nationalNumber, std::string normalizedValue);
     PhoneNumber() = default;
 
     std::string getRawValue() const;
     std::string getNormalizedValue() const;
-    unsigned int getCountryCode() const;
+    int getCountryCode() const;
     std::string getNationalNumber() const;
+    bool isEmpty() const { return m_rawValue.empty(); }
+    bool isRaw() const { return m_normalizedValue.empty(); }
+    bool operator==(const PhoneNumber &other) const;
 };
 
 #endif

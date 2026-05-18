@@ -11,7 +11,7 @@ class Address {
 
   public:
     Address(std::string street = "", std::string postalCode = "", std::string city = "", std::string country = "");
-    
+
     std::string getStreet() const;
     std::string getPostalCode() const;
     std::string getCity() const;

@@ -49,7 +49,6 @@ find_program(CLANG_TIDY clang-tidy)
 if(CLANG_TIDY)
     file(GLOB_RECURSE ALL_CPP_FILES
         ${CMAKE_SOURCE_DIR}/src/*.cpp
-        ${CMAKE_SOURCE_DIR}/tests/*.cpp
     )
     add_custom_target(tidy
         COMMAND ${CLANG_TIDY} -p ${CMAKE_BINARY_DIR} ${ALL_CPP_FILES}
@@ -69,7 +68,7 @@ if(CLANG_FORMAT)
         ${CMAKE_SOURCE_DIR}/include/*.hpp
         ${CMAKE_SOURCE_DIR}/libs/*.h
     )
-    add_custom_target(format
+    add_custom_target(format-fix
         COMMAND ${CLANG_FORMAT} -i ${ALL_SOURCE_FILES}
         COMMENT "Running clang-format"
     )

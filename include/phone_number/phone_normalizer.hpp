@@ -9,17 +9,18 @@
 
 class PhoneNormalizer {
   private:
-    
     NumberingPlanRepo m_repo;
 
     bool tryParseAnyCountryCode(std::string_view phoneNumber, int &countryCode, std::string_view &nationalNumber) const;
     bool tryParseAnyInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber) const;
-    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber, const std::string& isoCountry) const;
+    bool tryParseStrictInternationalPrefix(std::string_view phoneNumber, std::string_view &truncNumber,
+                                           const std::string &isoCountry) const;
 
   public:
-  
-    PhoneNumber normalize(const std::string &phoneNumber,const std::string& orginCountryIso="RS", bool strict = false) const;
+    PhoneNumber normalize(const std::string &phoneNumber, const std::string &orginCountryIso = "",
+                          bool strict = false) const;
     PhoneNormalizer(const std::string &metadata_path);
+    PhoneNormalizer(const std::vector<NumberingPlan> &plans);
 };
 
 #endif

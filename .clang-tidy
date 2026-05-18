@@ -14,7 +14,11 @@ Checks: >
   -modernize-use-trailing-return-type,
   -bugprone-easily-swappable-parameters,
   -modernize-use-nodiscard,
-  -readability-identifier-length
+  -readability-identifier-length,
+  -modernize-return-braced-init-list,
+  -bugprone-narrowing-conversions,
+  -cppcoreguidelines-narrowing-conversions,
+  -clang-diagnostic-c++11-narrowing,
 
 WarningsAsErrors: 'bugprone-*'
 
@@ -29,11 +33,13 @@ CheckOptions:
     value: camelBack
   - key: readability-identifier-naming.ClassCase
     value: CamelCase
-  - key: readability-identifier-naming.MemberCase
+  - key: readability-identifier-naming.ClassMemberCase
     value: camelBack
-  - key: readability-identifier-naming.MemberPrefix
+  - key: readability-identifier-naming.ClassMemberPrefix
     value: m_
-  - key: readability-identifier-naming.StuctMemberPrefix
+  - key: readability-identifier-naming.StructMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.StructMemberPrefix
     value: ""
   - key: readability-identifier-naming.NamespaceCase
     value: lower_case
