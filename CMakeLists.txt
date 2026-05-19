@@ -42,35 +42,6 @@ file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
 add_library(phone_normalizer STATIC ${SOURCES} ${HEADERS})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
 target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
-# target_link_libraries(phone_normalizer PRIVATE Qt6::Core Qt6::Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
-qt_add_executable(PhoneNumberApp
-    src/main.cpp
-)
-
-set_target_properties(PhoneNumberApp PROPERTIES
-    AUTOMOC ON
-)
-
-qt_add_qml_module(PhoneNumberApp
-    URI PhoneApp
-    VERSION 1.0
-    QML_FILES
-        ui/Main.qml
-        ui/ContactsView.qml
-        ui/DialView.qml
-        QML_FILES  ui/ContactInfo.qml
-        QML_FILES ui/DialingPopup.qml
-        QML_FILES ui/IncomingCallPopup.qml
-)
-
-target_link_libraries(PhoneNumberApp PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-    Qt6::QuickControls2
-    phone_normalizer
-)
-
 
 find_program(CLANG_TIDY clang-tidy)
 if(CLANG_TIDY)
@@ -124,8 +95,35 @@ qt_standard_project_setup()
 
 qt_add_executable(ContactsApp src/controller/contacts_controller.cpp src/model/contacts_model.cpp
  include/controller/contacts_controller.hpp include/model/contacts_model.hpp src/model/detailed_contact_model.cpp include/model/detailed_contact_model.hpp
+    src/main.cpp
 )
 
 
 target_link_libraries(ContactsApp PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick phone_normalizer)
 
+
+find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
+
+
+set_target_properties(ContactsApp PROPERTIES
+    AUTOMOC ON
+)
+
+qt_add_qml_module(ContactsApp
+    URI PhoneApp
+    VERSION 1.0
+    QML_FILES
+        ui/Main.qml
+        ui/ContactsView.qml
+        ui/DialView.qml
+        QML_FILES  ui/ContactInfo.qml
+        QML_FILES ui/DialingPopup.qml
+        QML_FILES ui/IncomingCallPopup.qml
+)
+
+target_link_libraries(ContactsApp PRIVATE
+    Qt6::Gui
+    Qt6::Quick
+    Qt6::QuickControls2
+    phone_normalizer
+)

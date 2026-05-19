@@ -1,5 +1,5 @@
 #include "model/contacts_model.hpp"
-#include "contacts_model.hpp"
+#include "model/contacts_model.hpp"
 
 ContactsModel::ContactsModel(ContactsController* controller, DetailesContactModel* detailedContactModel,QObject* parent)
     : m_controller(controller), m_detailedContactModel(detailedContactModel), QAbstractListModel(parent) {

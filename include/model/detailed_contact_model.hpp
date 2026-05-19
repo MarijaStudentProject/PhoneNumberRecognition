@@ -6,8 +6,8 @@
 #include <QObject>
 #include <QString>
 #include "controller/contacts_controller.hpp"
-#include "model/contacts_model.hpp"
 
+class ContactsModel;
 
 class DetailesContactModel : public QObject
 {

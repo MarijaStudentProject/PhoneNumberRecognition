@@ -1,5 +1,7 @@
 #include "model/detailed_contact_model.hpp"
-
+#include "model/contacts_model.hpp"
+#include <QVariant>
+#include "model/detailed_contact_model.hpp"
 
 
 
@@ -18,20 +20,27 @@ QString DetailesContactModel::name() const
     return m_editedName;
 }
 
-QString DetailesContactModel::email() const
-{
-    return m_editedEmail;
-}
+QString DetailesContactModel::surname() const { return m_editedSurname; }
+
+QString DetailesContactModel::email() const { return m_editedEmail; }
+
+QString DetailesContactModel::city() const { return m_editedCity; }
+
+QString DetailesContactModel::country() const { return m_editedCountry; }
+
+QString DetailesContactModel::street() const { return m_editedStreet; }
 
 QVariantList DetailesContactModel::phoneNumbers() const { 
     QVariantList list;
 
     for (const auto& number : m_editedPhoneNumbers) {
-        list.append(number);
-    }
+        list.append(QVariant::fromValue(number));
+    }   
 
     return list;
 }
+
+bool DetailesContactModel::hasSelection() const { return m_selectedId != -1; }
 
 void DetailesContactModel::setName(const QString &value) {
     if (m_editedName == value) {
@@ -43,8 +52,17 @@ void DetailesContactModel::setName(const QString &value) {
     emit nameChanged();
 }
 
-void DetailesContactModel::setEmail(const QString& value)
-{
+void DetailesContactModel::setSurname(const QString &value) {
+    if (m_editedSurname == value) {
+        return;
+    }
+
+    m_editedSurname = value;
+
+    emit surnameChanged();
+}
+
+void DetailesContactModel::setEmail(const QString &value) {
     if (m_editedEmail == value) {
         return;
     }
