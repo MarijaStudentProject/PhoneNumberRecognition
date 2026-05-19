@@ -14,8 +14,7 @@ Rectangle {
     signal accepted()
     signal declined()
 
-    // Call this from outside to trigger the popup:
-    // incomingCall.show("John Doe", "JD", "+38166123456", "#B4C8E8")
+
     function show(name, initials, phone, color) {
         contactName     = name
         contactInitials = initials

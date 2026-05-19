@@ -28,6 +28,8 @@ ApplicationWindow {
         ListElement { initials: "DO"; name: "Daniela Ortega"; phone: "(312) 555-0186"; color: "#E8B4D4" }
         ListElement { initials: "EB"; name: "Eli Bergman";    phone: "(503) 555-0162"; color: "#B4D4E8" }
         ListElement { initials: "FK"; name: "Faye Kobayashi"; phone: "(206) 555-0129"; color: "#D4E8B4" }
+        ListElement { initials: "ŽK"; name: "Žaye Kobayashi"; phone: "(206) 555-0129"; color: "#D4E8B4" }
+
     }
 
     // Main content — fills the whole window
@@ -108,7 +110,13 @@ ApplicationWindow {
             Layout.fillHeight: true
             currentIndex: currentTab
 
-            ContactsView { contactsModel: contactsModel }
+            ContactsView {
+                contactsModel: contactsModel
+                onCallRequested: (name, initials, phone, color) => {
+                    incomingCall.callLabel = "Calling..."
+                    incomingCall.show(name, initials, phone, color)
+                }
+            }
             DialView {
                     id: dialView
                     contactsModel: contactsModel

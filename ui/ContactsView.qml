@@ -12,6 +12,7 @@ Rectangle {
     property string selectedColor: "#E8B4B8"
     property bool showInfo: false
     property bool showDialing: false
+    signal callRequested(string name, string initials, string phone, string color)
 
     ColumnLayout {
         anchors.fill: parent
@@ -159,6 +160,9 @@ Rectangle {
         contactPhone:    selectedPhone
         contactColor:    selectedColor
         onDismissed: showDialing = false
-        onCallClicked: { showInfo = false; showDialing = true }
+        onCallClicked: {
+                showDialing = false
+                callRequested(selectedName, selectedInitials, selectedPhone, selectedColor)
+            }
     }
 }
