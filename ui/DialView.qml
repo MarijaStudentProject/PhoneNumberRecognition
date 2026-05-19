@@ -245,8 +245,8 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        root.callClicked(root.contactPhone)
-                        root.dismissed()
+                        if (dialedNumber.length > 0)
+                            contactCallRequested(dialedNumber, dialedNumber, dialedNumber, "#888888")
                     }
                 }
             }
