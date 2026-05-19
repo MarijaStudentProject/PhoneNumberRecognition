@@ -1,4 +1,4 @@
-#include "controller/contacts_controller.h"
+#include "controller/contacts_controller.hpp"
 
 #include <phone_number/phone_matcher.hpp>
 
@@ -10,8 +10,11 @@ const std::vector<Contact> &ContactsController::contacts() const{
     return m_contacts;
 }
 
-std::vector<int> ContactsController::searchByName(const std::string &text) const{
-    return PhoneMatcher::searchByName(text,m_contacts);
+std::vector<int> ContactsController::search(const std::string &text) const{
+     auto result = PhoneMatcher::searchByName(text,m_contacts);
+     auto result2 = PhoneMatcher::searchByNumberPrefix(text, m_contacts);
+     result.insert(result.end(), result2.begin(), result2.end());
+     return result;
 }
 
 Contact *ContactsController::findById(int id){
@@ -22,10 +25,20 @@ Contact *ContactsController::findById(int id){
     return &m_contacts[id];
 }
 
-void ContactsController::updateContact(int id, const std::string &name, const std::string surname, const std::string &phone, const std::string &email, const std::string &address){
+void ContactsController::updateContact(int id, const std::string &name, const std::string surname, const std::vector<std::string> &phone, const std::string &email, const Address &address){
     Contact *contact = findById(id);
-    //TODO
-    //Add setters in Contacts if nessesery
+    if(!contact){
+        return;
+    }
+    contact->setName(name);
+    contact->setSurname(surname);
+    contact->setEmail(email);
+    contact->setAddress(address);
+    std::vector<PhoneNumber> phoneNumbers;
+    for(const auto& p : phone){
+        phoneNumbers.push_back(m_normalizer.normalize(p, "RS", true));
+    }
+    contact->setPhoneNumbers(phoneNumbers);
 }
 
 void ContactsController::importContacts(const std::string& path){

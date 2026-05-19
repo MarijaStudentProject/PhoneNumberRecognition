@@ -6,6 +6,7 @@
 #include "phone_number/vcf_parser.hpp"
 #include <vector>
 #include <string>
+#include <optional>
 
 class ContactsController{
 
@@ -13,17 +14,10 @@ class ContactsController{
     ContactsController();
 
     const std::vector<Contact> &contacts() const;
-    std::vector<int> searchByName(const std::string& text) const;
+    std::vector<int> search(const std::string &text) const;
     Contact* findById(int id);
 
-    void updateContact(
-        int id,
-        const std::string& name,
-        const std::string surname,
-        const std::string& phone,
-        const std::string& email,
-        const std::string& address
-    );
+    void updateContact(int id, const std::string &name, const std::string surname, const std::vector<std::string> &phone, const std::string &email, const Address &address);
 
     void importContacts(const std::string& path);
     std::optional<int> match(const std::string& number);
