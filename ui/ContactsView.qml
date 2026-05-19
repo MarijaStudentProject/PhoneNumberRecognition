@@ -12,6 +12,11 @@ Rectangle {
     property string selectedColor: "#E8B4B8"
     property bool showInfo: false
     property bool showDialing: false
+
+    property int selectedIndex: -1
+    property string selectedEmail: ""
+    property string selectedAddress: ""
+
     signal callRequested(string name, string initials, string phone, string color)
 
     ColumnLayout {
@@ -126,14 +131,16 @@ Rectangle {
                     height: 1
                     color: "#F0F0F0"
                 }
-
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        selectedName     = model.name
-                        selectedInitials = model.initials
-                        selectedPhone    = model.phone
-                        selectedColor    = model.color
+                        contactInfo.contactIndex    = index
+                        contactInfo.contactName     = model.name
+                        contactInfo.contactInitials = model.initials
+                        contactInfo.contactPhone    = model.phone
+                        contactInfo.contactColor    = model.color
+                        contactInfo.contactEmail    = model.email
+                        contactInfo.contactAddress  = model.address
                         showInfo = true
                     }
                 }
@@ -142,12 +149,11 @@ Rectangle {
     }
 
     ContactInfo {
+        id: contactInfo
         anchors.fill: parent
         visible: showInfo
-        contactName:     selectedName
-        contactInitials: selectedInitials
-        contactPhone:    selectedPhone
-        contactColor:    selectedColor
+        enabled: showInfo
+        z: 10
         onDismissed:   showInfo = false
         onCallClicked: { showInfo = false; showDialing = true }
     }
@@ -155,14 +161,16 @@ Rectangle {
     DialingPopup {
         anchors.fill: parent
         visible: showDialing
-        contactName:     selectedName
-        contactInitials: selectedInitials
-        contactPhone:    selectedPhone
-        contactColor:    selectedColor
+        enabled: showDialing
+        z: 10
+        contactName:     contactInfo.contactName
+        contactInitials: contactInfo.contactInitials
+        contactPhone:    contactInfo.contactPhone
+        contactColor:    contactInfo.contactColor
         onDismissed: showDialing = false
         onCallClicked: {
-                showDialing = false
-                callRequested(selectedName, selectedInitials, selectedPhone, selectedColor)
-            }
+            showDialing = false
+            callRequested(contactInfo.contactName, contactInfo.contactInitials, contactInfo.contactPhone, contactInfo.contactColor)
+        }
     }
 }

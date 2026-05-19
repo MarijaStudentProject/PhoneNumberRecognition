@@ -16,20 +16,18 @@ ApplicationWindow {
     property string callingPhone: ""
     property string callingColor: "#E8B4B8"
     property bool showDialingFromSearch: false
-
     ListModel {
         id: contactsModel
-        ListElement { initials: "AK"; name: "Aanya Krishnan"; phone: "(415) 555-0182"; color: "#E8B4B8" }
-        ListElement { initials: "AW"; name: "Adam Werner";    phone: "(212) 555-0193"; color: "#B4C8E8" }
-        ListElement { initials: "AP"; name: "Alicia Park";    phone: "+44 20 7946 0921"; color: "#E8C4B4" }
-        ListElement { initials: "BS"; name: "Beatriz Souza";  phone: "(917) 555-0144"; color: "#C4B4E8" }
-        ListElement { initials: "CH"; name: "Caleb Hsu";      phone: "(646) 555-0117"; color: "#B4E8C8" }
-        ListElement { initials: "CR"; name: "Camille Roux";   phone: "+33 1 70 36 92 47"; color: "#E8E4B4" }
-        ListElement { initials: "DO"; name: "Daniela Ortega"; phone: "(312) 555-0186"; color: "#E8B4D4" }
-        ListElement { initials: "EB"; name: "Eli Bergman";    phone: "(503) 555-0162"; color: "#B4D4E8" }
-        ListElement { initials: "FK"; name: "Faye Kobayashi"; phone: "(206) 555-0129"; color: "#D4E8B4" }
-        ListElement { initials: "ŽK"; name: "Žaye Kobayashi"; phone: "(206) 555-0129"; color: "#D4E8B4" }
-
+        ListElement { initials: "AK"; name: "Aanya Krishnan";  phone: "(415) 555-0182";    color: "#E8B4B8"; email: ""; address: "" }
+        ListElement { initials: "AW"; name: "Adam Werner";     phone: "(212) 555-0193";    color: "#B4C8E8"; email: ""; address: "" }
+        ListElement { initials: "AP"; name: "Alicia Park";     phone: "+44 20 7946 0921";  color: "#E8C4B4"; email: ""; address: "" }
+        ListElement { initials: "BS"; name: "Beatriz Souza";   phone: "(917) 555-0144";    color: "#C4B4E8"; email: ""; address: "" }
+        ListElement { initials: "CH"; name: "Caleb Hsu";       phone: "(646) 555-0117";    color: "#B4E8C8"; email: ""; address: "" }
+        ListElement { initials: "CR"; name: "Camille Roux";    phone: "+33 1 70 36 92 47"; color: "#E8E4B4"; email: ""; address: "" }
+        ListElement { initials: "DO"; name: "Daniela Ortega";  phone: "(312) 555-0186";    color: "#E8B4D4"; email: ""; address: "" }
+        ListElement { initials: "EB"; name: "Eli Bergman";     phone: "(503) 555-0162";    color: "#B4D4E8"; email: ""; address: "" }
+        ListElement { initials: "FK"; name: "Faye Kobayashi";  phone: "(206) 555-0129";    color: "#D4E8B4"; email: ""; address: "" }
+        ListElement { initials: "ŽK"; name: "Žaye Kobayashi";  phone: "(206) 555-0129";    color: "#D4E8B4"; email: ""; address: "" }
     }
 
     // Main content — fills the whole window
