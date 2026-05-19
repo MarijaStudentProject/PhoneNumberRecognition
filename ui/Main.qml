@@ -6,9 +6,16 @@ ApplicationWindow {
     visible: true
     width: 400
     height: 700
+    minimumWidth: 360
+    minimumHeight: 600
     title: "Contacts"
 
     property int currentTab: 0
+    property string callingName: ""
+    property string callingInitials: ""
+    property string callingPhone: ""
+    property string callingColor: "#E8B4B8"
+    property bool showDialingFromSearch: false
 
     ListModel {
         id: contactsModel
@@ -23,6 +30,7 @@ ApplicationWindow {
         ListElement { initials: "FK"; name: "Faye Kobayashi"; phone: "(206) 555-0129"; color: "#D4E8B4" }
     }
 
+    // Main content — fills the whole window
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -101,7 +109,69 @@ ApplicationWindow {
             currentIndex: currentTab
 
             ContactsView { contactsModel: contactsModel }
-            DialView     { contactsModel: contactsModel }
+            DialView {
+                    id: dialView
+                    contactsModel: contactsModel
+                    onContactCallRequested: (name, initials, phone, color) => {
+                        callingName     = name
+                        callingInitials = initials
+                        callingPhone    = phone
+                        callingColor    = color
+                        showDialingFromSearch = true
+                    }
+            }
         }
     }
+
+    // Test button — floats over content, remove when wiring real signals
+    Rectangle {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 16
+        width: 110
+        height: 34
+        radius: 17
+        color: "#1a1a1a"
+        z: 10
+
+        Text {
+            anchors.centerIn: parent
+            text: "Test Call"
+            font.pixelSize: 13
+            color: "white"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: incomingCall.show("Beatriz Souza", "BS", "(917) 555-0144", "#C4B4E8")
+        }
+    }
+
+    // Incoming call popup — overlays everything
+    IncomingCallPopup {
+        id: incomingCall
+        anchors.fill: parent
+        focus: true
+        z: 99
+        onAccepted: console.log("Call accepted")
+        onDeclined: console.log("Call declined")
+    }
+
+    DialingPopup {
+        id: dialingPopup
+        anchors.fill: parent
+        visible: showDialingFromSearch
+        z: 98
+        contactName:     callingName
+        contactInitials: callingInitials
+        contactPhone:    callingPhone
+        contactColor:    callingColor
+        onDismissed:   showDialingFromSearch = false
+        onCallClicked: {
+            showDialingFromSearch = false
+            incomingCall.callLabel = "Calling..."
+            incomingCall.show(callingName, callingInitials, callingPhone, callingColor)
+        }
+    }
+
 }

@@ -42,7 +42,7 @@ file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
 add_library(phone_normalizer STATIC ${SOURCES} ${HEADERS})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
 target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
-
+# target_link_libraries(phone_normalizer PRIVATE Qt6::Core Qt6::Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
 qt_add_executable(PhoneNumberApp
     src/main.cpp
@@ -59,6 +59,9 @@ qt_add_qml_module(PhoneNumberApp
         ui/Main.qml
         ui/ContactsView.qml
         ui/DialView.qml
+        QML_FILES  ui/ContactInfo.qml
+        QML_FILES ui/DialingPopup.qml
+        QML_FILES ui/IncomingCallPopup.qml
 )
 
 target_link_libraries(PhoneNumberApp PRIVATE
@@ -101,7 +104,9 @@ endif()
 file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
 set(RESOURCE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
 set(RESOURCE_OUTPUT_DIR ${CMAKE_BINARY_DIR}/resources)
-
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 add_custom_target(copy_resources
     ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory

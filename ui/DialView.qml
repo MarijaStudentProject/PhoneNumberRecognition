@@ -8,6 +8,7 @@ Rectangle {
     property string dialedNumber: ""
     property var contactsModel: null
 
+    signal contactCallRequested(string name, string initials, string phone, string color)
     // use our function for phone number search instead of this
     function findMatches(number) {
         var results = []
@@ -79,6 +80,11 @@ Rectangle {
                     height: 1
                     color: "#F0F0F0"
                 }
+
+                MouseArea {
+                        anchors.fill: parent
+                        onClicked: contactCallRequested(modelData.name, modelData.initials, modelData.phone, modelData.color)
+                    }
             }
         }
 
@@ -96,80 +102,128 @@ Rectangle {
             }
         }
 
-        // Dialed number display
-        Item {
+        // Search bar showing dialed number
+        Rectangle {
             Layout.fillWidth: true
-            height: 60
-
-            Text {
-                anchors.centerIn: parent
-                text: dialedNumber
-                font.pixelSize: 28
-                font.letterSpacing: 4
-                color: "#1a1a1a"
-            }
-        }
-
-        // Keypad
-        GridLayout {
-            Layout.alignment: Qt.AlignHCenter
+            Layout.leftMargin: 16
+            Layout.rightMargin: 16
             Layout.bottomMargin: 8
-            columns: 3
-            rowSpacing: 4
-            columnSpacing: 0
+            height: 48
+            radius: 24
+            color: "white"
+            border.color: "#E0E0E0"
+            border.width: 1
 
-            Repeater {
-                model: [
-                    { digit: "1", sub: "" },
-                    { digit: "2", sub: "ABC" },
-                    { digit: "3", sub: "DEF" },
-                    { digit: "4", sub: "GHI" },
-                    { digit: "5", sub: "JKL" },
-                    { digit: "6", sub: "MNO" },
-                    { digit: "7", sub: "PQRS" },
-                    { digit: "8", sub: "TUV" },
-                    { digit: "9", sub: "WXYZ" },
-                    { digit: "*", sub: "" },
-                    { digit: "0", sub: "+" },
-                    { digit: "#", sub: "" },
-                ]
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: 20
+                anchors.rightMargin: 12
+                spacing: 8
 
-                delegate: Rectangle {
-                    width: 100
-                    height: 72
-                    color: "transparent"
+                Text {
+                    Layout.fillWidth: true
+                    text: dialedNumber.length > 0 ? dialedNumber : ""
+                    font.pixelSize: 22
+                    font.letterSpacing: 2
+                    color: "#1a1a1a"
+                    horizontalAlignment: Text.AlignHCenter
 
-                    ColumnLayout {
+                    Text {
+                        anchors.fill: parent
+                        text: "Enter number..."
+                        font.pixelSize: 15
+                        color: "#AAAAAA"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        visible: dialedNumber.length === 0
+                    }
+                }
+
+                // Delete button
+                Rectangle {
+                    width: 36; height: 36; radius: 18
+                    color: dialedNumber.length > 0 ? "#F2F2F2" : "transparent"
+                    visible: dialedNumber.length > 0
+
+                    Text {
                         anchors.centerIn: parent
-                        spacing: 1
-
-                        Text {
-                            Layout.alignment: Qt.AlignHCenter
-                            text: modelData.digit
-                            font.pixelSize: 28
-                            color: "#1a1a1a"
-                        }
-                        Text {
-                            Layout.alignment: Qt.AlignHCenter
-                            text: modelData.sub
-                            font.pixelSize: 10
-                            color: "#888"
-                            visible: modelData.sub.length > 0
-                        }
+                        text: "⌫"
+                        font.pixelSize: 18
+                        color: "#555"
                     }
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: dialedNumber += modelData.digit
-                        onPressAndHold: {
-                            if (modelData.digit === "0") dialedNumber += "+"
+                        onClicked: dialedNumber = dialedNumber.slice(0, -1)
+                        onPressAndHold: dialedNumber = ""
+                    }
+                }
+            }
+        }
+
+        // Keypad
+        Item {
+            Layout.fillWidth: true
+            height: 300
+
+            GridLayout {
+                anchors.centerIn: parent
+                columns: 3
+                rowSpacing: 4
+                columnSpacing: 0
+
+                Repeater {
+                    model: [
+                        { digit: "1", sub: "" },
+                        { digit: "2", sub: "ABC" },
+                        { digit: "3", sub: "DEF" },
+                        { digit: "4", sub: "GHI" },
+                        { digit: "5", sub: "JKL" },
+                        { digit: "6", sub: "MNO" },
+                        { digit: "7", sub: "PQRS" },
+                        { digit: "8", sub: "TUV" },
+                        { digit: "9", sub: "WXYZ" },
+                        { digit: "*", sub: "" },
+                        { digit: "0", sub: "+" },
+                        { digit: "#", sub: "" },
+                    ]
+
+                    delegate: Rectangle {
+                        width: 100
+                        height: 68
+                        color: "transparent"
+
+                        ColumnLayout {
+                            anchors.centerIn: parent
+                            spacing: 1
+                            Text {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: modelData.digit
+                                font.pixelSize: 28
+                                color: "#1a1a1a"
+                            }
+                            Text {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: modelData.sub
+                                font.pixelSize: 10
+                                color: "#888"
+                                visible: modelData.sub.length > 0
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: dialedNumber += modelData.digit
+                            onPressAndHold: {
+                                if (modelData.digit === "0") dialedNumber += "+"
+                            }
                         }
                     }
                 }
             }
         }
 
-        // Call + backspace row
+        // Call button row
         RowLayout {
             Layout.fillWidth: true
             Layout.bottomMargin: 24
@@ -190,21 +244,10 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: { /* handle call */ }
-                }
-            }
-
-            Item { Layout.fillWidth: true }
-
-            Text {
-                text: "⌫"
-                font.pixelSize: 24
-                color: dialedNumber.length > 0 ? "#1a1a1a" : "#CCCCCC"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: dialedNumber = dialedNumber.slice(0, -1)
-                    onPressAndHold: dialedNumber = ""
+                    onClicked: {
+                        root.callClicked(root.contactPhone)
+                        root.dismissed()
+                    }
                 }
             }
 

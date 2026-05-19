@@ -6,6 +6,12 @@ Rectangle {
     color: "#F8F8F8"
 
     property alias contactsModel: listView.model
+    property string selectedName: ""
+    property string selectedInitials: ""
+    property string selectedPhone: ""
+    property string selectedColor: "#E8B4B8"
+    property bool showInfo: false
+    property bool showDialing: false
 
     ColumnLayout {
         anchors.fill: parent
@@ -82,7 +88,6 @@ Rectangle {
                 height: visible ? 64 : 0
                 color: "white"
 
-                // use our function for name search instead of this
                 visible: searchField.text.length === 0 ||
                          model.name.toLowerCase().includes(searchField.text.toLowerCase())
 
@@ -120,7 +125,40 @@ Rectangle {
                     height: 1
                     color: "#F0F0F0"
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        selectedName     = model.name
+                        selectedInitials = model.initials
+                        selectedPhone    = model.phone
+                        selectedColor    = model.color
+                        showInfo = true
+                    }
+                }
             }
         }
+    }
+
+    ContactInfo {
+        anchors.fill: parent
+        visible: showInfo
+        contactName:     selectedName
+        contactInitials: selectedInitials
+        contactPhone:    selectedPhone
+        contactColor:    selectedColor
+        onDismissed:   showInfo = false
+        onCallClicked: { showInfo = false; showDialing = true }
+    }
+
+    DialingPopup {
+        anchors.fill: parent
+        visible: showDialing
+        contactName:     selectedName
+        contactInitials: selectedInitials
+        contactPhone:    selectedPhone
+        contactColor:    selectedColor
+        onDismissed: showDialing = false
+        onCallClicked: { showInfo = false; showDialing = true }
     }
 }
