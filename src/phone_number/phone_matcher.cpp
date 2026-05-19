@@ -33,7 +33,7 @@ std::optional<int> PhoneMatcher::findMatch(const PhoneNumber &number, const std:
 }
 
 std::vector<int> PhoneMatcher::searchByName(const std::string &name, const std::vector<Contact> &contacts,
-                                            int threshold = 2) {
+                                            int threshold) {
     std::vector<int> possibleMatches;
     std::string lowerName = toLower(name);
     for (int i = 0; i < contacts.size(); i++) {
