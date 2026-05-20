@@ -124,10 +124,11 @@ ApplicationWindow {
                         }
                     }
                     MouseArea {
-                        anchors.fill: parent;
+                        anchors.fill: parent
                         onClicked: {
-                        currentTab = 0
-                        clickSound.play()
+                            currentTab = 0
+                            dialView.dialedNumber = ""
+                            clickSound.play()
                         }
                     }
                 }
