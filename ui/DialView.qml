@@ -108,7 +108,10 @@ Rectangle {
 
                 MouseArea {
                         anchors.fill: parent
-                        onClicked: contactCallRequested(displayName, displayInitials, model.phone, displayColor)
+                        onClicked: {
+                            contactCallRequested(displayName, displayInitials, model.phone, displayColor)
+                            clickSound.play()
+                        }
                     }
             }
         }
@@ -179,8 +182,9 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: dialedNumber = dialedNumber.slice(0, -1)
+                        onClicked: {dialedNumber = dialedNumber.slice(0, -1); clickSound.play()}
                         onPressAndHold: dialedNumber = ""
+
                     }
                 }
             }
@@ -238,7 +242,43 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: dialedNumber += modelData.digit
+                            onClicked: {
+                                dialedNumber += modelData.digit
+                                switch(modelData.digit) {
+                                case "0":
+                                    dialPad0.play()
+                                    break;
+                                case "1":
+                                    dialPad1.play()
+                                    break;
+                                case "2":
+                                    dialPad2.play()
+                                    break;
+                                case "3":
+                                    dialPad3.play()
+                                    break;
+                                case "4":
+                                    dialPad4.play()
+                                    break;
+                                case "5":
+                                    dialPad5.play()
+                                    break;
+                                case "6":
+                                    dialPad6.play()
+                                    break;
+                                case "7":
+                                    dialPad7.play()
+                                    break;
+                                case "8":
+                                    dialPad8.play()
+                                    break;
+                                case "9":
+                                    dialPad9.play()
+                                    break;
+                                default:
+                                    dialPad0.play()
+                                }
+                            }
                             onPressAndHold: {
                                 if (modelData.digit === "0") dialedNumber += "+"
                             }
@@ -273,12 +313,12 @@ Rectangle {
                         detailesContactModel.clear()
                         contactsModel.makeCall()
 
-
-                        detailesContactModel.name ? incomingCall.show(
+                        clickSound.play()
+                        detailesContactModel.name ? activeCall.show(
                                                     detailesContactModel.name + " " + detailesContactModel.surname,
                                                     initialsFrom(detailesContactModel.name, detailesContactModel.surname),
                                                     detailesContactModel.phoneNumbers[0], "#C4B4E8" )
-                                            : incomingCall.show("", "", dialedNumber, "");
+                                            : activeCall.show("", "", dialedNumber, "#C4B4E8");
 
                     }
                 }

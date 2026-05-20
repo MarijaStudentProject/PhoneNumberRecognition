@@ -38,17 +38,19 @@ Rectangle {
 
     // Simulate connecting after 2 seconds
     Timer {
+        id: dialingTimer
         interval: 2000
-        running: root.visible && callState === "calling"
-        onTriggered: callState = "active"
+        running:{ root.visible && callState === "calling"}
+        onTriggered: {callState = "active"; dialingSound.stop()}
+
     }
 
     // Call timer
     Timer {
-        interval: 1000
+        interval: 2000
         repeat: true
         running: callState === "active"
-        onTriggered: elapsedSeconds++
+        onTriggered: {elapsedSeconds++; }
     }
 
     ColumnLayout {
@@ -152,7 +154,10 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: parent.parent.active = !parent.parent.active
+                            onClicked: {
+                                parent.parent.active = !parent.parent.active
+                                clickSound.play()
+                            }
                         }
                     }
 
@@ -184,6 +189,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked: {
                     root.visible = false
+                    clickSound.play()
                     root.callEnded()
                 }
             }

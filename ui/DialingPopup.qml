@@ -93,7 +93,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.dismissed()
+                        onClicked: {root.dismissed(); clickSound.play()}
                     }
                 }
 
@@ -121,6 +121,7 @@ Rectangle {
 
                             root.callClicked(root.contactPhone)
                             root.dismissed()
+                            clickSound.play()
                         }
                     }
                 }

@@ -1,8 +1,69 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtMultimedia
+
+
+
 
 ApplicationWindow {
+    SoundEffect {
+        id: clickSound
+        source: "qrc:/PhoneApp/ui/sounds/click.wav"
+    }
+
+    // Dialing tone — loops while calling
+    SoundEffect {
+        id: ringtoneSound
+        source: "qrc:/PhoneApp/ui/sounds/samsung-ringtone.wav"
+        loops: SoundEffect.Infinite
+    }
+    SoundEffect {
+        id: dialingSound
+        source: "qrc:/PhoneApp/ui/sounds/dialing-sound.wav"
+        loops: SoundEffect.Infinite
+    }
+    SoundEffect {
+        id: dialPad0
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-0.wav"
+    }
+    SoundEffect {
+        id: dialPad1
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-1.wav"
+    }
+    SoundEffect {
+        id: dialPad2
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-2.wav"
+    }
+    SoundEffect {
+        id: dialPad3
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-3.wav"
+    }
+    SoundEffect {
+        id: dialPad4
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-4.wav"
+    }
+    SoundEffect {
+        id: dialPad5
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-5.wav"
+    }
+    SoundEffect {
+        id: dialPad6
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-6.wav"
+    }
+    SoundEffect {
+        id: dialPad7
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-7.wav"
+    }
+    SoundEffect {
+        id: dialPad8
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-8.wav"
+    }
+    SoundEffect {
+        id: dialPad9
+        source: "qrc:/PhoneApp/ui/sounds/dialpad-9.wav"
+    }
+
     visible: true
     width: 400
     height: 700
@@ -62,7 +123,13 @@ ApplicationWindow {
                             color: currentTab === 0 ? "#1a1a1a" : "#888"
                         }
                     }
-                    MouseArea { anchors.fill: parent; onClicked: currentTab = 0 }
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: {
+                        currentTab = 0
+                        clickSound.play()
+                        }
+                    }
                 }
 
                 Rectangle {
@@ -90,7 +157,12 @@ ApplicationWindow {
                             color: currentTab === 1 ? "#1a1a1a" : "#888"
                         }
                     }
-                    MouseArea { anchors.fill: parent; onClicked: currentTab = 1 }
+                    MouseArea { anchors.fill: parent;
+                            onClicked: {
+                                currentTab = 1
+                                clickSound.play()
+                            }
+                    }
                 }
             }
         }
@@ -142,25 +214,40 @@ ApplicationWindow {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: incomingCall.show("Beatriz Souza", "BS", "(917) 555-0144", "#C4B4E8")
+            onClicked: {incomingCall.show("Beatriz Souza", "BS", "(917) 555-0144", "#C4B4E8"); clickSound.play()}
         }
     }
 
     // Incoming call popup — overlays everything
     IncomingCallPopup {
+
         id: incomingCall
         anchors.fill: parent
         z: 99
         onAccepted: {
             activeCall.show(incomingCall.contactName, incomingCall.contactInitials,
-                            incomingCall.contactPhone, incomingCall.contactColor)
+                            incomingCall.contactPhone, incomingCall.contactColor);
         }
         onDeclined: console.log("Call declined")
+        onVisibleChanged: {
+                if (visible)
+                    ringtoneSound.play()
+                else
+                    ringtoneSound.stop()
+            }
     }
     ActiveCallScreen {
         id: activeCall
         anchors.fill: parent
         z: 98
+        onVisibleChanged: {
+            if(visible) {
+                dialingSound.play();
+            } else {
+                dialingSound.stop();
+            }
+        }
+
         onCallEnded: console.log("Call ended")
     }
 

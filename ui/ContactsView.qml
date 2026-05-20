@@ -195,6 +195,7 @@ Rectangle {
                         selectedEmail = detailesContactModel.email
                         selectedColor    = displayColor
                         showInfo = true
+                        clickSound.play()
                     }
                 }
             }
@@ -211,13 +212,13 @@ Rectangle {
         contactEmail:   selectedEmail
         contactColor:    selectedColor
         onDismissed:   showInfo = false
-        contactName:     contactInfo.contactName
-        contactInitials: contactInfo.contactInitials
-        contactPhone:    contactInfo.contactPhone
-        contactColor:    contactInfo.contactColor
+        // contactName:     contactInfo.contactName
+        // contactInitials: contactInfo.contactInitials
+        // contactPhone:    contactInfo.contactPhone
+        // contactColor:    contactInfo.contactColor
         onCallClicked: {
             showDialing = false
-            callRequested(contactInfo.contactName, contactInfo.contactInitials, contactInfo.contactPhone, contactInfo.contactColor)
+            callRequested(contactName, contactInitials, contactPhone, contactColor)
         }
     }
 

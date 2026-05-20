@@ -27,8 +27,8 @@ endif()
 set(SOURCES
     src/phone_number/numbering_plan_repo.cpp
     src/phone_number/phone_normalizer.cpp
-    src/phone_number/address.cpp 
-    src/phone_number/phone_number.cpp 
+    src/phone_number/address.cpp
+    src/phone_number/phone_number.cpp
     src/phone_number/contact.cpp
     src/phone_number/vcf_parser.cpp
     src/phone_number/phone_matcher.cpp
@@ -42,37 +42,6 @@ file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
 add_library(phone_normalizer STATIC ${SOURCES} ${HEADERS})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
 target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
-# target_link_libraries(phone_normalizer PRIVATE Qt6::Core Qt6::Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
-qt_add_executable(PhoneNumberApp
-    src/main.cpp
-)
-
-set_target_properties(PhoneNumberApp PROPERTIES
-    AUTOMOC ON
-)
-
-qt_add_qml_module(PhoneNumberApp
-    URI PhoneApp
-    VERSION 1.0
-    QML_FILES
-        ui/Main.qml
-        ui/ContactsView.qml
-        ui/DialView.qml
-        QML_FILES  ui/ContactInfo.qml
-        QML_FILES ui/DialingPopup.qml
-        QML_FILES ui/IncomingCallPopup.qml
-        QML_FILES ui/ActiveCallScreen.qml
-        RESOURCES ui/fonts/fa-solid-900.ttf
-)
-
-target_link_libraries(PhoneNumberApp PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-    Qt6::QuickControls2
-    phone_normalizer
-)
-
 
 find_program(CLANG_TIDY clang-tidy)
 if(CLANG_TIDY)
@@ -120,7 +89,7 @@ add_custom_target(copy_resources
 add_subdirectory(tests)
 
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Multimedia)
 
 qt_standard_project_setup()
 
@@ -130,10 +99,10 @@ qt_add_executable(ContactsApp src/controller/contacts_controller.cpp src/model/c
 )
 
 
-target_link_libraries(ContactsApp PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick phone_normalizer)
+target_link_libraries(ContactsApp PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick  phone_normalizer)
 
 
-find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2 Multimedia)
 
 set(CMAKE_AUTORCC ON)
 
@@ -151,11 +120,28 @@ qt_add_qml_module(ContactsApp
         QML_FILES  ui/ContactInfo.qml
         QML_FILES ui/DialingPopup.qml
         QML_FILES ui/IncomingCallPopup.qml
+        QML_FILES ui/ActiveCallScreen.qml
+        RESOURCES ui/fonts/fa-solid-900.ttf
+        RESOURCES ui/sounds/dialpad-0.wav
+        RESOURCES ui/sounds/dialpad-1.wav
+        RESOURCES ui/sounds/dialpad-2.wav
+        RESOURCES ui/sounds/dialpad-3.wav
+        RESOURCES ui/sounds/dialpad-4.wav
+        RESOURCES ui/sounds/dialpad-5.wav
+        RESOURCES ui/sounds/dialpad-6.wav
+        RESOURCES ui/sounds/dialpad-7.wav
+        RESOURCES ui/sounds/dialpad-8.wav
+        RESOURCES ui/sounds/dialpad-9.wav
+        RESOURCES ui/sounds/click.wav
+        RESOURCES ui/sounds/samsung-ringtone.wav ui/sounds/dialing-sound.wav
+
+
 )
 
 target_link_libraries(ContactsApp PRIVATE
     Qt6::Gui
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Multimedia
     phone_normalizer
 )

@@ -10,6 +10,7 @@
 #include <QDir>
 
 #include <iostream>
+#include <qcoreapplication.h>
 
 int main(int argc, char *argv[])
 {
@@ -22,8 +23,8 @@ int main(int argc, char *argv[])
     ContactsModel contactsModel(&controller, &detailesContactModel);
     detailesContactModel.setContactsModel(&contactsModel);
 
-    //temporarly, because we dont have button for import in application
-    //it will import from prepared file in resources
+           //temporarly, because we dont have button for import in application
+           //it will import from prepared file in resources
 
     QString path = QDir(QCoreApplication::applicationDirPath())
                        .filePath("resources/contacts_100.vcf");
@@ -35,12 +36,12 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(
         "cppContactsModel",
         &contactsModel
-    );
+        );
 
     engine.rootContext()->setContextProperty(
         "detailesContactModel",
         &detailesContactModel
-    );
+        );
 
     engine.load(QUrl(QStringLiteral("qrc:/PhoneApp/ui/Main.qml")));
 

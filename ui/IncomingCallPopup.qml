@@ -129,7 +129,7 @@ Rectangle {
                         spacing: 2
                         Text {
                             Layout.alignment: Qt.AlignHCenter
-                            text: "📵"
+                            text: "\uf3dd"
                             font.pixelSize: 18
                         }
                         Text {
@@ -145,6 +145,7 @@ Rectangle {
                         onClicked: {
                             root.visible = false
                             root.declined()
+                            clickSound.play()
                         }
                     }
                 }
@@ -177,6 +178,7 @@ Rectangle {
                         onClicked: {
                             root.visible = false
                             root.accepted()
+                            clickSound.play()
                         }
                     }
                 }

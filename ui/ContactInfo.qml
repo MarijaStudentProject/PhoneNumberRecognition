@@ -41,7 +41,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         enabled: root.visible
-        onClicked: root.dismissed()
+        onClicked: {root.dismissed(); clickSound.play()}
     }
 
     Rectangle {
@@ -51,7 +51,7 @@ Rectangle {
         radius: 16
         color: "white"
 
-        MouseArea { anchors.fill: parent }
+        MouseArea { anchors.fill: parent; onClicked: clickSound.play()}
 
         // Close
         Text {
@@ -64,7 +64,7 @@ Rectangle {
             color: "#888"
             MouseArea {
                 anchors.fill: parent
-                onClicked: { editMode = false; root.dismissed() }
+                onClicked: { editMode = false; root.dismissed(); clickSound.play() }
             }
         }
 
@@ -94,6 +94,7 @@ Rectangle {
                         root.contactEmail   = emailField.text
                         root.contactAddress = addressField.text
                     }
+                    clickSound.play()
                     editMode = !editMode
                 }
             }
@@ -159,7 +160,7 @@ Rectangle {
                     }
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.callClicked(root.contactPhone)
+                        onClicked: {root.callClicked(root.contactPhone); clickSound.play()}
                     }
                 }
 
