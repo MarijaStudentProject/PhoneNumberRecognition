@@ -1,9 +1,14 @@
 #include "controller/contacts_controller.hpp"
 
 #include <phone_number/phone_matcher.hpp>
+#include <iostream>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 
 ContactsController::ContactsController()
-    : m_normalizer("resources/min_filtered_metadata.json"), m_vcfParser(m_normalizer, "RS"){
+    : m_normalizer(QDir(QCoreApplication::applicationDirPath())
+                       .filePath("resources/min_filtered_metadata.json").toStdString()),
+      m_vcfParser(m_normalizer, "RS"){
 }
 
 const std::vector<Contact> &ContactsController::contacts() const{
@@ -42,7 +47,9 @@ void ContactsController::updateContact(int id, const std::string &name, const st
 }
 
 void ContactsController::importContacts(const std::string& path){
-   m_contacts =  m_vcfParser.loadFromFile(path);
+    m_contacts =  m_vcfParser.loadFromFile(path);
+    std::sort(m_contacts.begin(), m_contacts.end());
+
 }
 
 std::optional<int> ContactsController::match(const std::string& number){

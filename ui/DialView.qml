@@ -8,25 +8,46 @@ Rectangle {
     property string dialedNumber: ""
     property var contactsModel: null
 
+
     signal contactCallRequested(string name, string initials, string phone, string color)
-    // use our function for phone number search instead of this
-    function findMatches(number) {
-        var results = []
-        if (!contactsModel || number.length < 2) return results
-        var digits = number.replace(/\D/g, "")
-        for (var i = 0; i < contactsModel.count; i++) {
-            var c = contactsModel.get(i)
-            var phoneDigits = c.phone.replace(/\D/g, "")
-            if (phoneDigits.includes(digits)) {
-                results.push(c)
-            }
-        }
-        return results
+
+
+    onDialedNumberChanged: contactsModel.setSearchText(dialedNumber)
+
+
+
+    function fullName(name, surname){
+        if(surname === undefined || surname.length === 0)
+            return name
+        return name + " " + surname
     }
 
-    property var matches: []
+    function initialsFrom(name, surname){
+        var first = name && name.length > 0 ? name[0] : ""
+        var second = surname && surname.length > 0 ? surname[0] : ""
 
-    onDialedNumberChanged: matches = findMatches(dialedNumber)
+        if(second.length === 0 && name.indexOf(" ") !== -1){
+            var parts = name.split(" ")
+            second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
+        }
+        return (first + second).toUpperCase()
+    }
+
+    function colorForId(id) {
+        var colors = [
+            "#E8B4B8",
+            "#B4C8E8",
+            "#E8C4B4",
+            "#C4B4E8",
+            "#B4E8C8",
+            "#E8E4B4",
+            "#E8B4D4",
+            "#B4D4E8",
+            "#D4E8B4"
+        ]
+
+        return colors[Math.abs(id) % colors.length]
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -38,13 +59,17 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
-            model: matches
-            visible: matches.length > 0
+            model: contactsModel
+            visible: matchList.count > 0 && dialedNumber.length > 0
 
             delegate: Rectangle {
                 width: matchList.width
                 height: 64
                 color: "white"
+
+                readonly property string displayName: fullName(model.name, model.surname)
+                readonly property string displayInitials: initialsFrom(model.name, model.surname)
+                readonly property string displayColor: colorForId(model.contactId)
 
                 RowLayout {
                     anchors.fill: parent
@@ -54,10 +79,10 @@ Rectangle {
 
                     Rectangle {
                         width: 42; height: 42; radius: 21
-                        color: modelData.color
+                        color: displayColor
                         Text {
                             anchors.centerIn: parent
-                            text: modelData.initials
+                            text: displayInitials
                             font.pixelSize: 14
                             font.weight: Font.Medium
                             color: "white"
@@ -67,8 +92,8 @@ Rectangle {
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 2
-                        Text { text: modelData.name;  font.pixelSize: 15; color: "#1a1a1a" }
-                        Text { text: modelData.phone; font.pixelSize: 13; color: "#888" }
+                        Text { text: displayName;  font.pixelSize: 15; color: "#1a1a1a" }
+                        Text { text: model.phone; font.pixelSize: 13; color: "#888" }
                     }
                 }
 
@@ -83,7 +108,7 @@ Rectangle {
 
                 MouseArea {
                         anchors.fill: parent
-                        onClicked: contactCallRequested(modelData.name, modelData.initials, modelData.phone, modelData.color)
+                        onClicked: contactCallRequested(displayName, displayInitials, model.phone, displayColor)
                     }
             }
         }
@@ -92,7 +117,7 @@ Rectangle {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            visible: matches.length === 0
+            visible: matchList.count === 0
 
             Text {
                 anchors.centerIn: parent
@@ -245,8 +270,16 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        root.callClicked(root.contactPhone)
-                        root.dismissed()
+                        detailesContactModel.clear()
+                        contactsModel.makeCall()
+
+
+                        detailesContactModel.name ? incomingCall.show(
+                                                    detailesContactModel.name + " " + detailesContactModel.surname,
+                                                    initialsFrom(detailesContactModel.name, detailesContactModel.surname),
+                                                    detailesContactModel.phoneNumbers[0], "#C4B4E8" )
+                                            : incomingCall.show("", "", dialedNumber, "");
+
                     }
                 }
             }

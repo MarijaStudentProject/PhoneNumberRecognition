@@ -5,14 +5,49 @@ import QtQuick.Layouts 1.15
 Rectangle {
     color: "#F8F8F8"
 
-    property alias contactsModel: listView.model
+    property var contactsModel: null
     property string selectedName: ""
     property string selectedInitials: ""
     property string selectedPhone: ""
+    property string selectedEmail: ""
     property string selectedColor: "#E8B4B8"
     property bool showInfo: false
     property bool showDialing: false
     signal callRequested(string name, string initials, string phone, string color)
+
+
+    function fullName(name, surname){
+        if(surname === undefined || surname.length === 0)
+            return name
+        return name + " " + surname
+    }
+
+    function initialsFrom(name, surname){
+        var first = name && name.length > 0 ? name[0] : ""
+        var second = surname && surname.length > 0 ? surname[0] : ""
+
+        if(second.length === 0 && name.indexOf(" ") !== -1){
+            var parts = name.split(" ")
+            second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
+        }
+        return (first + second).toUpperCase()
+    }
+
+    function colorForId(id) {
+        var colors = [
+            "#E8B4B8",
+            "#B4C8E8",
+            "#E8C4B4",
+            "#C4B4E8",
+            "#B4E8C8",
+            "#E8E4B4",
+            "#E8B4D4",
+            "#B4D4E8",
+            "#D4E8B4"
+        ]
+
+        return colors[Math.abs(id) % colors.length]
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -49,6 +84,12 @@ Rectangle {
                         color: "#333"
                         clip: true
 
+
+                        text: contactsModel ? contactsModel.searchText : ""
+
+                        onTextEdited: {
+                            contactsModel.searchText = text
+                        }
                         Text {
                             anchors.fill: parent
                             text: "Search contacts"
@@ -63,6 +104,7 @@ Rectangle {
 
         ListView {
             id: listView
+            model: contactsModel
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
@@ -85,12 +127,22 @@ Rectangle {
             }
 
             delegate: Rectangle {
+                required property int index
+                required property int contactId
+                required property string name
+                required property string surname
+                required property string phone
+
                 width: ListView.view.width
                 height: visible ? 64 : 0
                 color: "white"
 
-                visible: searchField.text.length === 0 ||
+           /*     visible: searchField.text.length === 0 ||
                          model.name.toLowerCase().includes(searchField.text.toLowerCase())
+            */
+                readonly property string displayName: fullName(name, surname)
+                readonly property string displayInitials: initialsFrom(name, surname)
+                readonly property string displayColor: colorForId(contactId)
 
                 RowLayout {
                     anchors.fill: parent
@@ -100,10 +152,10 @@ Rectangle {
 
                     Rectangle {
                         width: 42; height: 42; radius: 21
-                        color: model.color
+                        color: displayColor
                         Text {
                             anchors.centerIn: parent
-                            text: model.initials
+                            text: displayInitials
                             font.pixelSize: 14
                             font.weight: Font.Medium
                             color: "white"
@@ -112,9 +164,10 @@ Rectangle {
 
                     ColumnLayout {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignVCenter
                         spacing: 2
-                        Text { text: model.name;  font.pixelSize: 15; color: "#1a1a1a" }
-                        Text { text: model.phone; font.pixelSize: 13; color: "#888" }
+                        Text { text: displayName;  font.pixelSize: 15; color: "#1a1a1a"; horizontalAlignment: Text.AlignLeft}
+                        Text { text: phone; font.pixelSize: 13; color: "#888"; horizontalAlignment: Text.AlignLeft }
                     }
                 }
 
@@ -130,10 +183,13 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        selectedName     = model.name
-                        selectedInitials = model.initials
-                        selectedPhone    = model.phone
-                        selectedColor    = model.color
+                        contactsModel.select(index)
+
+                        selectedName     = displayName
+                        selectedInitials = displayInitials
+                        selectedPhone    = phone
+                        selectedEmail = detailesContactModel.email
+                        selectedColor    = displayColor
                         showInfo = true
                     }
                 }
@@ -147,6 +203,7 @@ Rectangle {
         contactName:     selectedName
         contactInitials: selectedInitials
         contactPhone:    selectedPhone
+        contactEmail:   selectedEmail
         contactColor:    selectedColor
         onDismissed:   showInfo = false
         onCallClicked: { showInfo = false; showDialing = true }

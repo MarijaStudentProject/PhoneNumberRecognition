@@ -104,6 +104,7 @@ target_link_libraries(ContactsApp PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick
 
 find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
 
+set(CMAKE_AUTORCC ON)
 
 set_target_properties(ContactsApp PROPERTIES
     AUTOMOC ON

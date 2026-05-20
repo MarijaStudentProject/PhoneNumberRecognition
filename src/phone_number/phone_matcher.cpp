@@ -120,6 +120,9 @@ std::optional<int> PhoneMatcher::matchBySuffix(std::string &number, const std::v
 
 std::vector<int> PhoneMatcher::searchByNumberPrefix(const std::string &number, const std::vector<Contact> &contacts) {
     std::vector<int> matches;
+    if(number.empty()){
+        return matches;
+    }
     for (int i = 0; i < contacts.size(); i++) {
         const auto &contact = contacts[i];
         if (!contact.hasPhoneNumbers()) {

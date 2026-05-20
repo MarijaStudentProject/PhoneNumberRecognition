@@ -178,5 +178,15 @@ void DetailesContactModel::setPhoneNumber(int index, const QString &number) {
 void DetailesContactModel::clear()
 {
     m_selectedId = -1;
+
+    setName("");
+    setSurname("");
+    m_editedPhoneNumbers.clear();
+
+    setEmail("");
+    setCity("");
+    setCountry("");
+    setStreet("");
+
     emit hasSelectionChanged();
 }

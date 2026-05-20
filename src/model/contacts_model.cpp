@@ -1,6 +1,7 @@
 #include "model/contacts_model.hpp"
 #include "model/contacts_model.hpp"
 
+#include <iostream>
 ContactsModel::ContactsModel(ContactsController* controller, DetailesContactModel* detailedContactModel,QObject* parent)
     : m_controller(controller), m_detailedContactModel(detailedContactModel), QAbstractListModel(parent) {
     refresh();
@@ -16,7 +17,6 @@ QVariant ContactsModel::data(const QModelIndex &index, int role) const{
     }
 
     const auto id = m_visibleIds[index.row()];
-
     const auto* c = m_controller->findById(id);
 
 
@@ -62,9 +62,14 @@ int ContactsModel::contactIdAt(int row) const{
 void ContactsModel::setSearchText(const QString &text){
     m_editedSearchText=text;
 
+
     beginResetModel();
     m_visibleIds = m_controller->search(text.toStdString());
     endResetModel();
+
+    if(text.isEmpty()){
+        refresh();
+    }
 
     emit searchTextChanged();
 }
@@ -80,6 +85,7 @@ void ContactsModel::setContactToSearchText(int row){
 
 void ContactsModel::import(const QString &text){
     m_controller->importContacts(text.toStdString());
+
     refresh();
 }
 
@@ -95,7 +101,7 @@ void ContactsModel::makeCall() {
             m_detailedContactModel->showDetails(opt.value());
         }
     }
-    setSearchText("");  
+    //setSearchText("");
  }
 void ContactsModel::select(int row) { 
     int id = contactIdAt(row);
@@ -108,7 +114,7 @@ void ContactsModel::select(int row) {
      m_visibleIds.clear();
 
      for (int i = 0; i < m_controller->contacts().size(); i++) {
-         m_visibleIds.push_back(i);
+        m_visibleIds.push_back(i);
      }
      endResetModel();
  }

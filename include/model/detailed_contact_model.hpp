@@ -40,6 +40,9 @@ public:
     QVariantList phoneNumbers() const;
     bool hasSelection() const;
 
+    void setContactsModel(ContactsModel *contactsModel){
+        m_contactsModel = contactsModel;
+    }
     void setName(const QString& value); //invokable?
     void setSurname(const QString& value);
     void setEmail(const QString& value);
