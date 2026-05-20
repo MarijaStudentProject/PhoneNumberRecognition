@@ -25,7 +25,7 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             height: 50
-            color: "white"
+            color: "#F8F8F8"
 
             RowLayout {
                 anchors.fill: parent
@@ -49,7 +49,12 @@ ApplicationWindow {
                     RowLayout {
                         anchors.centerIn: parent
                         spacing: 6
-                        Text { text: "👤"; font.pixelSize: 14 }
+                        Text {
+                            text: "\uf007"
+                            font.family: fontAwesome.name
+                            font.pixelSize: 14
+                            color: currentTab === 0 ? "#1a1a1a" : "#888"
+                        }
                         Text {
                             text: "Contacts"
                             font.pixelSize: 14
@@ -99,7 +104,7 @@ ApplicationWindow {
                 contactsModel: cppContactsModel
                 onCallRequested: (name, initials, phone, color) => {
                     incomingCall.callLabel = "Calling..."
-                    incomingCall.show(name, initials, phone, color)
+                    activeCall.show(name, initials, phone, color)
                 }
             }
             DialView {
@@ -108,9 +113,10 @@ ApplicationWindow {
                     onContactCallRequested: (name, initials, phone, color) => {
                         callingName     = name
                         callingInitials = initials
-                        callingPhone    = phone
+                        callingPhone  = phone
                         callingColor    = color
-                        showDialingFromSearch = true
+                        activeCall.show(callingName, callingInitials, callingPhone, callingColor)
+                        showDialingFromSearch = false
                     }
             }
         }
@@ -144,27 +150,23 @@ ApplicationWindow {
     IncomingCallPopup {
         id: incomingCall
         anchors.fill: parent
-        focus: true
         z: 99
-        onAccepted: console.log("Call accepted")
+        onAccepted: {
+            activeCall.show(incomingCall.contactName, incomingCall.contactInitials,
+                            incomingCall.contactPhone, incomingCall.contactColor)
+        }
         onDeclined: console.log("Call declined")
     }
-
-    DialingPopup {
-        id: dialingPopup
+    ActiveCallScreen {
+        id: activeCall
         anchors.fill: parent
-        visible: showDialingFromSearch
         z: 98
-        contactName:     callingName
-        contactInitials: callingInitials
-        contactPhone:    callingPhone
-        contactColor:    callingColor
-        onDismissed:   showDialingFromSearch = false
-        onCallClicked: {
-            showDialingFromSearch = false
-            incomingCall.callLabel = "Calling..."
-            incomingCall.show(callingName, callingInitials, callingPhone, callingColor)
-        }
+        onCallEnded: console.log("Call ended")
+    }
+
+    FontLoader {
+        id: fontAwesome
+        source: "qrc:PhoneApp/ui/fonts/fa-solid-900.ttf"
     }
 
 }
