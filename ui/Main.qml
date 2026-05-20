@@ -177,23 +177,6 @@ ApplicationWindow {
         onCallEnded: console.log("Call ended")
     }
 
-    DialingPopup {
-        id: dialingPopup
-        anchors.fill: parent
-        visible: showDialingFromSearch
-        z: 98
-        contactName:     callingName
-        contactInitials: callingInitials
-        contactPhone:    callingPhone
-        contactColor:    callingColor
-        onDismissed:   showDialingFromSearch = false
-        onCallClicked: {
-            showDialingFromSearch = false
-            activeCall.callLabel = "Calling..."
-            activeCall.show(callingName, callingInitials, callingPhone, callingColor)
-        }
-    }
-
     FontLoader {
         id: fontAwesome
         source: "qrc:PhoneApp/ui/fonts/fa-solid-900.ttf"

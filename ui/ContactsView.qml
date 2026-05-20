@@ -13,10 +13,6 @@ Rectangle {
     property bool showInfo: false
     property bool showDialing: false
 
-    property int selectedIndex: -1
-    property string selectedEmail: ""
-    property string selectedAddress: ""
-
     signal callRequested(string name, string initials, string phone, string color)
 
     ColumnLayout {

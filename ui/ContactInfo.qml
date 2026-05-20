@@ -19,7 +19,6 @@ Rectangle {
 
     signal dismissed()
     signal callClicked(string phone)
-    signal saved(string name, string phone)
 
     onVisibleChanged: {
         if (!visible) {
