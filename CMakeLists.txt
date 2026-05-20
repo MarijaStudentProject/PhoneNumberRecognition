@@ -62,6 +62,8 @@ qt_add_qml_module(PhoneNumberApp
         QML_FILES  ui/ContactInfo.qml
         QML_FILES ui/DialingPopup.qml
         QML_FILES ui/IncomingCallPopup.qml
+        QML_FILES ui/ActiveCallScreen.qml
+        RESOURCES ui/fonts/fa-solid-900.ttf
 )
 
 target_link_libraries(PhoneNumberApp PRIVATE

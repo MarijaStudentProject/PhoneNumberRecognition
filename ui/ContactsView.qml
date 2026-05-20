@@ -25,27 +25,30 @@ Rectangle {
 
         Rectangle {
             Layout.fillWidth: true
-            height: 48
-            color: "white"
-            Layout.leftMargin: 12
-            Layout.rightMargin: 12
-            Layout.topMargin: 8
-            Layout.bottomMargin: 4
-
+               Layout.topMargin: 8
+               Layout.bottomMargin: 4
+               height: 44
+               color: "#F8F8F8"  // white background behind the pill
             Rectangle {
                 anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-                radius: 20
-                color: "#F2F2F2"
+                       anchors.leftMargin: 16
+                       anchors.rightMargin: 16
+                       radius: 22
+                       color: "#EFEFEF"
+
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 14
-                    anchors.rightMargin: 14
-                    spacing: 8
+                            anchors.leftMargin: 14
+                            anchors.rightMargin: 14
+                            spacing: 8
 
-                    Text { text: "🔍"; font.pixelSize: 14; color: "#888" }
+                    Text {
+                        text: "\uf002"
+                        font.family: fontAwesome.name
+                        font.pixelSize: 14
+                        color: "#888"
+                    }
 
                     TextInput {
                         id: searchField
@@ -59,6 +62,7 @@ Rectangle {
                             text: "Search contacts"
                             color: "#AAAAAA"
                             font.pixelSize: 15
+                            verticalAlignment: Text.AlignVCenter
                             visible: searchField.text.length === 0
                         }
                     }
@@ -155,7 +159,14 @@ Rectangle {
         enabled: showInfo
         z: 10
         onDismissed:   showInfo = false
-        onCallClicked: { showInfo = false; showDialing = true }
+        contactName:     contactInfo.contactName
+        contactInitials: contactInfo.contactInitials
+        contactPhone:    contactInfo.contactPhone
+        contactColor:    contactInfo.contactColor
+        onCallClicked: {
+            showDialing = false
+            callRequested(contactInfo.contactName, contactInfo.contactInitials, contactInfo.contactPhone, contactInfo.contactColor)
+        }
     }
 
     DialingPopup {
