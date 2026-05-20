@@ -1,0 +1,799 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Petrovic;Marko;;;
+FN:Marko Petrovic
+TEL;TYPE=CELL:+381601231001
+EMAIL;TYPE=HOME:marko.petrovic1@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jovanovic;Nikola;;;
+FN:Nikola Jovanovic
+TEL;TYPE=CELL:+381 60 123 1002
+ADR;TYPE=HOME:;;Bulevar Kralja Aleksandra 88;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Nikolic;Jovan;;;
+FN:Jovan Nikolic
+TEL;TYPE=CELL:+381-60-123-1003
+EMAIL;TYPE=HOME:jovan.nikolic3@example.com
+ADR;TYPE=HOME:;;Zmaj Jovina 5;Novi Sad;;21000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ilic;Luka;;;
+FN:Luka Ilic
+TEL;TYPE=CELL:+381 (60) 123-1004
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stojanovic;Stefan;;;
+FN:Stefan Stojanovic
+TEL;TYPE=CELL:00381 60 123 1005
+EMAIL;TYPE=HOME:stefan.stojanovic5@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Pavlovic;Milos;;;
+FN:Milos Pavlovic
+TEL;TYPE=CELL:00 381 60 123 1006
+ADR;TYPE=HOME:;;Dunavska 7;Pozarevac;;12000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Markovic;Petar;;;
+FN:Petar Markovic
+TEL;TYPE=CELL:011 381 60 123 1007
+EMAIL;TYPE=HOME:petar.markovic7@example.com
+ADR;TYPE=HOME:;;Glavna 21;Kovin;;26220;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Djordjevic;Aleksa;;;
+FN:Aleksa Djordjevic
+TEL;TYPE=CELL:0601231008
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stankovic;Filip;;;
+FN:Filip Stankovic
+TEL;TYPE=CELL:060 123 1009
+EMAIL;TYPE=HOME:filip.stankovic9@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Popovic;Vuk;;;
+FN:Vuk Popovic
+TEL;TYPE=CELL:060-123-1010
+ADR;TYPE=HOME:;;Vojvode Stepe 101;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Milosevic;Ana;;;
+FN:Ana Milosevic
+TEL;TYPE=CELL:(060) 123-1011
+EMAIL;TYPE=HOME:ana.milosevic11@example.com
+ADR;TYPE=HOME:;;Knez Mihailova 12;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Knezevic;Milica;;;
+FN:Milica Knezevic
+TEL;TYPE=CELL:06 0123 1012
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Savic;Jelena;;;
+FN:Jelena Savic
+TEL;TYPE=CELL:064/123-1013
+EMAIL;TYPE=HOME:jelena.savic13@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Zivkovic;Marija;;;
+FN:Marija Zivkovic
+TEL;TYPE=CELL:065.123.1014
+ADR;TYPE=HOME:;;Cara Dusana 44;Nis;;18000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Mitrovic;Teodora;;;
+FN:Teodora Mitrovic
+TEL;TYPE=CELL:063 123 456
+EMAIL;TYPE=HOME:teodora.mitrovic15@example.com
+ADR;TYPE=HOME:;;Takovska 19;Kragujevac;;34000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ristic;Sara;;;
+FN:Sara Ristic
+TEL;TYPE=CELL:+381641231016
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Todorovic;Ivana;;;
+FN:Ivana Todorovic
+TEL;TYPE=CELL:00381-64-123-1017
+EMAIL;TYPE=HOME:ivana.todorovic17@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stevanovic;Katarina;;;
+FN:Katarina Stevanovic
+TEL;TYPE=CELL:064 123 1018
+ADR;TYPE=HOME:;;Nemanjina 3;Cacak;;32000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Lazic;Tamara;;;
+FN:Tamara Lazic
+TEL;TYPE=CELL:+381 11 234 1019
+EMAIL;TYPE=HOME:tamara.lazic19@example.com
+ADR;TYPE=HOME:;;Svetog Save 14;Subotica;;24000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Cvetkovic;Sofija;;;
+FN:Sofija Cvetkovic
+TEL;TYPE=CELL:011 234 1020
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Matic;Dusan;;;
+FN:Dusan Matic
+TEL;TYPE=CELL:(011) 234-1021
+EMAIL;TYPE=HOME:dusan.matic21@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Bogdanovic;Mihailo;;;
+FN:Mihailo Bogdanovic
+TEL;TYPE=CELL:+1 202 555 1022
+ADR;TYPE=HOME:;;Bulevar Kralja Aleksandra 88;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Milic;Andrej;;;
+FN:Andrej Milic
+TEL;TYPE=CELL:001 202 555 1023
+EMAIL;TYPE=HOME:andrej.milic23@example.com
+ADR;TYPE=HOME:;;Zmaj Jovina 5;Novi Sad;;21000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Peric;Uros;;;
+FN:Uros Peric
+TEL;TYPE=CELL:(202) 555-1024
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Radovic;Nemanja;;;
+FN:Nemanja Radovic
+TEL;TYPE=CELL:202-555-1025
+EMAIL;TYPE=HOME:nemanja.radovic25@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Simic;Ognjen;;;
+FN:Ognjen Simic
+TEL;TYPE=CELL:+49 30 126126
+ADR;TYPE=HOME:;;Dunavska 7;Pozarevac;;12000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Vasic;Vladimir;;;
+FN:Vladimir Vasic
+TEL;TYPE=CELL:0049 30 127127
+EMAIL;TYPE=HOME:vladimir.vasic27@example.com
+ADR;TYPE=HOME:;;Glavna 21;Kovin;;26220;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Gajic;Bogdan;;;
+FN:Bogdan Gajic
+TEL;TYPE=CELL:030 128128
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Kostic;Viktor;;;
+FN:Viktor Kostic
+TEL;TYPE=CELL:+44 20 7946 1029
+EMAIL;TYPE=HOME:viktor.kostic29@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jankovic;Pavle;;;
+FN:Pavle Jankovic
+TEL;TYPE=CELL:0044 20 7946 1030
+ADR;TYPE=HOME:;;Vojvode Stepe 101;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Petrovic;Iva;;;
+FN:Iva Petrovic
+TEL;TYPE=CELL:020 7946 1031
+EMAIL;TYPE=HOME:iva.petrovic31@example.com
+ADR;TYPE=HOME:;;Knez Mihailova 12;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jovanovic;Nina;;;
+FN:Nina Jovanovic
+TEL;TYPE=CELL:+33 1 42 68 53 00
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Nikolic;Mina;;;
+FN:Mina Nikolic
+TEL;TYPE=CELL:0033 1 42 68 53 00
+EMAIL;TYPE=HOME:mina.nikolic33@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ilic;Dunja;;;
+FN:Dunja Ilic
+TEL;TYPE=CELL:+39 06 6982
+ADR;TYPE=HOME:;;Cara Dusana 44;Nis;;18000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stojanovic;Lena;;;
+FN:Lena Stojanovic
+TEL;TYPE=CELL:0039 06 6982
+EMAIL;TYPE=HOME:lena.stojanovic35@example.com
+ADR;TYPE=HOME:;;Takovska 19;Kragujevac;;34000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Pavlovic;Nadja;;;
+FN:Nadja Pavlovic
+TEL;TYPE=CELL:+381601231036
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Markovic;Anja;;;
+FN:Anja Markovic
+TEL;TYPE=CELL:+381 60 123 1037
+EMAIL;TYPE=HOME:anja.markovic37@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Djordjevic;Isidora;;;
+FN:Isidora Djordjevic
+TEL;TYPE=CELL:+381-60-123-1038
+ADR;TYPE=HOME:;;Nemanjina 3;Cacak;;32000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stankovic;Una;;;
+FN:Una Stankovic
+TEL;TYPE=CELL:+381 (60) 123-1039
+EMAIL;TYPE=HOME:una.stankovic39@example.com
+ADR;TYPE=HOME:;;Svetog Save 14;Subotica;;24000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Popovic;Masa;;;
+FN:Masa Popovic
+TEL;TYPE=CELL:00381 60 123 1040
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Milosevic;Marko;;;
+FN:Marko Milosevic
+TEL;TYPE=CELL:00 381 60 123 1041
+EMAIL;TYPE=HOME:marko.milosevic41@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Knezevic;Nikola;;;
+FN:Nikola Knezevic
+TEL;TYPE=CELL:011 381 60 123 1042
+ADR;TYPE=HOME:;;Bulevar Kralja Aleksandra 88;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Savic;Jovan;;;
+FN:Jovan Savic
+TEL;TYPE=CELL:0601231043
+EMAIL;TYPE=HOME:jovan.savic43@example.com
+ADR;TYPE=HOME:;;Zmaj Jovina 5;Novi Sad;;21000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Zivkovic;Luka;;;
+FN:Luka Zivkovic
+TEL;TYPE=CELL:060 123 1044
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Mitrovic;Stefan;;;
+FN:Stefan Mitrovic
+TEL;TYPE=CELL:060-123-1045
+EMAIL;TYPE=HOME:stefan.mitrovic45@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ristic;Milos;;;
+FN:Milos Ristic
+TEL;TYPE=CELL:(060) 123-1046
+ADR;TYPE=HOME:;;Dunavska 7;Pozarevac;;12000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Todorovic;Petar;;;
+FN:Petar Todorovic
+TEL;TYPE=CELL:06 0123 1047
+EMAIL;TYPE=HOME:petar.todorovic47@example.com
+ADR;TYPE=HOME:;;Glavna 21;Kovin;;26220;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stevanovic;Aleksa;;;
+FN:Aleksa Stevanovic
+TEL;TYPE=CELL:064/123-1048
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Lazic;Filip;;;
+FN:Filip Lazic
+TEL;TYPE=CELL:065.123.1049
+EMAIL;TYPE=HOME:filip.lazic49@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Cvetkovic;Vuk;;;
+FN:Vuk Cvetkovic
+TEL;TYPE=CELL:063 123 456
+ADR;TYPE=HOME:;;Vojvode Stepe 101;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Matic;Ana;;;
+FN:Ana Matic
+TEL;TYPE=CELL:+381641231051
+EMAIL;TYPE=HOME:ana.matic51@example.com
+ADR;TYPE=HOME:;;Knez Mihailova 12;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Bogdanovic;Milica;;;
+FN:Milica Bogdanovic
+TEL;TYPE=CELL:00381-64-123-1052
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Milic;Jelena;;;
+FN:Jelena Milic
+TEL;TYPE=CELL:064 123 1053
+EMAIL;TYPE=HOME:jelena.milic53@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Peric;Marija;;;
+FN:Marija Peric
+TEL;TYPE=CELL:+381 11 234 1054
+ADR;TYPE=HOME:;;Cara Dusana 44;Nis;;18000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Radovic;Teodora;;;
+FN:Teodora Radovic
+TEL;TYPE=CELL:011 234 1055
+EMAIL;TYPE=HOME:teodora.radovic55@example.com
+ADR;TYPE=HOME:;;Takovska 19;Kragujevac;;34000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Simic;Sara;;;
+FN:Sara Simic
+TEL;TYPE=CELL:(011) 234-1056
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Vasic;Ivana;;;
+FN:Ivana Vasic
+TEL;TYPE=CELL:+1 202 555 1057
+EMAIL;TYPE=HOME:ivana.vasic57@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Gajic;Katarina;;;
+FN:Katarina Gajic
+TEL;TYPE=CELL:001 202 555 1058
+ADR;TYPE=HOME:;;Nemanjina 3;Cacak;;32000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Kostic;Tamara;;;
+FN:Tamara Kostic
+TEL;TYPE=CELL:(202) 555-1059
+EMAIL;TYPE=HOME:tamara.kostic59@example.com
+ADR;TYPE=HOME:;;Svetog Save 14;Subotica;;24000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jankovic;Sofija;;;
+FN:Sofija Jankovic
+TEL;TYPE=CELL:202-555-1060
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Petrovic;Dusan;;;
+FN:Dusan Petrovic
+TEL;TYPE=CELL:+49 30 161161
+EMAIL;TYPE=HOME:dusan.petrovic61@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jovanovic;Mihailo;;;
+FN:Mihailo Jovanovic
+TEL;TYPE=CELL:0049 30 162162
+ADR;TYPE=HOME:;;Bulevar Kralja Aleksandra 88;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Nikolic;Andrej;;;
+FN:Andrej Nikolic
+TEL;TYPE=CELL:030 163163
+EMAIL;TYPE=HOME:andrej.nikolic63@example.com
+ADR;TYPE=HOME:;;Zmaj Jovina 5;Novi Sad;;21000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ilic;Uros;;;
+FN:Uros Ilic
+TEL;TYPE=CELL:+44 20 7946 1064
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stojanovic;Nemanja;;;
+FN:Nemanja Stojanovic
+TEL;TYPE=CELL:0044 20 7946 1065
+EMAIL;TYPE=HOME:nemanja.stojanovic65@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Pavlovic;Ognjen;;;
+FN:Ognjen Pavlovic
+TEL;TYPE=CELL:020 7946 1066
+ADR;TYPE=HOME:;;Dunavska 7;Pozarevac;;12000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Markovic;Vladimir;;;
+FN:Vladimir Markovic
+TEL;TYPE=CELL:+33 1 42 68 53 00
+EMAIL;TYPE=HOME:vladimir.markovic67@example.com
+ADR;TYPE=HOME:;;Glavna 21;Kovin;;26220;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Djordjevic;Bogdan;;;
+FN:Bogdan Djordjevic
+TEL;TYPE=CELL:0033 1 42 68 53 00
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stankovic;Viktor;;;
+FN:Viktor Stankovic
+TEL;TYPE=CELL:+39 06 6982
+EMAIL;TYPE=HOME:viktor.stankovic69@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Popovic;Pavle;;;
+FN:Pavle Popovic
+TEL;TYPE=CELL:0039 06 6982
+ADR;TYPE=HOME:;;Vojvode Stepe 101;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Milosevic;Iva;;;
+FN:Iva Milosevic
+TEL;TYPE=CELL:+381601231071
+EMAIL;TYPE=HOME:iva.milosevic71@example.com
+ADR;TYPE=HOME:;;Knez Mihailova 12;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Knezevic;Nina;;;
+FN:Nina Knezevic
+TEL;TYPE=CELL:+381 60 123 1072
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Savic;Mina;;;
+FN:Mina Savic
+TEL;TYPE=CELL:+381-60-123-1073
+EMAIL;TYPE=HOME:mina.savic73@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Zivkovic;Dunja;;;
+FN:Dunja Zivkovic
+TEL;TYPE=CELL:+381 (60) 123-1074
+ADR;TYPE=HOME:;;Cara Dusana 44;Nis;;18000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Mitrovic;Lena;;;
+FN:Lena Mitrovic
+TEL;TYPE=CELL:00381 60 123 1075
+EMAIL;TYPE=HOME:lena.mitrovic75@example.com
+ADR;TYPE=HOME:;;Takovska 19;Kragujevac;;34000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ristic;Nadja;;;
+FN:Nadja Ristic
+TEL;TYPE=CELL:00 381 60 123 1076
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Todorovic;Anja;;;
+FN:Anja Todorovic
+TEL;TYPE=CELL:011 381 60 123 1077
+EMAIL;TYPE=HOME:anja.todorovic77@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stevanovic;Isidora;;;
+FN:Isidora Stevanovic
+TEL;TYPE=CELL:0601231078
+ADR;TYPE=HOME:;;Nemanjina 3;Cacak;;32000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Lazic;Una;;;
+FN:Una Lazic
+TEL;TYPE=CELL:060 123 1079
+EMAIL;TYPE=HOME:una.lazic79@example.com
+ADR;TYPE=HOME:;;Svetog Save 14;Subotica;;24000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Cvetkovic;Masa;;;
+FN:Masa Cvetkovic
+TEL;TYPE=CELL:060-123-1080
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Matic;Marko;;;
+FN:Marko Matic
+TEL;TYPE=CELL:(060) 123-1081
+EMAIL;TYPE=HOME:marko.matic81@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Bogdanovic;Nikola;;;
+FN:Nikola Bogdanovic
+TEL;TYPE=CELL:06 0123 1082
+ADR;TYPE=HOME:;;Bulevar Kralja Aleksandra 88;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Milic;Jovan;;;
+FN:Jovan Milic
+TEL;TYPE=CELL:064/123-1083
+EMAIL;TYPE=HOME:jovan.milic83@example.com
+ADR;TYPE=HOME:;;Zmaj Jovina 5;Novi Sad;;21000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Peric;Luka;;;
+FN:Luka Peric
+TEL;TYPE=CELL:065.123.1084
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Radovic;Stefan;;;
+FN:Stefan Radovic
+TEL;TYPE=CELL:063 123 456
+EMAIL;TYPE=HOME:stefan.radovic85@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Simic;Milos;;;
+FN:Milos Simic
+TEL;TYPE=CELL:+381641231086
+ADR;TYPE=HOME:;;Dunavska 7;Pozarevac;;12000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Vasic;Petar;;;
+FN:Petar Vasic
+TEL;TYPE=CELL:00381-64-123-1087
+EMAIL;TYPE=HOME:petar.vasic87@example.com
+ADR;TYPE=HOME:;;Glavna 21;Kovin;;26220;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Gajic;Aleksa;;;
+FN:Aleksa Gajic
+TEL;TYPE=CELL:064 123 1088
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Kostic;Filip;;;
+FN:Filip Kostic
+TEL;TYPE=CELL:+381 11 234 1089
+EMAIL;TYPE=HOME:filip.kostic89@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jankovic;Vuk;;;
+FN:Vuk Jankovic
+TEL;TYPE=CELL:011 234 1090
+ADR;TYPE=HOME:;;Vojvode Stepe 101;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Petrovic;Ana;;;
+FN:Ana Petrovic
+TEL;TYPE=CELL:(011) 234-1091
+EMAIL;TYPE=HOME:ana.petrovic91@example.com
+ADR;TYPE=HOME:;;Knez Mihailova 12;Belgrade;;11000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Jovanovic;Milica;;;
+FN:Milica Jovanovic
+TEL;TYPE=CELL:+1 202 555 1092
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Nikolic;Jelena;;;
+FN:Jelena Nikolic
+TEL;TYPE=CELL:001 202 555 1093
+EMAIL;TYPE=HOME:jelena.nikolic93@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Ilic;Marija;;;
+FN:Marija Ilic
+TEL;TYPE=CELL:(202) 555-1094
+ADR;TYPE=HOME:;;Cara Dusana 44;Nis;;18000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stojanovic;Teodora;;;
+FN:Teodora Stojanovic
+TEL;TYPE=CELL:202-555-1095
+EMAIL;TYPE=HOME:teodora.stojanovic95@example.com
+ADR;TYPE=HOME:;;Takovska 19;Kragujevac;;34000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Pavlovic;Sara;;;
+FN:Sara Pavlovic
+TEL;TYPE=CELL:+49 30 196196
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Markovic;Ivana;;;
+FN:Ivana Markovic
+TEL;TYPE=CELL:0049 30 197197
+EMAIL;TYPE=HOME:ivana.markovic97@example.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Djordjevic;Katarina;;;
+FN:Katarina Djordjevic
+TEL;TYPE=CELL:030 198198
+ADR;TYPE=HOME:;;Nemanjina 3;Cacak;;32000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Stankovic;Tamara;;;
+FN:Tamara Stankovic
+TEL;TYPE=CELL:+44 20 7946 1099
+EMAIL;TYPE=HOME:tamara.stankovic99@example.com
+ADR;TYPE=HOME:;;Svetog Save 14;Subotica;;24000;Serbia
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+N:Popovic;Sofija;;;
+FN:Sofija Popovic
+TEL;TYPE=CELL:0044 20 7946 1100
+END:VCARD

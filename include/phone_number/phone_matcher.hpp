@@ -19,7 +19,7 @@ class PhoneMatcher {
     static std::optional<int> findMatch(const PhoneNumber &number, const std::vector<Contact> &contacts);
     static std::optional<int> matchBySuffix(std::string &number, const std::vector<Contact> &contacts, int minLen = 5,
                                             float threshold = 0.75F);
-    static std::vector<int> searchByName(const std::string &name, const std::vector<Contact> &contacts, int threshold);
+    static std::vector<int> searchByName(const std::string &name, const std::vector<Contact> &contacts, int threshold = 2);
     static std::vector<int> searchByNumberPrefix(const std::string &number, const std::vector<Contact> &contacts);
 };
 

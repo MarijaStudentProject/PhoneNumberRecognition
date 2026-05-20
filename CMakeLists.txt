@@ -118,3 +118,44 @@ add_custom_target(copy_resources
 )
 
 add_subdirectory(tests)
+
+
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+
+qt_standard_project_setup()
+
+qt_add_executable(ContactsApp src/controller/contacts_controller.cpp src/model/contacts_model.cpp
+ include/controller/contacts_controller.hpp include/model/contacts_model.hpp src/model/detailed_contact_model.cpp include/model/detailed_contact_model.hpp
+    src/main.cpp
+)
+
+
+target_link_libraries(ContactsApp PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick phone_normalizer)
+
+
+find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2)
+
+set(CMAKE_AUTORCC ON)
+
+set_target_properties(ContactsApp PROPERTIES
+    AUTOMOC ON
+)
+
+qt_add_qml_module(ContactsApp
+    URI PhoneApp
+    VERSION 1.0
+    QML_FILES
+        ui/Main.qml
+        ui/ContactsView.qml
+        ui/DialView.qml
+        QML_FILES  ui/ContactInfo.qml
+        QML_FILES ui/DialingPopup.qml
+        QML_FILES ui/IncomingCallPopup.qml
+)
+
+target_link_libraries(ContactsApp PRIVATE
+    Qt6::Gui
+    Qt6::Quick
+    Qt6::QuickControls2
+    phone_normalizer
+)
