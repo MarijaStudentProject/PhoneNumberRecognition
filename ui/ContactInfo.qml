@@ -9,6 +9,7 @@ Rectangle {
 
     property int    contactIndex: -1
     property string contactName: ""
+    property string contactSurname: ""
     property string contactInitials: ""
     property string contactPhone: ""
     property string contactColor: "#E8B4B8"
@@ -80,15 +81,14 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    if (editMode && root.contactIndex >= 0) {
-                        contactsModel.set(root.contactIndex, {
-                            "name":     nameField.text,
-                            "phone":    phoneField.text,
-                            "initials": root.contactInitials,
-                            "color":    root.contactColor,
-                            "email":    emailField.text,
-                            "address":  addressField.text
-                        })
+                    if (editMode) {
+                        detailesContactModel.name   = nameField.text
+                        detailesContactModel.surname = surnameField.text
+                        detailesContactModel.email  = emailField.text
+                        detailesContactModel.street = addressField.text
+                        detailesContactModel.setPhoneNumber(0, phoneField.text)
+                        detailesContactModel.save()
+
                         root.contactName    = nameField.text
                         root.contactPhone   = phoneField.text
                         root.contactEmail   = emailField.text
@@ -124,24 +124,42 @@ Rectangle {
             }
 
             // Name
-            TextField {
-                id: nameField
+            RowLayout {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: 12
                 Layout.bottomMargin: 16
-                text: root.contactName
-                font.pixelSize: 18
-                font.weight: Font.Medium
-                color: "#1a1a1a"
-                readOnly: !editMode
-                horizontalAlignment: Text.AlignHCenter
-                background: Rectangle {
-                    color: editMode ? "#F9F9F9" : "transparent"
-                    border.color: editMode ? "#E0E0E0" : "transparent"
-                    radius: 6
+                spacing: 6
+
+                TextField {
+                    id: nameField
+                    text: root.contactName
+                    font.pixelSize: 18
+                    font.weight: Font.Medium
+                    color: "#1a1a1a"
+                    readOnly: !editMode
+                    horizontalAlignment: Text.AlignHCenter
+                    background: Rectangle {
+                        color: editMode ? "#F9F9F9" : "transparent"
+                        border.color: editMode ? "#E0E0E0" : "transparent"
+                        radius: 6
+                    }
+                }
+
+                TextField {
+                    id: surnameField
+                    text: root.contactSurname
+                    font.pixelSize: 18
+                    font.weight: Font.Medium
+                    color: "#1a1a1a"
+                    readOnly: !editMode
+                    horizontalAlignment: Text.AlignHCenter
+                    background: Rectangle {
+                        color: editMode ? "#F9F9F9" : "transparent"
+                        border.color: editMode ? "#E0E0E0" : "transparent"
+                        radius: 6
+                    }
                 }
             }
-
             // Call + favourite (hidden in edit mode)
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter

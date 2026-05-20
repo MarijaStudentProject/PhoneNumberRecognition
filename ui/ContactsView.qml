@@ -188,12 +188,14 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: {
                         contactsModel.select(index)
-
-                        selectedName     = displayName
-                        selectedInitials = displayInitials
-                        selectedPhone    = phone
-                        selectedEmail = detailesContactModel.email
-                        selectedColor    = displayColor
+                        contactInfo.contactIndex    = index
+                        contactInfo.contactName     = name
+                        contactInfo.contactSurname  = surname
+                        contactInfo.contactInitials = displayInitials
+                        contactInfo.contactPhone    = phone
+                        contactInfo.contactEmail    = detailesContactModel.email
+                        contactInfo.contactAddress  = detailesContactModel.street
+                        contactInfo.contactColor    = displayColor
                         showInfo = true
                         clickSound.play()
                     }

@@ -91,7 +91,7 @@ add_subdirectory(tests)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Multimedia)
 
-qt_standard_project_setup()
+#qt_standard_project_setup()
 
 qt_add_executable(ContactsApp src/controller/contacts_controller.cpp src/model/contacts_model.cpp
  include/controller/contacts_controller.hpp include/model/contacts_model.hpp src/model/detailed_contact_model.cpp include/model/detailed_contact_model.hpp
