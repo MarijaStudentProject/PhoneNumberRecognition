@@ -131,6 +131,7 @@ Rectangle {
                             Layout.alignment: Qt.AlignHCenter
                             text: "\uf3dd"
                             font.pixelSize: 18
+                            font.family: fontAwesome.name;
                         }
                         Text {
                             Layout.alignment: Qt.AlignHCenter
@@ -164,6 +165,7 @@ Rectangle {
                             Layout.alignment: Qt.AlignHCenter
                             text: "\uf095"
                             font.pixelSize: 18
+                            font.family: fontAwesome.name;
                         }
                         Text {
                             Layout.alignment: Qt.AlignHCenter

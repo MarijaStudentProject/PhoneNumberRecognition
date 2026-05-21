@@ -171,6 +171,7 @@ Rectangle {
                     text: "\uf55a"
                     font.pixelSize: 18
                     color: "#555"
+                    font.family: fontAwesome.name;
                 }
 
                 MouseArea {
@@ -279,6 +280,7 @@ Rectangle {
             anchors.centerIn: parent
             text: "\uf095"
             font.pixelSize: 24
+            font.family: fontAwesome.name;
         }
 
         MouseArea {

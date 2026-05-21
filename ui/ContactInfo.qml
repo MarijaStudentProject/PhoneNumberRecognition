@@ -63,6 +63,7 @@ Rectangle {
             text: "\uf00d"
             font.pixelSize: 14
             color: "#888"
+            font.family: fontAwesome.name;
             MouseArea {
                 anchors.fill: parent
                 onClicked: { editMode = false; root.dismissed(); clickSound.play() }
@@ -178,7 +179,7 @@ Rectangle {
                     RowLayout {
                         anchors.centerIn: parent
                         spacing: 6
-                        Text { text: "\uf095"; font.pixelSize: 13 }
+                        Text { text: "\uf095"; font.pixelSize: 13; font.family: fontAwesome.name }
                         Text { text: "Call"; font.pixelSize: 14; font.weight: Font.Medium; color: "white" }
                     }
                     MouseArea {
