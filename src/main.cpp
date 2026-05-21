@@ -11,11 +11,18 @@
 
 #include <iostream>
 #include <qcoreapplication.h>
-
+#include <QFontDatabase>
 int main(int argc, char *argv[])
 {
+
     QGuiApplication app(argc, argv);
 
+    if (QFile::exists(":/PhoneApp/ui/fonts/fa-solid-900.ttf")) {
+        int id = QFontDatabase::addApplicationFont(":/PhoneApp/ui/fonts/fa-solid-900.ttf");
+        qDebug() << "Font id:" << id;
+    } else {
+        qDebug() << "Font file not found in resources";
+    }
 
     ContactsController controller;
 

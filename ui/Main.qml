@@ -259,6 +259,12 @@ ApplicationWindow {
     FontLoader {
         id: fontAwesome
         source: "qrc:PhoneApp/ui/fonts/fa-solid-900.ttf"
+        onStatusChanged: {
+               if (status === FontLoader.Ready)
+                   console.log("Font loaded:", name)
+               else if (status === FontLoader.Error)
+                   console.log("Font failed to load")
+           }
     }
 
 }
