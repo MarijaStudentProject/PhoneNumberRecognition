@@ -162,7 +162,7 @@ Rectangle {
                         spacing: 2
                         Text {
                             Layout.alignment: Qt.AlignHCenter
-                            text: "📞"
+                            text: "\uf095"
                             font.pixelSize: 18
                         }
                         Text {

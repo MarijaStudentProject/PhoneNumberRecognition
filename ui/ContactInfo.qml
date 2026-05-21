@@ -60,7 +60,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.topMargin: 12
             anchors.rightMargin: 14
-            text: "✕"
+            text: "\uf00d"
             font.pixelSize: 14
             color: "#888"
             MouseArea {
@@ -93,6 +93,7 @@ Rectangle {
                         root.contactPhone   = phoneField.text
                         root.contactEmail   = emailField.text
                         root.contactAddress = addressField.text
+
                     }
                     clickSound.play()
                     editMode = !editMode
@@ -143,6 +144,8 @@ Rectangle {
                         border.color: editMode ? "#E0E0E0" : "transparent"
                         radius: 6
                     }
+                    onTextEdited: keyboardSound.play()
+
                 }
 
                 TextField {
@@ -158,6 +161,8 @@ Rectangle {
                         border.color: editMode ? "#E0E0E0" : "transparent"
                         radius: 6
                     }
+                    onTextEdited: keyboardSound.play()
+
                 }
             }
             // Call + favourite (hidden in edit mode)
@@ -173,7 +178,7 @@ Rectangle {
                     RowLayout {
                         anchors.centerIn: parent
                         spacing: 6
-                        Text { text: "📞"; font.pixelSize: 13 }
+                        Text { text: "\uf095"; font.pixelSize: 13 }
                         Text { text: "Call"; font.pixelSize: 14; font.weight: Font.Medium; color: "white" }
                     }
                     MouseArea {
@@ -185,7 +190,20 @@ Rectangle {
                 Rectangle {
                     width: 34; height: 34; radius: 17
                     color: "#F2F2F2"
-                    Text { anchors.centerIn: parent; text: "☆"; font.pixelSize: 16; color: "#888" }
+                    property bool isFavourite: false
+                    Text { anchors.centerIn: parent;
+                        text: parent.isFavourite ? "\uf005" : "\uf006"
+                        font.pixelSize: 16;
+                        font.family: fontAwesome.name
+                        color: parent.isFavourite ? "#FFD700" : "#888"
+                    }
+                    MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                parent.isFavourite = !parent.isFavourite
+                                clickSound.play()
+                            }
+                        }
                 }
             }
 
@@ -214,6 +232,7 @@ Rectangle {
                         border.color: editMode ? "#E0E0E0" : "transparent"
                         radius: 6
                     }
+                    onTextEdited: keyboardSound.play()
                 }
             }
 
@@ -236,6 +255,8 @@ Rectangle {
                         border.color: editMode ? "#E0E0E0" : "transparent"
                         radius: 6
                     }
+                    onTextEdited: keyboardSound.play()
+
                 }
             }
 
@@ -258,6 +279,8 @@ Rectangle {
                         border.color: editMode ? "#E0E0E0" : "transparent"
                         radius: 6
                     }
+                    onTextEdited: keyboardSound.play()
+
                 }
             }
         }

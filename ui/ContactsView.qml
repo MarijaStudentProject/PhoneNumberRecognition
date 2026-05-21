@@ -1,3 +1,4 @@
+
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -16,7 +17,6 @@ Rectangle {
 
     signal callRequested(string name, string initials, string phone, string color)
 
-
     function fullName(name, surname){
         if(surname === undefined || surname.length === 0)
             return name
@@ -26,7 +26,6 @@ Rectangle {
     function initialsFrom(name, surname){
         var first = name && name.length > 0 ? name[0] : ""
         var second = surname && surname.length > 0 ? surname[0] : ""
-
         if(second.length === 0 && name.indexOf(" ") !== -1){
             var parts = name.split(" ")
             second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
@@ -36,17 +35,9 @@ Rectangle {
 
     function colorForId(id) {
         var colors = [
-            "#E8B4B8",
-            "#B4C8E8",
-            "#E8C4B4",
-            "#C4B4E8",
-            "#B4E8C8",
-            "#E8E4B4",
-            "#E8B4D4",
-            "#B4D4E8",
-            "#D4E8B4"
+            "#E8B4B8", "#B4C8E8", "#E8C4B4", "#C4B4E8",
+            "#B4E8C8", "#E8E4B4", "#E8B4D4", "#B4D4E8", "#D4E8B4"
         ]
-
         return colors[Math.abs(id) % colors.length]
     }
 
@@ -54,25 +45,26 @@ Rectangle {
         anchors.fill: parent
         spacing: 0
 
+        // Search bar
         Rectangle {
             Layout.fillWidth: true
-               Layout.topMargin: 8
-               Layout.bottomMargin: 4
-               height: 44
-               color: "#F8F8F8"  // white background behind the pill
+            Layout.topMargin: 8
+            Layout.bottomMargin: 4
+            height: 44
+            color: "#F8F8F8"
+
             Rectangle {
                 anchors.fill: parent
-                       anchors.leftMargin: 16
-                       anchors.rightMargin: 16
-                       radius: 22
-                       color: "#EFEFEF"
-
+                anchors.leftMargin: 16
+                anchors.rightMargin: 16
+                radius: 22
+                color: "#EFEFEF"
 
                 RowLayout {
                     anchors.fill: parent
-                            anchors.leftMargin: 14
-                            anchors.rightMargin: 14
-                            spacing: 8
+                    anchors.leftMargin: 14
+                    anchors.rightMargin: 14
+                    spacing: 8
 
                     Text {
                         text: "\uf002"
@@ -87,13 +79,9 @@ Rectangle {
                         font.pixelSize: 15
                         color: "#333"
                         clip: true
-
-
                         text: contactsModel ? contactsModel.searchText : ""
+                        onTextEdited: { contactsModel.searchText = text; keyboardSound.play() }
 
-                        onTextEdited: {
-                            contactsModel.searchText = text
-                        }
                         Text {
                             anchors.fill: parent
                             text: "Search contacts"
@@ -107,6 +95,7 @@ Rectangle {
             }
         }
 
+        // Contacts list
         ListView {
             id: listView
             model: contactsModel
@@ -142,22 +131,23 @@ Rectangle {
                 height: visible ? 64 : 0
                 color: "white"
 
-           /*     visible: searchField.text.length === 0 ||
-                         model.name.toLowerCase().includes(searchField.text.toLowerCase())
-            */
-                readonly property string displayName: fullName(name, surname)
+                readonly property string displayName:     fullName(name, surname)
                 readonly property string displayInitials: initialsFrom(name, surname)
-                readonly property string displayColor: colorForId(contactId)
+                readonly property string displayColor:    colorForId(contactId)
 
-                RowLayout {
+                Row {
                     anchors.fill: parent
                     anchors.leftMargin: 16
                     anchors.rightMargin: 16
                     spacing: 14
 
+                    // Avatar
                     Rectangle {
-                        width: 42; height: 42; radius: 21
+                        width: 42; height: 42
+                        radius: 21
+                        anchors.verticalCenter: parent.verticalCenter
                         color: displayColor
+
                         Text {
                             anchors.centerIn: parent
                             text: displayInitials
@@ -167,12 +157,21 @@ Rectangle {
                         }
                     }
 
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignVCenter
+                    // Name + phone
+                    Column {
+                        anchors.verticalCenter: parent.verticalCenter
                         spacing: 2
-                        Text { text: displayName;  font.pixelSize: 15; color: "#1a1a1a"; horizontalAlignment: Text.AlignLeft}
-                        Text { text: phone; font.pixelSize: 13; color: "#888"; horizontalAlignment: Text.AlignLeft }
+
+                        Text {
+                            text: displayName
+                            font.pixelSize: 15
+                            color: "#1a1a1a"
+                        }
+                        Text {
+                            text: phone
+                            font.pixelSize: 13
+                            color: "#888"
+                        }
                     }
                 }
 
@@ -184,6 +183,7 @@ Rectangle {
                     height: 1
                     color: "#F0F0F0"
                 }
+
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
@@ -211,13 +211,9 @@ Rectangle {
         contactName:     selectedName
         contactInitials: selectedInitials
         contactPhone:    selectedPhone
-        contactEmail:   selectedEmail
+        contactEmail:    selectedEmail
         contactColor:    selectedColor
         onDismissed:   showInfo = false
-        // contactName:     contactInfo.contactName
-        // contactInitials: contactInfo.contactInitials
-        // contactPhone:    contactInfo.contactPhone
-        // contactColor:    contactInfo.contactColor
         onCallClicked: {
             showDialing = false
             callRequested(contactName, contactInitials, contactPhone, contactColor)

@@ -134,6 +134,7 @@ qt_add_qml_module(ContactsApp
         RESOURCES ui/sounds/dialpad-9.wav
         RESOURCES ui/sounds/click.wav
         RESOURCES ui/sounds/samsung-ringtone.wav ui/sounds/dialing-sound.wav
+        RESOURCES ui/sounds/keyboard-sound.wav
 
 
 )

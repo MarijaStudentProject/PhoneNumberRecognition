@@ -14,6 +14,10 @@ ApplicationWindow {
 
     // Dialing tone — loops while calling
     SoundEffect {
+        id: keyboardSound
+        source: "qrc:/PhoneApp/ui/sounds/keyboard-sound.wav"
+    }
+    SoundEffect {
         id: ringtoneSound
         source: "qrc:/PhoneApp/ui/sounds/samsung-ringtone.wav"
         loops: SoundEffect.Infinite
@@ -176,7 +180,7 @@ ApplicationWindow {
             ContactsView {
                 contactsModel: cppContactsModel
                 onCallRequested: (name, initials, phone, color) => {
-                    incomingCall.callLabel = "Calling..."
+                    incomingCall.callLabel = "Incoming call"
                     activeCall.show(name, initials, phone, color)
                 }
             }

@@ -106,7 +106,7 @@ Rectangle {
                     RowLayout {
                         anchors.centerIn: parent
                         spacing: 8
-                        Text { text: "📞"; font.pixelSize: 16 }
+                        Text { text: "\uf095"; font.pixelSize: 16 }
                         Text {
                             text: "Call"
                             font.pixelSize: 16
