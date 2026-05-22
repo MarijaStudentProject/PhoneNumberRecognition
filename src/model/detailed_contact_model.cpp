@@ -1,6 +1,5 @@
 #include "model/detailed_contact_model.hpp"
 #include "model/contacts_model.hpp"
-#include "model/detailed_contact_model.hpp"
 #include <QVariant>
 
 DetailesContactModel::DetailesContactModel(ContactsController *controller, ContactsModel *contactsModel)
@@ -91,7 +90,7 @@ void DetailesContactModel::showDetails(int id) {
     m_selectedId = id;
 
     auto *c = m_controller->findById(id);
-    if (!c) {
+    if (c == nullptr) {
         return;
     }
 
@@ -139,8 +138,9 @@ void DetailesContactModel::prepareNew() {
 void DetailesContactModel::save() {
     std::vector<std::string> phoneNumbers;
     for (const auto &p : m_editedPhoneNumbers) {
-        if (!p.isEmpty())
+        if (!p.isEmpty()) {
             phoneNumbers.push_back(p.toStdString());
+        }
     }
 
     if (m_isNew) {
@@ -158,7 +158,7 @@ void DetailesContactModel::save() {
 
     auto *c = m_controller->findById(m_selectedId);
 
-    if (!c) {
+    if (c == nullptr) {
         return;
     }
 

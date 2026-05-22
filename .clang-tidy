@@ -19,6 +19,9 @@ Checks: >
   -bugprone-narrowing-conversions,
   -cppcoreguidelines-narrowing-conversions,
   -clang-diagnostic-c++11-narrowing,
+  -performance-enum-size,
+  -performance-inefficient-vector-operation,
+  -bugprone-branch-clone
 
 WarningsAsErrors: 'bugprone-*'
 

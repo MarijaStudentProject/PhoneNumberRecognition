@@ -27,6 +27,7 @@ jobs:
         run: |
           cmake -B build \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DBUILD_QT_APP=OFF \
             -G Ninja
 
       - name: Build

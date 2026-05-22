@@ -19,7 +19,7 @@ class ContactsController {
     std::vector<int> search(const std::string &text) const;
     Contact *findById(int id);
 
-    void updateContact(int id, const std::string &name, const std::string surname,
+    void updateContact(int id, const std::string &name, const std::string &surname,
                        const std::vector<std::string> &phone, const std::string &email, const Address &address);
     int addContact(const std::string &name, const std::string &surname, const std::vector<std::string> &phones,
                    const std::string &email, const Address &address);

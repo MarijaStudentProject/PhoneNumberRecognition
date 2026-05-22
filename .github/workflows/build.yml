@@ -15,8 +15,25 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ 
-		# add qt later
+          sudo apt-get install -y cmake g++ git catch2
+
+      - name: Clone dependency
+        run: |
+          git clone https://github.com/ivanenko/vCard external/librepo
+
+      - name: Patch Catch2 issue
+        run: |
+          sed -i '/add_subdirectory(test)/d' external/librepo/CMakeLists.txt
+
+      - name: Build dependency
+        run: |
+          cmake -S external/librepo -B external/librepo/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$HOME/.local
+
+          cmake --build external/librepo/build
+          cmake --install external/librepo/build
+
       - name: Configure
         run: cmake -S . -B build
 

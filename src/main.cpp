@@ -54,5 +54,5 @@ int main(int argc, char *argv[]) {
 
     engine.load(QUrl(QStringLiteral("qrc:/PhoneApp/ui/Main.qml")));
 
-    return app.exec();
+    return QGuiApplication::exec();
 }

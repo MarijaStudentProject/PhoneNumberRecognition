@@ -30,11 +30,11 @@ Contact *ContactsController::findById(int id) {
     return &m_contacts[id];
 }
 
-void ContactsController::updateContact(int id, const std::string &name, const std::string surname,
+void ContactsController::updateContact(int id, const std::string &name, const std::string &surname,
                                        const std::vector<std::string> &phone, const std::string &email,
                                        const Address &address) {
     Contact *contact = findById(id);
-    if (!contact) {
+    if (contact == nullptr) {
         return;
     }
     contact->setName(name);
@@ -55,11 +55,12 @@ int ContactsController::addContact(const std::string &name, const std::string &s
     for (const auto &p : phones) {
         phoneNumbers.push_back(m_normalizer.normalize(p, m_parsingRegion, true));
     }
-    m_contacts.push_back(Contact(name, surname, phoneNumbers, email, address));
+    m_contacts.emplace_back(name, surname, phoneNumbers, email, address);
     std::sort(m_contacts.begin(), m_contacts.end());
     for (int i = 0; i < static_cast<int>(m_contacts.size()); ++i) {
-        if (m_contacts[i].getName() == name && m_contacts[i].getSurname() == surname)
+        if (m_contacts[i].getName() == name && m_contacts[i].getSurname() == surname) {
             return i;
+        }
     }
     return static_cast<int>(m_contacts.size()) - 1;
 }

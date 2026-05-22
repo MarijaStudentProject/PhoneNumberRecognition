@@ -287,7 +287,7 @@ ApplicationWindow {
         function onCallReceived(number, country) {
             clickSound.play()
             detailesContactModel.clear()
-            cppContactsModel.Call(number,country)
+            cppContactsModel.call(number,country)
             detailesContactModel.name? incomingCall.show(
                         detailesContactModel.name + " " + detailesContactModel.surname,
                         initialsFrom(detailesContactModel.name, detailesContactModel.surname),
