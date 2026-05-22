@@ -14,7 +14,6 @@ std::vector<Contact> VcfParser::loadFromFile(const std::string &filePath) const 
     std::ifstream file;
     file.open(filePath);
 
-
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filePath << '\n';
         return {};

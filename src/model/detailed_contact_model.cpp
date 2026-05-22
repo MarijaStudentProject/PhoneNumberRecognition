@@ -1,24 +1,12 @@
 #include "model/detailed_contact_model.hpp"
 #include "model/contacts_model.hpp"
-#include <QVariant>
 #include "model/detailed_contact_model.hpp"
+#include <QVariant>
 
+DetailesContactModel::DetailesContactModel(ContactsController *controller, ContactsModel *contactsModel)
+    : m_controller(controller), m_contactsModel(contactsModel) {}
 
-
-
-DetailesContactModel::DetailesContactModel(
-    ContactsController* controller,
-    ContactsModel* contactsModel
-)
-    : m_controller(controller)
-    , m_contactsModel(contactsModel)
-{
-}
-
-QString DetailesContactModel::name() const
-{
-    return m_editedName;
-}
+QString DetailesContactModel::name() const { return m_editedName; }
 
 QString DetailesContactModel::surname() const { return m_editedSurname; }
 
@@ -30,12 +18,12 @@ QString DetailesContactModel::country() const { return m_editedCountry; }
 
 QString DetailesContactModel::street() const { return m_editedStreet; }
 
-QVariantList DetailesContactModel::phoneNumbers() const { 
+QVariantList DetailesContactModel::phoneNumbers() const {
     QVariantList list;
 
-    for (const auto& number : m_editedPhoneNumbers) {
+    for (const auto &number : m_editedPhoneNumbers) {
         list.append(QVariant::fromValue(number));
-    }   
+    }
 
     return list;
 }
@@ -76,7 +64,7 @@ void DetailesContactModel::setCity(const QString &value) {
     if (m_editedCity == value) {
         return;
     }
-    
+
     m_editedCity = value;
 
     emit cityChanged();
@@ -102,11 +90,11 @@ void DetailesContactModel::setStreet(const QString &value) {
 void DetailesContactModel::showDetails(int id) {
     m_selectedId = id;
 
-    auto* c = m_controller->findById(id);
+    auto *c = m_controller->findById(id);
     if (!c) {
         return;
     }
-    
+
     m_editedName = QString::fromStdString(c->getName());
     m_editedSurname = QString::fromStdString(c->getSurname());
     m_editedEmail = QString::fromStdString(c->getEmail());
@@ -115,7 +103,7 @@ void DetailesContactModel::showDetails(int id) {
     m_editedStreet = QString::fromStdString(c->getAddress().getStreet());
 
     m_editedPhoneNumbers.clear();
-    for(const auto& p : c->getPhoneNumbers()) { 
+    for (const auto &p : c->getPhoneNumbers()) {
         m_editedPhoneNumbers.append(QString::fromStdString(p.getRawValue()));
     }
 
@@ -130,9 +118,7 @@ void DetailesContactModel::showDetails(int id) {
     emit hasSelectionChanged();
 }
 
-
-void DetailesContactModel::prepareNew()
-{
+void DetailesContactModel::prepareNew() {
     m_selectedId = -1;
     m_isNew = true;
     m_editedName.clear();
@@ -142,7 +128,7 @@ void DetailesContactModel::prepareNew()
     m_editedCountry.clear();
     m_editedStreet.clear();
     m_editedPhoneNumbers.clear();
-    m_editedPhoneNumbers.append(""); // index 0 must exist for setPhoneNumber(0,…) in ContactInfo save handler
+    m_editedPhoneNumbers.append("");
     emit nameChanged();
     emit surnameChanged();
     emit emailChanged();
@@ -150,10 +136,9 @@ void DetailesContactModel::prepareNew()
     emit hasSelectionChanged();
 }
 
-void DetailesContactModel::save()
-{
+void DetailesContactModel::save() {
     std::vector<std::string> phoneNumbers;
-    for (const auto& p : m_editedPhoneNumbers) {
+    for (const auto &p : m_editedPhoneNumbers) {
         if (!p.isEmpty())
             phoneNumbers.push_back(p.toStdString());
     }
@@ -161,12 +146,8 @@ void DetailesContactModel::save()
     if (m_isNew) {
         m_isNew = false;
         m_selectedId = m_controller->addContact(
-            m_editedName.toStdString(),
-            m_editedSurname.toStdString(),
-            phoneNumbers,
-            m_editedEmail.toStdString(),
-            Address(m_editedStreet.toStdString(), "", m_editedCity.toStdString(), m_editedCountry.toStdString())
-        );
+            m_editedName.toStdString(), m_editedSurname.toStdString(), phoneNumbers, m_editedEmail.toStdString(),
+            Address(m_editedStreet.toStdString(), "", m_editedCity.toStdString(), m_editedCountry.toStdString()));
         m_contactsModel->refresh();
         return;
     }
@@ -175,30 +156,21 @@ void DetailesContactModel::save()
         return;
     }
 
-    auto* c = m_controller->findById(m_selectedId);
+    auto *c = m_controller->findById(m_selectedId);
 
     if (!c) {
         return;
     }
 
-    m_controller->updateContact(
-        m_selectedId,
-        m_editedName.toStdString(),
-        m_editedSurname.toStdString(),
-        phoneNumbers,
-        m_editedEmail.toStdString(),
-        Address(
-            m_editedStreet.toStdString(),
-            c->getAddress().getPostalCode(),
-            m_editedCity.toStdString(),
-            m_editedCountry.toStdString()
-        )
-    );
+    m_controller->updateContact(m_selectedId, m_editedName.toStdString(), m_editedSurname.toStdString(), phoneNumbers,
+                                m_editedEmail.toStdString(),
+                                Address(m_editedStreet.toStdString(), c->getAddress().getPostalCode(),
+                                        m_editedCity.toStdString(), m_editedCountry.toStdString()));
 
     m_contactsModel->refresh();
 }
 
-void DetailesContactModel::setPhoneNumber(int index, const QString &number) { 
+void DetailesContactModel::setPhoneNumber(int index, const QString &number) {
     if (index < 0 || index >= m_editedPhoneNumbers.size()) {
         return;
     }
@@ -206,10 +178,9 @@ void DetailesContactModel::setPhoneNumber(int index, const QString &number) {
     m_editedPhoneNumbers[index] = number;
 
     emit phoneNumbersChanged();
- }
+}
 
-void DetailesContactModel::clear()
-{
+void DetailesContactModel::clear() {
     m_selectedId = -1;
 
     setName("");

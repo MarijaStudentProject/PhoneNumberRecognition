@@ -34,32 +34,30 @@ std::optional<int> PhoneMatcher::findMatch(const PhoneNumber &number, const std:
 
 std::vector<int> PhoneMatcher::searchByName(const std::string &name, const std::vector<Contact> &contacts,
                                             int threshold) {
-    if(name.empty()){
+    if (name.empty()) {
         return {};
     }
     std::vector<int> possibleMatches;
     std::string lowerName = toLower(name);
     for (int i = 0; i < contacts.size(); i++) {
         const auto &contact = contacts[i];
-        if(toLower(contact.getFullName()) == lowerName || toLower(contact.getName()) == lowerName ||
-           toLower(contact.getSurname()) == lowerName) {
+        if (toLower(contact.getFullName()) == lowerName || toLower(contact.getName()) == lowerName ||
+            toLower(contact.getSurname()) == lowerName) {
             possibleMatches.push_back(i);
-        }
-        else if(startsWith(toLower(contact.getFullName()), lowerName) || startsWith(toLower(contact.getName()), lowerName) ||
-                startsWith(toLower(contact.getSurname()), lowerName)) {
+        } else if (startsWith(toLower(contact.getFullName()), lowerName) ||
+                   startsWith(toLower(contact.getName()), lowerName) ||
+                   startsWith(toLower(contact.getSurname()), lowerName)) {
             possibleMatches.push_back(i);
-        }
-        else if (name.length()>=4){
+        } else if (name.length() >= 4) {
             if (editDistance(lowerName, toLower(contact.getFullName())) <= threshold ||
-            editDistance(lowerName, toLower(contact.getName())) <= threshold ||
-            editDistance(lowerName, toLower(contact.getSurname())) <= threshold) {
+                editDistance(lowerName, toLower(contact.getName())) <= threshold ||
+                editDistance(lowerName, toLower(contact.getSurname())) <= threshold) {
                 possibleMatches.push_back(i);
             }
         }
     }
     return possibleMatches;
 }
-
 
 int PhoneMatcher::editDistance(const std::string &a, const std::string &b) {
 
@@ -134,7 +132,7 @@ std::optional<int> PhoneMatcher::matchBySuffix(std::string &number, const std::v
 
 std::vector<int> PhoneMatcher::searchByNumberPrefix(const std::string &number, const std::vector<Contact> &contacts) {
     std::vector<int> matches;
-    if(number.empty()){
+    if (number.empty()) {
         return matches;
     }
     for (int i = 0; i < contacts.size(); i++) {

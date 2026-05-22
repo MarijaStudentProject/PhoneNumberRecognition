@@ -7,6 +7,32 @@ import QtMultimedia
 
 
 ApplicationWindow {
+
+
+    function fullName(name, surname){
+        if(surname === undefined || surname.length === 0)
+            return name
+        return name + " " + surname
+    }
+
+    function initialsFrom(name, surname){
+        var first = name && name.length > 0 ? name[0] : ""
+        var second = surname && surname.length > 0 ? surname[0] : ""
+        if(second.length === 0 && name.indexOf(" ") !== -1){
+            var parts = name.split(" ")
+            second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
+        }
+        return (first + second).toUpperCase()
+    }
+
+    function colorForId(id) {
+        var colors = [
+            "#E8B4B8", "#B4C8E8", "#E8C4B4", "#C4B4E8",
+            "#B4E8C8", "#E8E4B4", "#E8B4D4", "#B4D4E8", "#D4E8B4"
+        ]
+        return colors[Math.abs(id) % colors.length]
+    }
+
     SoundEffect {
         id: clickSound
         source: "qrc:/PhoneApp/ui/sounds/click.wav"
@@ -254,6 +280,21 @@ ApplicationWindow {
         }
 
         onCallEnded: console.log("Call ended")
+    }
+
+    Connections {
+        target: callPoller
+        function onCallReceived(number, country) {
+            clickSound.play()
+            detailesContactModel.clear()
+            cppContactsModel.Call(number,country)
+            detailesContactModel.name? incomingCall.show(
+                        detailesContactModel.name + " " + detailesContactModel.surname,
+                        initialsFrom(detailesContactModel.name, detailesContactModel.surname),
+                        detailesContactModel.phoneNumbers[0], "#C4B4E8")
+                    : incomingCall.show("", "", number, "#C4B4E8")
+            
+        }
     }
 
     FontLoader {

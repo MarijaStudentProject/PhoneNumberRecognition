@@ -178,7 +178,8 @@ TEST_CASE("PhoneMatcher searchByName", "[matcher]") {
     }
 
     SECTION("prefix and distance match") {
-        std::vector<Contact> contacts = {Contact("marko", "petrovic", {dummy}),Contact("ana", "ketri", {dummy}),Contact("dummy", "dummy", {dummy})};
+        std::vector<Contact> contacts = {Contact("marko", "petrovic", {dummy}), Contact("ana", "ketri", {dummy}),
+                                         Contact("dummy", "dummy", {dummy})};
         auto result = PhoneMatcher::searchByName("petr", contacts, 2);
         REQUIRE(result.size() == 2);
         REQUIRE(result[0] == 0);
@@ -190,7 +191,6 @@ TEST_CASE("PhoneMatcher searchByName", "[matcher]") {
         auto result = PhoneMatcher::searchByName("", contacts, 2);
         REQUIRE(result.empty());
     }
-
 }
 
 TEST_CASE("PhoneMatcher searchByNumberPrefix", "[matcher]") {

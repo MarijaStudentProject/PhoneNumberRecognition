@@ -2,34 +2,29 @@
 #ifndef SELECTED_CONTACT_MODEL_H
 #define SELECTED_CONTACT_MODEL_H
 
-
+#include "controller/contacts_controller.hpp"
 #include <QObject>
 #include <QString>
-#include "controller/contacts_controller.hpp"
 
 class ContactsModel;
 
-class DetailesContactModel : public QObject
-{
+class DetailesContactModel : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString surname READ surname WRITE setSurname NOTIFY surnameChanged)
     Q_PROPERTY(QString email READ email WRITE setEmail NOTIFY emailChanged)
-    
+
     Q_PROPERTY(QString city READ city WRITE setCity NOTIFY cityChanged)
     Q_PROPERTY(QString country READ country WRITE setCountry NOTIFY countryChanged)
     Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY streetChanged)
-    
+
     Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY hasSelectionChanged)
 
     Q_PROPERTY(QVariantList phoneNumbers READ phoneNumbers NOTIFY phoneNumbersChanged)
-    
-public:
-    DetailesContactModel(
-        ContactsController* controller,
-        ContactsModel* contactsModel
-    );
+
+  public:
+    DetailesContactModel(ContactsController *controller, ContactsModel *contactsModel);
 
     QString name() const;
     QString surname() const;
@@ -40,25 +35,23 @@ public:
     QVariantList phoneNumbers() const;
     bool hasSelection() const;
 
-    void setContactsModel(ContactsModel *contactsModel){
-        m_contactsModel = contactsModel;
-    }
-    void setName(const QString& value); //invokable?
-    void setSurname(const QString& value);
-    void setEmail(const QString& value);
-    void setCity(const QString& value);
-    void setCountry(const QString& value);
-    void setStreet(const QString& value);
+    void setContactsModel(ContactsModel *contactsModel) { m_contactsModel = contactsModel; }
+    void setName(const QString &value); // invokable?
+    void setSurname(const QString &value);
+    void setEmail(const QString &value);
+    void setCity(const QString &value);
+    void setCountry(const QString &value);
+    void setStreet(const QString &value);
 
     void showDetails(int id);
-    
+
     Q_INVOKABLE void clear();
     Q_INVOKABLE void save();
+    Q_INVOKABLE void prepareNew();
 
-    Q_INVOKABLE void setPhoneNumber(int index, const QString& number);
+    Q_INVOKABLE void setPhoneNumber(int index, const QString &number);
 
-
-signals:
+  signals:
     void nameChanged();
     void surnameChanged();
     void emailChanged();
@@ -68,14 +61,15 @@ signals:
     void phoneNumbersChanged();
     void hasSelectionChanged();
 
-private:
+  private:
     void load();
 
-private:
-    ContactsController* m_controller;
-    ContactsModel* m_contactsModel;
+  private:
+    ContactsController *m_controller;
+    ContactsModel *m_contactsModel;
 
     int m_selectedId = -1;
+    bool m_isNew = false;
 
     QString m_editedName;
     QString m_editedSurname;
@@ -85,7 +79,6 @@ private:
     QString m_editedCountry;
     QString m_editedStreet;
     QStringList m_editedPhoneNumbers;
-
 };
 
 #endif // SELECTED_CONTACT_MODEL_H

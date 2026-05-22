@@ -64,11 +64,11 @@ if(BUILD_QT_APP)
         include/controller/contacts_controller.hpp
         include/model/contacts_model.hpp
         include/model/detailed_contact_model.hpp
-        include/network/incoming_call_poller.hpp
+        include/network/incoming_call_listener.hpp
         src/controller/contacts_controller.cpp
         src/model/contacts_model.cpp
         src/model/detailed_contact_model.cpp
-        src/network/incoming_call_poller.cpp
+        src/network/incoming_call_listener.cpp
         src/main.cpp
     )
 

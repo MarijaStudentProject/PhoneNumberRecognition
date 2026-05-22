@@ -27,6 +27,7 @@ Rectangle {
         } else {
             Qt.callLater(function() {
                 nameField.text    = contactName
+                surnameField.text = contactSurname
                 phoneField.text   = contactPhone
                 emailField.text   = contactEmail
                 addressField.text = contactAddress
@@ -35,6 +36,7 @@ Rectangle {
     }
 
     onContactNameChanged:    nameField.text    = contactName
+    onContactSurnameChanged: surnameField.text = contactSurname
     onContactPhoneChanged:   phoneField.text   = contactPhone
     onContactEmailChanged:   emailField.text   = contactEmail
     onContactAddressChanged: addressField.text = contactAddress
