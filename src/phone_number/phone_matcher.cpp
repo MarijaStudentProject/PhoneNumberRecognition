@@ -34,18 +34,32 @@ std::optional<int> PhoneMatcher::findMatch(const PhoneNumber &number, const std:
 
 std::vector<int> PhoneMatcher::searchByName(const std::string &name, const std::vector<Contact> &contacts,
                                             int threshold) {
+    if(name.empty()){
+        return {};
+    }
     std::vector<int> possibleMatches;
     std::string lowerName = toLower(name);
     for (int i = 0; i < contacts.size(); i++) {
         const auto &contact = contacts[i];
-        if (editDistance(lowerName, toLower(contact.getFullName())) <= threshold ||
+        if(toLower(contact.getFullName()) == lowerName || toLower(contact.getName()) == lowerName ||
+           toLower(contact.getSurname()) == lowerName) {
+            possibleMatches.push_back(i);
+        }
+        else if(startsWith(toLower(contact.getFullName()), lowerName) || startsWith(toLower(contact.getName()), lowerName) ||
+                startsWith(toLower(contact.getSurname()), lowerName)) {
+            possibleMatches.push_back(i);
+        }
+        else if (name.length()>=4){
+            if (editDistance(lowerName, toLower(contact.getFullName())) <= threshold ||
             editDistance(lowerName, toLower(contact.getName())) <= threshold ||
             editDistance(lowerName, toLower(contact.getSurname())) <= threshold) {
-            possibleMatches.push_back(i);
+                possibleMatches.push_back(i);
+            }
         }
     }
     return possibleMatches;
 }
+
 
 int PhoneMatcher::editDistance(const std::string &a, const std::string &b) {
 

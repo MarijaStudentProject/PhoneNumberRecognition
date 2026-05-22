@@ -169,6 +169,28 @@ TEST_CASE("PhoneMatcher searchByName", "[matcher]") {
         REQUIRE(result.size() == 1);
         REQUIRE(result[0] == 0);
     }
+
+    SECTION("prefix match name") {
+        std::vector<Contact> contacts = {Contact("marko", "petrovic", {dummy})};
+        auto result = PhoneMatcher::searchByName("ma", contacts, 2);
+        REQUIRE(result.size() == 1);
+        REQUIRE(result[0] == 0);
+    }
+
+    SECTION("prefix and distance match") {
+        std::vector<Contact> contacts = {Contact("marko", "petrovic", {dummy}),Contact("ana", "ketri", {dummy}),Contact("dummy", "dummy", {dummy})};
+        auto result = PhoneMatcher::searchByName("petr", contacts, 2);
+        REQUIRE(result.size() == 2);
+        REQUIRE(result[0] == 0);
+        REQUIRE(result[1] == 1);
+    }
+
+    SECTION("empty name no match") {
+        std::vector<Contact> contacts = {Contact("marko", "petrovic", {dummy})};
+        auto result = PhoneMatcher::searchByName("", contacts, 2);
+        REQUIRE(result.empty());
+    }
+
 }
 
 TEST_CASE("PhoneMatcher searchByNumberPrefix", "[matcher]") {
@@ -203,9 +225,7 @@ TEST_CASE("PhoneMatcher searchByNumberPrefix", "[matcher]") {
         PhoneNumber p2("+49301234567", 49, "301234567", "+49301234567");
         std::vector<Contact> contacts = {Contact("Marko", "Petrovic", {p1}), Contact("Hans", "Mueller", {p2})};
         auto result = PhoneMatcher::searchByNumberPrefix("", contacts);
-        REQUIRE(result.size() == 2);
-        REQUIRE(result[0] == 0);
-        REQUIRE(result[1] == 1);
+        REQUIRE(result.size() == 0);
     }
 
     SECTION("prefix longer than number returns no match") {
