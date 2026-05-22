@@ -25,22 +25,22 @@ The Qt6 frontend provides a native-feeling contacts browser and dial pad.
 ### 📱 Phone Number Normalization
 
 * Parses E.164, local, and international prefix formats (+381..., 00381..., 060...)
-* Detects country codes from a JSON metadata file (supports any country)
+* Detects country codes from a JSON metadata file (supports countries from EU, ASIA, NA)
 * Region-aware parsing — knows which national prefix to strip per country
 * Special-case handling (e.g. Italy keeps national prefix)
 
 ### 🔍 Contact Matching
 
 * Exact match — compares normalized E.164 values
-* Suffix match — fuzzy fallback for partial number overlap (configurable threshold)
-* Name search — Levenshtein edit distance with Unicode support
+* Suffix match — fuzzy fallback for partial number overlap 
+* Name search — Levenshtein edit distance 
 * Number prefix search — live filtering as you type
 
 ### 🖥️ Qt Application
 
 * Contacts list with search (name or number)
 * Contact detail view with inline editing — changes are held in memory for the session
-* Dial pad with DTMF sounds and contact matching
+* Dial pad with contact matching
 * Active call screen and incoming call simulation
 * Import contacts from .vcf file at startup
 
@@ -71,11 +71,9 @@ git clone https://github.com/ivanenko/vCard.git
 
 Build and install per the repository instructions. The library is linked as vCard via find_library.
 
-#### Features provided by the library:
+### 📄 Json Parser
 
-* vCard (.vcf) parsing
-* Contact field extraction (name, phone, email)
-* Extensible data model for custom processing
+This project uses the following header only library:  [https://github.com/zserge/jsmn](https://github.com/zserge/jsmn)
 
 
 ## 🧪 Testing
@@ -98,33 +96,51 @@ Build and install per the repository instructions. The library is linked as vCar
   * QtQuick
   * QtQuickControls2
   * QtMultimedia
+  * Qt6::Network
 
 
 ## 🔧 Build Steps
+### 0. Install dependencies
+   - [Ivanenko vCard library](#-vcard-parser)
+   
+   - Required Qt modules
+      ```bash
+      sudo apt install \
+       qml6-module-qtquick-controls \
+       qml6-module-qtmultimedia
+      ```
+      
+### 1. Clone the repository:
+     ```bash
+     git clone https://github.com/MarijaStudentProject/PhoneNumberRecognition.git
+     ```
 
-1. Clone the repository:
+### 2. Build from the command line:
+    
+    ```bash
+    cd PhoneNumberRecognition
+    mkdir build && cd build
+    cmake ..
+    make 
+    ./ContactsApp
+    ```
+#### Build tests
 
-```bash
-git clone https://github.com/MarijaStudentProject/PhoneNumberRecognition.git
-```
+   ```bash
+   make tests 
+   ./tests/tests
+   ```
 
-2. Open **Qt Creator**
+## Or build with Qt Creator
 
-3. Click **Open Project**
+1. Open **Qt Creator**
 
-4. Navigate to the cloned folder and select: **CMakeLists.txt**
+2. Click **Open Project**
 
-5. Configure the project (choose Qt6 kit if prompted)
+3. Navigate to the cloned folder and select: **CMakeLists.txt**
+
+4. Configure the project (choose Qt6 kit if prompted)
 
 6. Click **Configure Project**
 
 7. Run the application: Click **Run (▶)**
-
-Or build from the command line:
-```bash
-cd PhoneNumberRecognition
-mkdir build && cd build
-cmake ..
-make 
-./ContactsApp
-```
