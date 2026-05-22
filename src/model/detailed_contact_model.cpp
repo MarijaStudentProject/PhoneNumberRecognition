@@ -131,8 +131,46 @@ void DetailesContactModel::showDetails(int id) {
 }
 
 
+void DetailesContactModel::prepareNew()
+{
+    m_selectedId = -1;
+    m_isNew = true;
+    m_editedName.clear();
+    m_editedSurname.clear();
+    m_editedEmail.clear();
+    m_editedCity.clear();
+    m_editedCountry.clear();
+    m_editedStreet.clear();
+    m_editedPhoneNumbers.clear();
+    m_editedPhoneNumbers.append(""); // index 0 must exist for setPhoneNumber(0,…) in ContactInfo save handler
+    emit nameChanged();
+    emit surnameChanged();
+    emit emailChanged();
+    emit phoneNumbersChanged();
+    emit hasSelectionChanged();
+}
+
 void DetailesContactModel::save()
 {
+    std::vector<std::string> phoneNumbers;
+    for (const auto& p : m_editedPhoneNumbers) {
+        if (!p.isEmpty())
+            phoneNumbers.push_back(p.toStdString());
+    }
+
+    if (m_isNew) {
+        m_isNew = false;
+        m_selectedId = m_controller->addContact(
+            m_editedName.toStdString(),
+            m_editedSurname.toStdString(),
+            phoneNumbers,
+            m_editedEmail.toStdString(),
+            Address(m_editedStreet.toStdString(), "", m_editedCity.toStdString(), m_editedCountry.toStdString())
+        );
+        m_contactsModel->refresh();
+        return;
+    }
+
     if (m_selectedId == -1) {
         return;
     }
@@ -143,11 +181,6 @@ void DetailesContactModel::save()
         return;
     }
 
-    std::vector<std::string> phoneNumbers;
-    for(const auto& p : m_editedPhoneNumbers) {
-        phoneNumbers.push_back(p.toStdString());
-    }
-    
     m_controller->updateContact(
         m_selectedId,
         m_editedName.toStdString(),

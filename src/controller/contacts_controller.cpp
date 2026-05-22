@@ -46,6 +46,23 @@ void ContactsController::updateContact(int id, const std::string &name, const st
     contact->setPhoneNumbers(phoneNumbers);
 }
 
+int ContactsController::addContact(const std::string& name, const std::string& surname,
+    const std::vector<std::string>& phones,
+    const std::string& email, const Address& address)
+{
+    std::vector<PhoneNumber> phoneNumbers;
+    for (const auto& p : phones) {
+        phoneNumbers.push_back(m_normalizer.normalize(p, "RS", true));
+    }
+    m_contacts.push_back(Contact(name, surname, phoneNumbers, email, address));
+    std::sort(m_contacts.begin(), m_contacts.end());
+    for (int i = 0; i < static_cast<int>(m_contacts.size()); ++i) {
+        if (m_contacts[i].getName() == name && m_contacts[i].getSurname() == surname)
+            return i;
+    }
+    return static_cast<int>(m_contacts.size()) - 1;
+}
+
 void ContactsController::importContacts(const std::string& path){
     m_contacts =  m_vcfParser.loadFromFile(path);
     std::sort(m_contacts.begin(), m_contacts.end());

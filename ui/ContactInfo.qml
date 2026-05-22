@@ -135,6 +135,7 @@ Rectangle {
                 TextField {
                     id: nameField
                     text: root.contactName
+                    implicitWidth: 110
                     font.pixelSize: 18
                     font.weight: Font.Medium
                     color: "#1a1a1a"
@@ -146,12 +147,12 @@ Rectangle {
                         radius: 6
                     }
                     onTextEdited: keyboardSound.play()
-
                 }
 
                 TextField {
                     id: surnameField
                     text: root.contactSurname
+                    implicitWidth: 110
                     font.pixelSize: 18
                     font.weight: Font.Medium
                     color: "#1a1a1a"
@@ -163,7 +164,6 @@ Rectangle {
                         radius: 6
                     }
                     onTextEdited: keyboardSound.play()
-
                 }
             }
             // Call + favourite (hidden in edit mode)
