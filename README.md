@@ -144,3 +144,6 @@ This project uses the following header only library:  [https://github.com/zserge
 6. Click **Configure Project**
 
 7. Run the application: Click **Run (▶)**
+
+## Configuration
+Resources are copied to the `build` folder during installation. There you can change the metadata path as well as the parsing region.
