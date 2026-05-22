@@ -1,13 +1,13 @@
-cmake_minimum_required(VERSION 3.10)
-project(PhoneNumberRecognition)
+cmake_minimum_required(VERSION 3.16)
+project(PhoneNumberRecognition VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(FetchContent)
+option(BUILD_QT_APP "Build Qt GUI application" ON)
 
+include(FetchContent)
 
 find_package(Catch2 3 QUIET)
 
@@ -17,14 +17,17 @@ if(NOT Catch2_FOUND)
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
         GIT_TAG        v3.7.1
+        GIT_SHALLOW    TRUE
     )
     FetchContent_MakeAvailable(Catch2)
 else()
     message(STATUS "Catch2 found locally: ${Catch2_DIR}")
 endif()
 
+find_library(VCARD_LIB vCard REQUIRED)
 
-set(SOURCES
+
+set(NUMBER_SOURCES
     src/phone_number/numbering_plan_repo.cpp
     src/phone_number/phone_normalizer.cpp
     src/phone_number/address.cpp
@@ -34,115 +37,89 @@ set(SOURCES
     src/phone_number/phone_matcher.cpp
 )
 
-
-
-find_library(VCARD_LIB vCard REQUIRED)
-
-file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
-add_library(phone_normalizer STATIC ${SOURCES} ${HEADERS})
+add_library(phone_normalizer STATIC ${NUMBER_SOURCES})
 target_include_directories(phone_normalizer PUBLIC "${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/libs")
 target_link_libraries(phone_normalizer PUBLIC ${VCARD_LIB})
 
-find_program(CLANG_TIDY clang-tidy)
-if(CLANG_TIDY)
-    file(GLOB_RECURSE ALL_CPP_FILES
-        ${CMAKE_SOURCE_DIR}/src/*.cpp
-    )
-    add_custom_target(tidy
-        COMMAND ${CLANG_TIDY} -p ${CMAKE_BINARY_DIR} ${ALL_CPP_FILES}
-        COMMENT "Running clang-tidy"
-    )
-    add_custom_target(tidy-fix
-        COMMAND ${CLANG_TIDY} -p ${CMAKE_BINARY_DIR} --fix ${ALL_CPP_FILES}
-        COMMENT "Running clang-tidy with --fix"
-    )
-endif()
+add_subdirectory(tests)
 
-find_program(CLANG_FORMAT clang-format)
-if(CLANG_FORMAT)
-    file(GLOB_RECURSE ALL_SOURCE_FILES
-        ${CMAKE_SOURCE_DIR}/src/*.cpp
-        ${CMAKE_SOURCE_DIR}/tests/*.cpp
-        ${CMAKE_SOURCE_DIR}/include/*.hpp
-        ${CMAKE_SOURCE_DIR}/libs/*.h
-    )
-    add_custom_target(format-fix
-        COMMAND ${CLANG_FORMAT} -i ${ALL_SOURCE_FILES}
-        COMMENT "Running clang-format"
-    )
-endif()
-
-file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
 set(RESOURCE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
 set(RESOURCE_OUTPUT_DIR ${CMAKE_BINARY_DIR}/resources)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
+
 add_custom_target(copy_resources
-    ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${RESOURCE_SOURCE_DIR}
         ${RESOURCE_OUTPUT_DIR}
     COMMENT "Copying resources to build directory"
 )
 
-add_subdirectory(tests)
+include(ClangTools.cmake)
 
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Multimedia)
+if(BUILD_QT_APP)
 
-#qt_standard_project_setup()
+    find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 Multimedia Network)
 
-qt_add_executable(ContactsApp src/controller/contacts_controller.cpp src/model/contacts_model.cpp
- include/controller/contacts_controller.hpp include/model/contacts_model.hpp src/model/detailed_contact_model.cpp include/model/detailed_contact_model.hpp
-    src/main.cpp
-)
+    qt_add_executable(ContactsApp
+        include/controller/contacts_controller.hpp
+        include/model/contacts_model.hpp
+        include/model/detailed_contact_model.hpp
+        include/network/incoming_call_poller.hpp
+        src/controller/contacts_controller.cpp
+        src/model/contacts_model.cpp
+        src/model/detailed_contact_model.cpp
+        src/network/incoming_call_poller.cpp
+        src/main.cpp
+    )
 
+    set_target_properties(ContactsApp PROPERTIES
+        AUTOMOC ON
+        AUTOUIC ON
+        AUTORCC ON
+    )
 
-target_link_libraries(ContactsApp PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick  phone_normalizer)
+    target_include_directories(ContactsApp PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/libs)
 
+    add_dependencies(ContactsApp copy_resources)
 
-find_package(Qt6 REQUIRED COMPONENTS Gui Quick QuickControls2 Multimedia)
+    target_link_libraries(ContactsApp PRIVATE
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Qml
+        Qt6::Quick
+        Qt6::QuickControls2
+        Qt6::Multimedia
+        Qt6::Network
+        phone_normalizer
+    )
 
-set(CMAKE_AUTORCC ON)
-
-set_target_properties(ContactsApp PROPERTIES
-    AUTOMOC ON
-)
-
-qt_add_qml_module(ContactsApp
-    URI PhoneApp
-    VERSION 1.0
-    QML_FILES
-        ui/Main.qml
-        ui/ContactsView.qml
-        ui/DialView.qml
-        QML_FILES  ui/ContactInfo.qml
-        QML_FILES ui/DialingPopup.qml
-        QML_FILES ui/IncomingCallPopup.qml
-        QML_FILES ui/ActiveCallScreen.qml
-        RESOURCES ui/fonts/fa-solid-900.ttf
-        RESOURCES ui/sounds/dialpad-0.wav
-        RESOURCES ui/sounds/dialpad-1.wav
-        RESOURCES ui/sounds/dialpad-2.wav
-        RESOURCES ui/sounds/dialpad-3.wav
-        RESOURCES ui/sounds/dialpad-4.wav
-        RESOURCES ui/sounds/dialpad-5.wav
-        RESOURCES ui/sounds/dialpad-6.wav
-        RESOURCES ui/sounds/dialpad-7.wav
-        RESOURCES ui/sounds/dialpad-8.wav
-        RESOURCES ui/sounds/dialpad-9.wav
-        RESOURCES ui/sounds/click.wav
-        RESOURCES ui/sounds/samsung-ringtone.wav ui/sounds/dialing-sound.wav
-        RESOURCES ui/sounds/keyboard-sound.wav
-
-
-)
-
-target_link_libraries(ContactsApp PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-    Qt6::QuickControls2
-    Qt6::Multimedia
-    phone_normalizer
-)
+    qt_add_qml_module(ContactsApp
+        URI PhoneApp
+        VERSION 1.0
+        QML_FILES
+            ui/Main.qml
+            ui/ContactsView.qml
+            ui/DialView.qml
+            ui/ContactInfo.qml
+            ui/DialingPopup.qml
+            ui/IncomingCallPopup.qml
+            ui/ActiveCallScreen.qml
+        RESOURCES
+            ui/fonts/fa-solid-900.ttf
+            ui/sounds/dialpad-0.wav
+            ui/sounds/dialpad-1.wav
+            ui/sounds/dialpad-2.wav
+            ui/sounds/dialpad-3.wav
+            ui/sounds/dialpad-4.wav
+            ui/sounds/dialpad-5.wav
+            ui/sounds/dialpad-6.wav
+            ui/sounds/dialpad-7.wav
+            ui/sounds/dialpad-8.wav
+            ui/sounds/dialpad-9.wav
+            ui/sounds/click.wav
+            ui/sounds/samsung-ringtone.wav
+            ui/sounds/dialing-sound.wav
+            ui/sounds/keyboard-sound.wav
+    )
+    
+endif()
