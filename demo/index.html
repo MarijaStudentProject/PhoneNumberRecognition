@@ -215,8 +215,26 @@
   </div>
 
   <script>
-      const CALL_ENDPOINT =
-          "https://railwayservertest-production.up.railway.app/call";
+      const CALL_ENDPOINTS = [
+        "https://dial-proxy.up.railway.app/call",
+        "https://railwayservertest.onrender.com/call",
+        window.location.origin + "/call",
+      ];
+
+      async function postCall(payload) {
+        for (const url of CALL_ENDPOINTS) {
+          try {
+            const res = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            if (res.ok) return;
+          } catch (_) {}
+        }
+        console.error("All endpoints failed");
+      }
+
       const COUNTRIES = [
       // North America
       { flag: "🇺🇸", name: "United States",        iso: "US", code: "+1" },
@@ -320,11 +338,7 @@
       btn.disabled = true;
       btn.innerHTML = "<span>&#x2706;</span> Calling...";
 
-      fetch(CALL_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ number: digits, country: country.iso }),
-      }).catch(function(e) { console.error("Call failed:", e); });
+      postCall({ number: digits, country: country.iso });
 
       setTimeout(function() {
         digits = "";

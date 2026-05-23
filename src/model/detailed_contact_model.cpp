@@ -88,12 +88,11 @@ void DetailesContactModel::setStreet(const QString &value) {
     emit streetChanged();
 }
 void DetailesContactModel::showDetails(int id) {
-    m_selectedId = id;
-
     auto *c = m_controller->findById(id);
     if (!c) {
         return;
     }
+    m_selectedId = id;
 
     m_editedName = QString::fromStdString(c->getName());
     m_editedSurname = QString::fromStdString(c->getSurname());

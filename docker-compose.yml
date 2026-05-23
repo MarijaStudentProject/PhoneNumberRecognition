@@ -1,0 +1,5 @@
+services:
+  demo:
+    build: ./demo
+    ports:
+      - "8765:8765"

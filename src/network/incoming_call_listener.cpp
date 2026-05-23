@@ -23,6 +23,7 @@ void IncomingCallListener::poll() { m_nam->get(QNetworkRequest(QUrl(m_serverUrl 
 
 void IncomingCallListener::onReply(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
+        reply->deleteLater();
         return;
     }
     const QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());

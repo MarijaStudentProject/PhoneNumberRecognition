@@ -51,13 +51,12 @@ int ContactsModel::contactIdAt(int row) const {
 
 void ContactsModel::setSearchText(const QString &text) {
     m_editedSearchText = text;
-
-    beginResetModel();
-    m_visibleIds = m_controller->search(text.toStdString());
-    endResetModel();
-
     if (text.isEmpty()) {
         refresh();
+    } else {
+        beginResetModel();
+        m_visibleIds = m_controller->search(text.toStdString());
+        endResetModel();
     }
 
     emit searchTextChanged();
