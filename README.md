@@ -107,7 +107,8 @@ This project uses the following header only library:  [https://github.com/zserge
       ```bash
       sudo apt install \
        qml6-module-qtquick-controls \
-       qml6-module-qtmultimedia
+       qml6-module-qtmultimedia \
+       qml6-module-qtquick-dialogs
       ```
       
 ### 1. Clone the repository:
