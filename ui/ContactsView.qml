@@ -341,8 +341,7 @@ Rectangle {
         title: "Import VCF file"
         nameFilters: ["VCard files (*.vcf)", "All files (*)"]
         onAccepted: {
-            var path = fileDialog.selectedFile.toString()
-            path = path.replace(/^file:\/\//, "")
+            var path = fileDialog.selectedFile.toLocalFile()
             contactsModel.import(path)
         }
     }
