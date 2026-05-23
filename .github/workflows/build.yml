@@ -52,4 +52,4 @@ jobs:
 
       - name: Run clang-tidy
         run: |
-          cmake --build build --target tidy
+          cmake --build build --target tidy-check
