@@ -1,6 +1,5 @@
 #include "model/detailed_contact_model.hpp"
 #include "model/contacts_model.hpp"
-#include "model/detailed_contact_model.hpp"
 #include <QVariant>
 
 DetailesContactModel::DetailesContactModel(ContactsController *controller, ContactsModel *contactsModel)
