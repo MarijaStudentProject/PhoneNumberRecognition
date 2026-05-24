@@ -1,6 +1,9 @@
 #include "test_helper.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <string_view>
+#include "phone_number/phone_normalizer.hpp"
+#include "phone_number/phone_matcher.hpp"
+#include "phone_number/vcf_parser.hpp"
 
 TEST_CASE("international number - country code known", "[normalizer]") {
 
@@ -184,4 +187,36 @@ TEST_CASE("normalizer input formatting", "[normalizer]") {
         auto result = normalizer.normalize("381+66123456");
         REQUIRE(result.getRawValue() == "38166123456");
     }
+}
+
+TEST_CASE("normalizer integration test"){
+    PhoneNormalizer normalizer("../resources/min_filtered_metadata.json");
+    VcfParser parser(normalizer, "RS");
+    std::vector<Contact> contacts = parser.loadFromFile("../resources/contacts_100.vcf");
+
+    auto nLocal=normalizer.normalize("060 1231008", "RS", false);
+    auto nInt00=normalizer.normalize("00 381 60 1231008", "RS", false);
+    auto nIntPlus=normalizer.normalize("+ 381 60 1231008", "RS", false);
+    auto nInvalid=normalizer.normalize("00 060 1231008", "RS", false);
+
+    REQUIRE(nLocal.getNormalizedValue()=="+381601231008");
+    REQUIRE(nInt00.getNormalizedValue()=="+381601231008");
+    REQUIRE(nIntPlus.getNormalizedValue()=="+381601231008");
+    REQUIRE(nInvalid.getNormalizedValue()!="+381601231008");
+
+    auto m1=PhoneMatcher::findMatch(nLocal, contacts);
+    auto m2=PhoneMatcher::findMatch(nInt00, contacts);
+    auto m3=PhoneMatcher::findMatch(nIntPlus, contacts);
+    auto m4=PhoneMatcher::findMatch(nInvalid, contacts);
+    REQUIRE(m1);
+    REQUIRE(m2);
+    REQUIRE(m3);
+    REQUIRE(!m4);
+
+    REQUIRE(contacts[m1.value()].getName()=="Aleksa");
+    REQUIRE(contacts[m1.value()].getSurname()=="Djordjevic");
+    REQUIRE(m1.value()==m2.value());
+    REQUIRE(m1.value()==m3.value());
+    
+
 }

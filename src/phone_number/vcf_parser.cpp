@@ -58,7 +58,7 @@ Contact VcfParser::cardToContact(vCard &card) const {
         } else if (propName == VC_EMAIL) {
             email = values[0];
         } else if (propName == VC_TELEPHONE) {
-            PhoneNumber phoneNumber = m_normalizer.normalize(values[0], m_parsingRegion);
+            PhoneNumber phoneNumber = m_normalizer.normalize(values[0], m_parsingRegion,true);
             phoneNumbers.push_back(phoneNumber);
         } else if (propName == VC_ADDRESS) {
 
