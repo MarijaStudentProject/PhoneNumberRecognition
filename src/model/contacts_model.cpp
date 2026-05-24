@@ -83,6 +83,7 @@ void ContactsModel::makeCall() {
 }
 
 void ContactsModel::Call(QString number, QString country) {
+    m_detailedContactModel->setDetailsById(-1);
     if (number.isEmpty()) {
         return;
     }
@@ -90,7 +91,7 @@ void ContactsModel::Call(QString number, QString country) {
     if (opt) {
         Contact *c = m_controller->findById(opt.value());
         if (c) {
-            m_detailedContactModel->showDetails(opt.value());
+            m_detailedContactModel->setDetailsById(opt.value());
         }
     }
     // setSearchText("");
@@ -98,7 +99,15 @@ void ContactsModel::Call(QString number, QString country) {
 
 void ContactsModel::select(int row) {
     int id = contactIdAt(row);
-    m_detailedContactModel->showDetails(id);
+    m_detailedContactModel->setDetailsById(id);
+}
+
+QVariantMap ContactsModel::normalizeIncoming(const QString &number, const QString &country) const {
+    QVariantMap result;
+    auto normalized = m_controller->normalize(number.toStdString(), country.toStdString(), true);
+    result["normalized"] = QString::fromStdString(normalized.getNormalizedValue());
+    result["countryCode"] = normalized.getCountryCode();
+    return result;
 }
 
 void ContactsModel::refresh() {

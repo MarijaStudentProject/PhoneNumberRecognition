@@ -3,6 +3,31 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 Rectangle {
+
+    function fullName(name, surname){
+        if(surname === undefined || surname.length === 0)
+            return name
+        return name + " " + surname
+    }
+
+    function initialsFrom(name, surname){
+        var first = name && name.length > 0 ? name[0] : ""
+        var second = surname && surname.length > 0 ? surname[0] : ""
+        if(second.length === 0 && name.indexOf(" ") !== -1){
+            var parts = name.split(" ")
+            second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
+        }
+        return (first + second).toUpperCase()
+    }
+
+    function colorForId(id) {
+        var colors = [
+            "#E8B4B8", "#B4C8E8", "#E8C4B4", "#C4B4E8",
+            "#B4E8C8", "#E8E4B4", "#E8B4D4", "#B4D4E8", "#D4E8B4"
+        ]
+        return colors[Math.abs(id) % colors.length]
+    }
+
     id: root
     color: "#0a4a4a"
 
@@ -11,6 +36,7 @@ Rectangle {
     property string contactPhone: ""
     property string contactColor: "#B4C8E8"
     property string callLabel: "Connecting..."
+    property int contactCountryCode: 0
 
     // states: "calling", "active"
     property string callState: "calling"
@@ -20,14 +46,50 @@ Rectangle {
 
     visible: false
 
-    function show(name, initials, phone, color) {
-        contactName     = name
-        contactInitials = initials
-        contactPhone    = phone
-        contactColor    = color
-        callState       = "calling"
-        elapsedSeconds  = 0
-        visible         = true
+    function countryCodeToName(code) {
+        var map = {
+            1: "USA / Canada", 7: "Russia", 20: "Egypt",
+            27: "South Africa", 30: "Greece", 31: "Netherlands",
+            32: "Belgium", 33: "France", 34: "Spain", 36: "Hungary",
+            39: "Italy", 40: "Romania", 41: "Switzerland", 43: "Austria",
+            44: "United Kingdom", 45: "Denmark", 46: "Sweden", 47: "Norway",
+            48: "Poland", 49: "Germany", 51: "Peru", 52: "Mexico",
+            54: "Argentina", 55: "Brazil", 56: "Chile", 57: "Colombia",
+            61: "Australia", 62: "Indonesia", 63: "Philippines",
+            64: "New Zealand", 65: "Singapore", 66: "Thailand",
+            81: "Japan", 82: "South Korea", 86: "China", 90: "Turkey",
+            91: "India", 92: "Pakistan", 94: "Sri Lanka", 98: "Iran",
+            212: "Morocco", 213: "Algeria", 216: "Tunisia",
+            234: "Nigeria", 254: "Kenya",
+            380: "Ukraine", 381: "Serbia", 382: "Montenegro", 385: "Croatia",
+            386: "Slovenia", 387: "Bosnia & Herzegovina",
+            389: "North Macedonia", 420: "Czech Republic", 421: "Slovakia",
+            994: "Azerbaijan", 995: "Georgia", 998: "Uzbekistan"
+        }
+        return map[code] !== undefined ? map[code] : ""
+    }
+
+    function show(name, initials, phone, color, countryCode) {
+        contactName        = name
+        contactInitials    = initials
+        contactPhone       = phone
+        contactColor       = color
+        contactCountryCode = countryCode !== undefined ? countryCode : 0
+        callState          = "calling"
+        elapsedSeconds     = 0
+        visible            = true
+    }
+
+    function showSelected(){
+        contactName        = detailesContactModel.name + " " + detailesContactModel.surname
+        contactInitials    = initialsFrom(detailesContactModel.name, detailesContactModel.surname)
+        contactPhone       = detailesContactModel.getPrimaryNumber()
+        contactColor       = colorForId(detailesContactModel.contactId)
+        contactCountryCode = detailesContactModel.getPrimaryCountryCode()
+        callState          = "calling"
+        elapsedSeconds     = 0
+        visible            = true
+        
     }
 
     function formatTime(s) {
@@ -77,6 +139,16 @@ Rectangle {
             font.pixelSize: root.contactName.length > 0 ? 28 : 22
             font.weight: Font.Bold
             color: "white"
+        }
+
+        // Country
+        Text {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: 2
+            text: countryCodeToName(root.contactCountryCode)
+            font.pixelSize: 12
+            color: "#80ffffff"
+            visible: root.contactCountryCode !== 0
         }
 
         // Phone

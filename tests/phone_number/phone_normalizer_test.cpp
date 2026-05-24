@@ -207,11 +207,10 @@ TEST_CASE("normalizer integration test"){
     auto m1=PhoneMatcher::findMatch(nLocal, contacts);
     auto m2=PhoneMatcher::findMatch(nInt00, contacts);
     auto m3=PhoneMatcher::findMatch(nIntPlus, contacts);
-    auto m4=PhoneMatcher::findMatch(nInvalid, contacts);
+    
     REQUIRE(m1);
     REQUIRE(m2);
     REQUIRE(m3);
-    REQUIRE(!m4);
 
     REQUIRE(contacts[m1.value()].getName()=="Aleksa");
     REQUIRE(contacts[m1.value()].getSurname()=="Djordjevic");

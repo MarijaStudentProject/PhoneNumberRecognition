@@ -8,11 +8,6 @@ Rectangle {
     color: "#F8F8F8"
 
     property var contactsModel: null
-    property string selectedName: ""
-    property string selectedInitials: ""
-    property string selectedPhone: ""
-    property string selectedEmail: ""
-    property string selectedColor: "#E8B4B8"
     property bool showInfo: false
     property bool showDialing: false
 
@@ -32,6 +27,17 @@ Rectangle {
             second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
         }
         return (first + second).toUpperCase()
+    }
+
+    function showCurrentInfo() {
+        contactInfo.contactName     = detailesContactModel.name
+        contactInfo.contactSurname  = detailesContactModel.surname
+        contactInfo.contactInitials = initialsFrom(detailesContactModel.name, detailesContactModel.surname)
+        contactInfo.contactPhone    = detailesContactModel.phoneNumbers.length > 0
+                                        ? detailesContactModel.getPrimaryNumber() : ""
+        contactInfo.contactEmail    = detailesContactModel.email
+        contactInfo.contactColor    = colorForId(detailesContactModel.contactId)
+        showInfo = true
     }
 
     function colorForId(id) {
@@ -209,16 +215,8 @@ Rectangle {
 
                             onTriggered: {
                                 detailesContactModel.prepareNew()
-                                contactInfo.contactIndex    = -1
-                                contactInfo.contactName     = ""
-                                contactInfo.contactSurname  = ""
-                                contactInfo.contactInitials = ""
-                                contactInfo.contactPhone    = ""
-                                contactInfo.contactEmail    = ""
-                                contactInfo.contactAddress  = ""
-                                contactInfo.contactColor    = "#B4C8E8"
                                 contactInfo.editMode        = true
-                                showInfo = true
+                                showCurrentInfo()
                                 clickSound.play()
                             }
                         }
@@ -320,15 +318,7 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: {
                         contactsModel.select(index)
-                        contactInfo.contactIndex    = index
-                        contactInfo.contactName     = name
-                        contactInfo.contactSurname  = surname
-                        contactInfo.contactInitials = displayInitials
-                        contactInfo.contactPhone    = phone
-                        contactInfo.contactEmail    = detailesContactModel.email
-                        contactInfo.contactAddress  = detailesContactModel.street
-                        contactInfo.contactColor    = displayColor
-                        showInfo = true
+                        showCurrentInfo()
                         clickSound.play()
                     }
                 }
@@ -341,20 +331,20 @@ Rectangle {
         title: "Import VCF file"
         nameFilters: ["VCard files (*.vcf)", "All files (*)"]
         onAccepted: {
-            var path = fileDialog.selectedFile.toLocalFile()
+            var path = fileDialog.selectedFile.toString().replace("file://", "")
             contactsModel.import(path)
         }
     }
-
     ContactInfo {
         id: contactInfo
         anchors.fill: parent
         visible: showInfo
-        contactName:     selectedName
-        contactInitials: selectedInitials
-        contactPhone:    selectedPhone
-        contactEmail:    selectedEmail
-        contactColor:    selectedColor
+        contactName:     ""
+        contactSurname:  ""
+        contactInitials: ""
+        contactPhone:    ""
+        contactEmail:    ""
+        contactColor:    "#E8B4B8"
         onDismissed:   showInfo = false
         onCallClicked: {
             showDialing = false
@@ -367,14 +357,14 @@ Rectangle {
         visible: showDialing
         enabled: showDialing
         z: 10
-        contactName:     contactInfo.contactName
-        contactInitials: contactInfo.contactInitials
-        contactPhone:    contactInfo.contactPhone
-        contactColor:    contactInfo.contactColor
+        contactName:     detailesContactModel.name
+        contactInitials: initialsFrom(detailesContactModel.name, detailesContactModel.surname)
+        contactPhone:    detailesContactModel.getPrimaryNumber()
+        contactColor:    colorForId(detailesContactModel.contactId)
         onDismissed: showDialing = false
         onCallClicked: {
             showDialing = false
-            callRequested(contactInfo.contactName, contactInfo.contactInitials, contactInfo.contactPhone, contactInfo.contactColor)
+            callRequested(detailesContactModel.name, contactInitials, detailesContactModel.getPrimaryNumber(), contactColor)
         }
     }
 }

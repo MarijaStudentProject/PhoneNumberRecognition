@@ -69,6 +69,11 @@ void ContactsController::importContacts(const std::string &path) {
     std::sort(m_contacts.begin(), m_contacts.end());
 }
 
+PhoneNumber ContactsController::normalize(const std::string &number, const std::string &country, bool strict) const {
+    std::string isoCode = country.empty() ? m_parsingRegion : country;
+    return m_normalizer.normalize(number, isoCode, strict);
+}
+
 std::optional<int> ContactsController::match(const std::string &number, const std::string &country) const {
     std::string isoCode = country.empty() ? m_parsingRegion : country;
 

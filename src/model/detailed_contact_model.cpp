@@ -29,6 +29,8 @@ QVariantList DetailesContactModel::phoneNumbers() const {
 
 bool DetailesContactModel::hasSelection() const { return m_selectedId != -1; }
 
+int DetailesContactModel::contactId() const { return m_selectedId; }
+
 void DetailesContactModel::setName(const QString &value) {
     if (m_editedName == value) {
         return;
@@ -86,9 +88,10 @@ void DetailesContactModel::setStreet(const QString &value) {
 
     emit streetChanged();
 }
-void DetailesContactModel::showDetails(int id) {
+void DetailesContactModel::setDetailsById(int id) {
     auto *c = m_controller->findById(id);
     if (!c) {
+        m_selectedId = -1;
         return;
     }
     m_selectedId = id;
@@ -114,6 +117,7 @@ void DetailesContactModel::showDetails(int id) {
     emit phoneNumbersChanged();
 
     emit hasSelectionChanged();
+    emit contactIdChanged();
 }
 
 void DetailesContactModel::prepareNew() {
@@ -127,11 +131,16 @@ void DetailesContactModel::prepareNew() {
     m_editedStreet.clear();
     m_editedPhoneNumbers.clear();
     m_editedPhoneNumbers.append("");
+    
     emit nameChanged();
     emit surnameChanged();
     emit emailChanged();
+    emit cityChanged();
+    emit countryChanged();
+    emit streetChanged();
     emit phoneNumbersChanged();
     emit hasSelectionChanged();
+    emit contactIdChanged();
 }
 
 void DetailesContactModel::save() {
@@ -146,6 +155,16 @@ void DetailesContactModel::save() {
         m_selectedId = m_controller->addContact(
             m_editedName.toStdString(), m_editedSurname.toStdString(), phoneNumbers, m_editedEmail.toStdString(),
             Address(m_editedStreet.toStdString(), "", m_editedCity.toStdString(), m_editedCountry.toStdString()));
+        emit contactIdChanged();
+
+        emit nameChanged();
+        emit surnameChanged();
+        emit emailChanged();
+        emit cityChanged();
+        emit countryChanged();
+        emit streetChanged();
+        emit phoneNumbersChanged();
+        
         m_contactsModel->refresh();
         return;
     }
@@ -166,6 +185,26 @@ void DetailesContactModel::save() {
                                         m_editedCity.toStdString(), m_editedCountry.toStdString()));
 
     m_contactsModel->refresh();
+}
+
+QString DetailesContactModel::getPrimaryNumber() const {
+    if (m_selectedId == -1)
+        return "";
+    const auto *c = m_controller->findById(m_selectedId);
+
+    if (!c || !c->hasPhoneNumbers())
+        return "";
+    const auto &p = c->getPrimaryPhoneNumber();
+    return QString::fromStdString(p.getRawValue());
+}
+
+int DetailesContactModel::getPrimaryCountryCode() const {
+    if (m_selectedId == -1)
+        return 0;
+    const auto *c = m_controller->findById(m_selectedId);
+    if (!c || !c->hasPhoneNumbers())
+        return 0;
+    return c->getPrimaryPhoneNumber().getCountryCode();
 }
 
 void DetailesContactModel::setPhoneNumber(int index, const QString &number) {
@@ -190,5 +229,15 @@ void DetailesContactModel::clear() {
     setCountry("");
     setStreet("");
 
+
+    emit nameChanged();
+    emit surnameChanged();
+    emit emailChanged();
+    emit cityChanged();
+    emit countryChanged();
+    emit streetChanged();
+    emit phoneNumbersChanged();
+
     emit hasSelectionChanged();
+    emit contactIdChanged();
 }

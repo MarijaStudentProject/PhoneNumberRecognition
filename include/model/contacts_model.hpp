@@ -39,6 +39,9 @@ class ContactsModel : public QAbstractListModel {
 
     Q_INVOKABLE void select(int row);
 
+    Q_INVOKABLE QVariantMap normalizeIncoming(const QString &number, const QString &country = "") const;
+    
+
     void refresh();
   signals:
     void searchTextChanged();

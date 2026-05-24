@@ -26,6 +26,7 @@ class ContactsController {
 
     void importContacts(const std::string &path);
     std::optional<int> match(const std::string &number, const std::string &country) const;
+    PhoneNumber normalize(const std::string &number, const std::string &country = "", bool strict = true) const;
 
   private:
     std::vector<Contact> m_contacts;

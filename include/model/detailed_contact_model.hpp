@@ -20,6 +20,7 @@ class DetailesContactModel : public QObject {
     Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY streetChanged)
 
     Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY hasSelectionChanged)
+    Q_PROPERTY(int contactId READ contactId NOTIFY contactIdChanged)
 
     Q_PROPERTY(QVariantList phoneNumbers READ phoneNumbers NOTIFY phoneNumbersChanged)
 
@@ -34,6 +35,7 @@ class DetailesContactModel : public QObject {
     QString street() const;
     QVariantList phoneNumbers() const;
     bool hasSelection() const;
+    int contactId() const;
 
     void setContactsModel(ContactsModel *contactsModel) { m_contactsModel = contactsModel; }
     void setName(const QString &value); // invokable?
@@ -43,13 +45,16 @@ class DetailesContactModel : public QObject {
     void setCountry(const QString &value);
     void setStreet(const QString &value);
 
-    void showDetails(int id);
+    Q_INVOKABLE void setDetailsById(int id);
 
     Q_INVOKABLE void clear();
     Q_INVOKABLE void save();
     Q_INVOKABLE void prepareNew();
 
     Q_INVOKABLE void setPhoneNumber(int index, const QString &number);
+
+    Q_INVOKABLE QString getPrimaryNumber() const;
+    Q_INVOKABLE int getPrimaryCountryCode() const;
 
   signals:
     void nameChanged();
@@ -60,6 +65,7 @@ class DetailesContactModel : public QObject {
     void streetChanged();
     void phoneNumbersChanged();
     void hasSelectionChanged();
+    void contactIdChanged();
 
   private:
     void load();

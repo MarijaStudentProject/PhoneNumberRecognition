@@ -9,6 +9,7 @@ Rectangle {
     property var contactsModel: null
 
     signal contactCallRequested(string name, string initials, string phone, string color)
+    signal callButtonPressed(string phone)
 
     onDialedNumberChanged: contactsModel.setSearchText(dialedNumber)
 
@@ -52,6 +53,8 @@ Rectangle {
             height: 64
             color: "white"
 
+            required property int index
+            required property var model
             readonly property string displayName:     fullName(model.name, model.surname)
             readonly property string displayInitials: initialsFrom(model.name, model.surname)
             readonly property string displayColor:    colorForId(model.contactId)
@@ -95,6 +98,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    contactsModel.select(index)
                     contactCallRequested(displayName, displayInitials, model.phone, displayColor)
                     clickSound.play()
                 }
@@ -286,15 +290,8 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                detailesContactModel.clear()
-                contactsModel.makeCall()
+                callButtonPressed(dialedNumber)
                 clickSound.play()
-                detailesContactModel.name
-                    ? activeCall.show(
-                        detailesContactModel.name + " " + detailesContactModel.surname,
-                        initialsFrom(detailesContactModel.name, detailesContactModel.surname),
-                        detailesContactModel.phoneNumbers[0], "#C4B4E8")
-                    : activeCall.show("", "", dialedNumber, "#C4B4E8")
             }
         }
     }

@@ -94,6 +94,20 @@ ApplicationWindow {
         source: "qrc:/PhoneApp/ui/sounds/dialpad-9.wav"
     }
 
+    function callNumber(number, country) {
+        if (number.length === 0) {
+            return;
+        }
+        detailesContactModel.clear()
+        cppContactsModel.Call(number,country)
+        var norm = cppContactsModel.normalizeIncoming(number, country)
+        callingPhoneNormalized = norm.normalized
+        callingPhoneCode = norm.countryCode
+        detailesContactModel.contactId != -1
+            ? incomingCall.showSelected()
+            : incomingCall.show("", "", callingPhoneNormalized? callingPhoneNormalized : number, "#C4B4E8", callingPhoneCode)
+    }
+
     visible: true
     width: 400
     height: 700
@@ -105,6 +119,8 @@ ApplicationWindow {
     property string callingName: ""
     property string callingInitials: ""
     property string callingPhone: ""
+    property string callingPhoneNormalized: ""
+    property int callingPhoneCode: 0
     property string callingColor: "#E8B4B8"
     property bool showDialingFromSearch: false
 
@@ -207,20 +223,17 @@ ApplicationWindow {
                 contactsModel: cppContactsModel
                 onCallRequested: (name, initials, phone, color) => {
                     incomingCall.callLabel = "Incoming call"
-                    activeCall.show(name, initials, phone, color)
+                    activeCall.showSelected()
                 }
             }
             DialView {
                     id: dialView
                     contactsModel: cppContactsModel
                     onContactCallRequested: (name, initials, phone, color) => {
-                        callingName     = name
-                        callingInitials = initials
-                        callingPhone  = phone
-                        callingColor    = color
-                        activeCall.show(callingName, callingInitials, callingPhone, callingColor)
+                        activeCall.showSelected()
                         showDialingFromSearch = false
                     }
+                    onCallButtonPressed: (phone) => callNumber(phone, "RS")
             }
         }
     }
@@ -245,7 +258,7 @@ ApplicationWindow {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: {incomingCall.show("Beatriz Souza", "BS", "(917) 555-0144", "#C4B4E8"); clickSound.play()}
+            onClicked: {incomingCall.show("Beatriz Souza", "BS", "(917) 555-0144", "#C4B4E8", 0); clickSound.play()}
         }
     }
 
@@ -257,7 +270,7 @@ ApplicationWindow {
         z: 99
         onAccepted: {
             activeCall.show(incomingCall.contactName, incomingCall.contactInitials,
-                            incomingCall.contactPhone, incomingCall.contactColor);
+                            incomingCall.contactPhone, incomingCall.contactColor, incomingCall.contactCountryCode);
         }
         onDeclined: console.log("Call declined")
         onVisibleChanged: {
@@ -286,14 +299,7 @@ ApplicationWindow {
         target: callPoller
         function onCallReceived(number, country) {
             clickSound.play()
-            detailesContactModel.clear()
-            cppContactsModel.Call(number,country)
-            detailesContactModel.name? incomingCall.show(
-                        detailesContactModel.name + " " + detailesContactModel.surname,
-                        initialsFrom(detailesContactModel.name, detailesContactModel.surname),
-                        detailesContactModel.phoneNumbers[0], "#C4B4E8")
-                    : incomingCall.show("", "", number, "#C4B4E8")
-            
+            callNumber(number, country)
         }
     }
 
