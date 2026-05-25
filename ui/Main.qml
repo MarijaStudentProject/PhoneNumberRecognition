@@ -94,18 +94,28 @@ ApplicationWindow {
         source: "qrc:/PhoneApp/ui/sounds/dialpad-9.wav"
     }
 
-    function callNumber(number, country) {
-        if (number.length === 0) {
-            return;
-        }
+    function resolveNumber(number, country) {
         detailesContactModel.clear()
-        cppContactsModel.Call(number,country)
+        cppContactsModel.Call(number, country)
         var norm = cppContactsModel.normalizeIncoming(number, country)
         callingPhoneNormalized = norm.normalized
         callingPhoneCode = norm.countryCode
-        detailesContactModel.contactId != -1
+    }
+
+    function makeOutgoingCall(number, country) {
+        if (number.length === 0) return
+        resolveNumber(number, country)
+        detailesContactModel.contactId !== -1
+            ? activeCall.showSelected()
+            : activeCall.show("", "", callingPhoneNormalized ? callingPhoneNormalized : number, "#C4B4E8", callingPhoneCode)
+    }
+
+    function receiveIncomingCall(number, country) {
+        if (number.length === 0) return
+        resolveNumber(number, country)
+        detailesContactModel.contactId !== -1
             ? incomingCall.showSelected()
-            : incomingCall.show("", "", callingPhoneNormalized? callingPhoneNormalized : number, "#C4B4E8", callingPhoneCode)
+            : incomingCall.show("", "", callingPhoneNormalized ? callingPhoneNormalized : number, "#C4B4E8", callingPhoneCode)
     }
 
     visible: true
@@ -233,7 +243,7 @@ ApplicationWindow {
                         activeCall.showSelected()
                         showDialingFromSearch = false
                     }
-                    onCallButtonPressed: (phone) => callNumber(phone, "RS")
+                    onCallButtonPressed: (phone) => makeOutgoingCall(phone, "RS")
             }
         }
     }
@@ -299,7 +309,7 @@ ApplicationWindow {
         target: callPoller
         function onCallReceived(number, country) {
             clickSound.play()
-            callNumber(number, country)
+            receiveIncomingCall(number, country)
         }
     }
 
