@@ -43,8 +43,11 @@ jobs:
       - name: Build
         run: cmake --build build
 
+      - name: Build
+        run: cmake --build build --target copy_resources
+
       - name: Run Tests
-        run: ctest --test-dir build/tests --output-on-failure
+        run: cd tests && ctest --output-on-failure
 
       - name: Check formatting
         run: |
