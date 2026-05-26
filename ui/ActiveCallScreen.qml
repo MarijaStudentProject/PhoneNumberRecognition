@@ -101,7 +101,7 @@ Rectangle {
     // Simulate connecting after 2 seconds
     Timer {
         id: dialingTimer
-        interval: 2000
+        interval: 1000
         running:{ root.visible && callState === "calling"}
         onTriggered: {callState = "active"; dialingSound.stop()}
 

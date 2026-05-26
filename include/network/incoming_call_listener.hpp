@@ -13,6 +13,7 @@ class IncomingCallListener : public QObject {
     explicit IncomingCallListener(QString serverUrl, QObject *parent = nullptr);
     void start(int intervalMs = 500);
     void stop();
+    Q_INVOKABLE void resumePolling();
 
   signals:
     void callReceived(const QString &number, const QString &country);
@@ -21,6 +22,7 @@ class IncomingCallListener : public QObject {
     QNetworkAccessManager *m_nam;
     QTimer *m_timer;
     QString m_serverUrl;
+    int m_intervalMs = 500;
 
     void poll();
     void onReply(QNetworkReply *reply);

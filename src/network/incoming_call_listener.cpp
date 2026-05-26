@@ -15,9 +15,12 @@ IncomingCallListener::IncomingCallListener(QString serverUrl, QObject *parent)
 }
 
 void IncomingCallListener::start(int intervalMs) {
+    m_intervalMs = intervalMs;
     connect(m_timer, &QTimer::timeout, this, &IncomingCallListener::poll);
-    m_timer->start(intervalMs);
+    m_timer->start(m_intervalMs);
 }
+
+void IncomingCallListener::resumePolling() { m_timer->start(m_intervalMs); }
 
 void IncomingCallListener::stop() { m_timer->stop(); }
 
@@ -28,10 +31,15 @@ void IncomingCallListener::onReply(QNetworkReply *reply) {
         reply->deleteLater();
         return;
     }
-    const QJsonDocument Doc = QJsonDocument::fromJson(reply->readAll());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
     reply->deleteLater();
-    if (Doc.isNull() || !Doc.isObject()) {
+    if (doc.isNull() || !doc.isObject()) {
         return;
     }
-    emit callReceived(Doc["number"].toString(), Doc["country"].toString());
+    QString number = doc["number"].toString();
+    if (number.isEmpty()) {
+        return;
+    }
+    m_timer->stop();
+    emit callReceived(number, doc["country"].toString());
 }

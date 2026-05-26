@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     QString url = demoSettings.value("server/api_url").toString();
 
     IncomingCallListener callPoller(url);
-    callPoller.start(2000);
+    callPoller.start(1000);
 
     QQmlApplicationEngine engine;
 
