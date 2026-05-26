@@ -15,9 +15,11 @@
 #include <qcoreapplication.h>
 
 #include <QSettings>
+#include <QQuickStyle>
 
 int main(int argc, char *argv[]) {
 
+    QQuickStyle::setStyle("Fusion");
     QGuiApplication app(argc, argv);
 
     if (QFile::exists(":/PhoneApp/ui/fonts/fa-solid-900.ttf")) {
