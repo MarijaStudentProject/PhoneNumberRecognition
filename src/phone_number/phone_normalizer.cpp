@@ -14,8 +14,6 @@ std::string cleanPhoneNumber(const std::string &phoneNumber) {
     }
     return cleaned;
 }
-} // namespace
-namespace {
 bool startsWith(std::string_view str, std::string_view prefix) { return str.substr(0, prefix.size()) == prefix; }
 } // namespace
 
@@ -99,8 +97,8 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std
             return {clPhoneNumber, countryCode, std::string(nationalNumber), clPhoneNumber};
         }
 
-    } else { // try international prefix with country code, for example 00381 66 555 555,
-             // 0011 49 555 555 (australia calling germany)
+    } else { // try international prefix with country code, for example 0011 49 555 555 (australia calling germany)
+            
         std::string_view truncNumber;
         if ((strictOrigin && tryParseStrictInternationalPrefix(phoneNumberView, truncNumber, orginCountryIso)) ||
             (!strictOrigin && tryParseAnyInternationalPrefix(phoneNumberView, truncNumber))) {
@@ -115,7 +113,6 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std
         const NumberingPlan &plan = m_repo.getForIsoCountry(orginCountryIso);
         if (startsWith(phoneNumberView, plan.nationalPrefix)) {
             // Italy has a weird numbering plan where national prefix is not removed
-            // for example 066 555 555 -> +39 066 555 555
 
             nationalNumber =
                 orginCountryIso == "IT" ? phoneNumberView : phoneNumberView.substr(plan.nationalPrefix.size());
@@ -125,11 +122,10 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std
         }
     }
 
-    return {clPhoneNumber, 0, "", ""}; // we dont know how to parse it, return as is
+    return {clPhoneNumber, 0, "", ""};
 
-} // TODO consider adding length check
+} 
 
-// Constructs a PhoneNormalizer that loads numbering-plan metadata from metadata_path
 PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path) { m_repo.loadPlans(metadata_path); }
 
 PhoneNormalizer::PhoneNormalizer(const std::vector<NumberingPlan> &plans) : m_repo(plans) {}

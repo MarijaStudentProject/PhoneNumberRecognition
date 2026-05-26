@@ -93,7 +93,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.dismissed()
+                        onClicked: {root.dismissed(); clickSound.play()}
                     }
                 }
 
@@ -106,7 +106,7 @@ Rectangle {
                     RowLayout {
                         anchors.centerIn: parent
                         spacing: 8
-                        Text { text: "📞"; font.pixelSize: 16 }
+                        Text { text: "\uf095"; font.pixelSize: 16 }
                         Text {
                             text: "Call"
                             font.pixelSize: 16
@@ -121,6 +121,7 @@ Rectangle {
 
                             root.callClicked(root.contactPhone)
                             root.dismissed()
+                            clickSound.play()
                         }
                     }
                 }

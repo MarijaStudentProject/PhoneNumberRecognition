@@ -36,5 +36,11 @@ class Contact {
         }
         return m_surname < other.m_surname;
     }
+
+    void setName(const std::string &name) { m_name = name; }
+    void setSurname(const std::string &surname) { m_surname = surname; }
+    void setEmail(const std::string &email) { m_email = email; }
+    void setAddress(const Address &address) { m_address = address; }
+    void setPhoneNumbers(const std::vector<PhoneNumber> &phoneNumbers) { m_phoneNumbers = phoneNumbers; }
 };
 #endif

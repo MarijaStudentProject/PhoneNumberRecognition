@@ -9,249 +9,290 @@ Rectangle {
     property var contactsModel: null
 
     signal contactCallRequested(string name, string initials, string phone, string color)
-    // use our function for phone number search instead of this
-    function findMatches(number) {
-        var results = []
-        if (!contactsModel || number.length < 2) return results
-        var digits = number.replace(/\D/g, "")
-        for (var i = 0; i < contactsModel.count; i++) {
-            var c = contactsModel.get(i)
-            var phoneDigits = c.phone.replace(/\D/g, "")
-            if (phoneDigits.includes(digits)) {
-                results.push(c)
-            }
-        }
-        return results
+    signal callButtonPressed(string phone)
+
+    onDialedNumberChanged: contactsModel.setSearchText(dialedNumber)
+
+    function fullName(name, surname){
+        if(surname === undefined || surname.length === 0)
+            return name
+        return name + " " + surname
     }
 
-    property var matches: []
+    function initialsFrom(name, surname){
+        var first = name && name.length > 0 ? name[0] : ""
+        var second = surname && surname.length > 0 ? surname[0] : ""
+        if(second.length === 0 && name.indexOf(" ") !== -1){
+            var parts = name.split(" ")
+            second = parts.length > 1 && parts[1].length > 0 ? parts[1][0] : ""
+        }
+        return (first + second).toUpperCase()
+    }
 
-    onDialedNumberChanged: matches = findMatches(dialedNumber)
+    function colorForId(id) {
+        var colors = [
+            "#E8B4B8", "#B4C8E8", "#E8C4B4", "#C4B4E8",
+            "#B4E8C8", "#E8E4B4", "#E8B4D4", "#B4D4E8", "#D4E8B4"
+        ]
+        return colors[Math.abs(id) % colors.length]
+    }
 
-    ColumnLayout {
-        anchors.fill: parent
-        spacing: 0
+    // Matched contacts list — fills space above search bar
+    ListView {
+        id: matchList
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: searchBar.top
+        clip: true
+        model: contactsModel
+        visible: matchList.count > 0 && dialedNumber.length > 0
 
-        // Matched contacts list
-        ListView {
-            id: matchList
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            clip: true
-            model: matches
-            visible: matches.length > 0
+        delegate: Rectangle {
+            width: matchList.width
+            height: 64
+            color: "white"
 
-            delegate: Rectangle {
-                width: matchList.width
-                height: 64
-                color: "white"
+            required property int index
+            required property var model
+            readonly property string displayName:     fullName(model.name, model.surname)
+            readonly property string displayInitials: initialsFrom(model.name, model.surname)
+            readonly property string displayColor:    colorForId(model.contactId)
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 16
-                    spacing: 14
+            Row {
+                anchors.fill: parent
+                anchors.leftMargin: 16
+                anchors.rightMargin: 16
+                spacing: 14
 
-                    Rectangle {
-                        width: 42; height: 42; radius: 21
-                        color: modelData.color
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData.initials
-                            font.pixelSize: 14
-                            font.weight: Font.Medium
-                            color: "white"
-                        }
-                    }
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 2
-                        Text { text: modelData.name;  font.pixelSize: 15; color: "#1a1a1a" }
-                        Text { text: modelData.phone; font.pixelSize: 13; color: "#888" }
+                Rectangle {
+                    width: 42; height: 42; radius: 21
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: displayColor
+                    Text {
+                        anchors.centerIn: parent
+                        text: displayInitials
+                        font.pixelSize: 14
+                        font.weight: Font.Medium
+                        color: "white"
                     }
                 }
 
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.leftMargin: 72
-                    anchors.right: parent.right
-                    height: 1
-                    color: "#F0F0F0"
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 2
+                    Text { text: displayName;  font.pixelSize: 15; color: "#1a1a1a" }
+                    Text { text: model.phone;  font.pixelSize: 13; color: "#888" }
+                }
+            }
+
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 72
+                anchors.right: parent.right
+                height: 1
+                color: "#F0F0F0"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    contactsModel.select(index)
+                    contactCallRequested(displayName, displayInitials, model.phone, displayColor)
+                    clickSound.play()
+                }
+            }
+        }
+    }
+
+    // No matches placeholder
+    Item {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: searchBar.top
+        visible: matchList.count === 0
+
+        Text {
+            anchors.centerIn: parent
+            text: dialedNumber.length === 0 ? "" : "No matches"
+            font.pixelSize: 14
+            color: "#AAAAAA"
+        }
+    }
+
+    // Search bar — fixed above keypad
+    Rectangle {
+        id: searchBar
+        anchors.bottom: keypad.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: 16
+        anchors.rightMargin: 16
+        anchors.bottomMargin: 8
+        height: 48
+        radius: 24
+        color: "white"
+        border.color: "#E0E0E0"
+        border.width: 1
+
+        Row {
+            anchors.fill: parent
+            anchors.leftMargin: 20
+            anchors.rightMargin: 12
+
+            Text {
+                width: parent.width - 48
+                height: parent.height
+                text: dialedNumber.length > 0 ? dialedNumber : ""
+                font.pixelSize: 22
+                font.letterSpacing: 2
+                color: "#1a1a1a"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+
+                Text {
+                    anchors.fill: parent
+                    text: "Enter number..."
+                    font.pixelSize: 15
+                    color: "#AAAAAA"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    visible: dialedNumber.length === 0
+                }
+            }
+
+            Rectangle {
+                width: 36; height: 36
+                anchors.verticalCenter: parent.verticalCenter
+                radius: 18
+                color: "#F2F2F2"
+                visible: dialedNumber.length > 0
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "\uf55a"
+                    font.pixelSize: 18
+                    color: "#555"
+                    font.family: fontAwesome.name;
                 }
 
                 MouseArea {
-                        anchors.fill: parent
-                        onClicked: contactCallRequested(modelData.name, modelData.initials, modelData.phone, modelData.color)
-                    }
-            }
-        }
-
-        // Placeholder when no matches and nothing typed
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            visible: matches.length === 0
-
-            Text {
-                anchors.centerIn: parent
-                text: dialedNumber.length === 0 ? "" : "No matches"
-                font.pixelSize: 14
-                color: "#AAAAAA"
-            }
-        }
-
-        // Search bar showing dialed number
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.leftMargin: 16
-            Layout.rightMargin: 16
-            Layout.bottomMargin: 8
-            height: 48
-            radius: 24
-            color: "white"
-            border.color: "#E0E0E0"
-            border.width: 1
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 20
-                anchors.rightMargin: 12
-                spacing: 8
-
-                Text {
-                    Layout.fillWidth: true
-                    text: dialedNumber.length > 0 ? dialedNumber : ""
-                    font.pixelSize: 22
-                    font.letterSpacing: 2
-                    color: "#1a1a1a"
-                    horizontalAlignment: Text.AlignHCenter
-
-                    Text {
-                        anchors.fill: parent
-                        text: "Enter number..."
-                        font.pixelSize: 15
-                        color: "#AAAAAA"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        visible: dialedNumber.length === 0
-                    }
+                    anchors.fill: parent
+                    onClicked: { dialedNumber = dialedNumber.slice(0, -1); clickSound.play() }
+                    onPressAndHold: dialedNumber = ""
                 }
+            }
+        }
+    }
 
-                // Delete button
-                Rectangle {
-                    width: 36; height: 36; radius: 18
-                    color: dialedNumber.length > 0 ? "#F2F2F2" : "transparent"
-                    visible: dialedNumber.length > 0
+    // Keypad — fixed above call button
+    Item {
+        id: keypad
+        anchors.bottom: callButton.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottomMargin: 8
+        height: 300
 
-                    Text {
+        GridLayout {
+            anchors.centerIn: parent
+            columns: 3
+            rowSpacing: 4
+            columnSpacing: 0
+
+            Repeater {
+                model: [
+                    { digit: "1", sub: "   " },
+                    { digit: "2", sub: "ABC" },
+                    { digit: "3", sub: "DEF" },
+                    { digit: "4", sub: "GHI" },
+                    { digit: "5", sub: "JKL" },
+                    { digit: "6", sub: "MNO" },
+                    { digit: "7", sub: "PQRS" },
+                    { digit: "8", sub: "TUV" },
+                    { digit: "9", sub: "WXYZ" },
+                    { digit: "*", sub: "" },
+                    { digit: "0", sub: "+" },
+                    { digit: "#", sub: "" },
+                ]
+
+                delegate: Rectangle {
+                    width: 100
+                    height: 68
+                    color: "transparent"
+
+                    Column {
                         anchors.centerIn: parent
-                        text: "⌫"
-                        font.pixelSize: 18
-                        color: "#555"
+                        spacing: 1
+                        width: 80
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width
+                            text: modelData.digit
+                            font.pixelSize: 28
+                            color: "#1a1a1a"
+                        }
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width
+                            text: modelData.sub
+                            font.pixelSize: 10
+                            color: "#888"
+                            visible: modelData.sub.length > 0
+                        }
                     }
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: dialedNumber = dialedNumber.slice(0, -1)
-                        onPressAndHold: dialedNumber = ""
-                    }
-                }
-            }
-        }
-
-        // Keypad
-        Item {
-            Layout.fillWidth: true
-            height: 300
-
-            GridLayout {
-                anchors.centerIn: parent
-                columns: 3
-                rowSpacing: 4
-                columnSpacing: 0
-
-                Repeater {
-                    model: [
-                        { digit: "1", sub: "" },
-                        { digit: "2", sub: "ABC" },
-                        { digit: "3", sub: "DEF" },
-                        { digit: "4", sub: "GHI" },
-                        { digit: "5", sub: "JKL" },
-                        { digit: "6", sub: "MNO" },
-                        { digit: "7", sub: "PQRS" },
-                        { digit: "8", sub: "TUV" },
-                        { digit: "9", sub: "WXYZ" },
-                        { digit: "*", sub: "" },
-                        { digit: "0", sub: "+" },
-                        { digit: "#", sub: "" },
-                    ]
-
-                    delegate: Rectangle {
-                        width: 100
-                        height: 68
-                        color: "transparent"
-
-                        ColumnLayout {
-                            anchors.centerIn: parent
-                            spacing: 1
-                            Text {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: modelData.digit
-                                font.pixelSize: 28
-                                color: "#1a1a1a"
-                            }
-                            Text {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: modelData.sub
-                                font.pixelSize: 10
-                                color: "#888"
-                                visible: modelData.sub.length > 0
+                        onClicked: {
+                            dialedNumber += modelData.digit
+                            switch(modelData.digit) {
+                                case "0": dialPad0.play(); break;
+                                case "1": dialPad1.play(); break;
+                                case "2": dialPad2.play(); break;
+                                case "3": dialPad3.play(); break;
+                                case "4": dialPad4.play(); break;
+                                case "5": dialPad5.play(); break;
+                                case "6": dialPad6.play(); break;
+                                case "7": dialPad7.play(); break;
+                                case "8": dialPad8.play(); break;
+                                case "9": dialPad9.play(); break;
+                                default:  dialPad0.play();
                             }
                         }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: dialedNumber += modelData.digit
-                            onPressAndHold: {
-                                if (modelData.digit === "0") dialedNumber += "+"
-                            }
+                        onPressAndHold: {
+                            if (modelData.digit === "0") dialedNumber += "+"
                         }
                     }
                 }
             }
         }
+    }
 
-        // Call button row
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.bottomMargin: 24
-            Layout.leftMargin: 24
-            Layout.rightMargin: 24
+    // Call button — fixed at bottom
+    Rectangle {
+        id: callButton
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 24
+        width: 64; height: 64; radius: 32
+        color: "#4CAF50"
 
-            Item { Layout.fillWidth: true }
+        Text {
+            anchors.centerIn: parent
+            text: "\uf095"
+            font.pixelSize: 24
+            font.family: fontAwesome.name;
+        }
 
-            Rectangle {
-                width: 64; height: 64; radius: 32
-                color: "#4CAF50"
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "📞"
-                    font.pixelSize: 24
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        root.callClicked(root.contactPhone)
-                        root.dismissed()
-                    }
-                }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                callButtonPressed(dialedNumber)
+                clickSound.play()
             }
-
-            Item { Layout.fillWidth: true }
         }
     }
 }

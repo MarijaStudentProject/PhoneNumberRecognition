@@ -30,7 +30,7 @@ int main() {
     PhoneNormalizer normalizer{"../resources/min_filtered_metadata.json"};
     VcfParser parser = VcfParser(normalizer, "RS");
 
-    std::vector<Contact> contacts = parser.loadFromFile("../resources/test.vcf");
+    std::vector<Contact> contacts = parser.loadFromFile("../resources/contacts_100.vcf");
 
     for (auto &c : contacts) {
         std::cout << c.getName() << '\n';
