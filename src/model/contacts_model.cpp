@@ -8,29 +8,31 @@ ContactsModel::ContactsModel(ContactsController *controller, DetailesContactMode
     refresh();
 }
 
-int ContactsModel::rowCount(const QModelIndex &) const { return m_visibleIds.size(); }
+int ContactsModel::rowCount(const QModelIndex & /*parent*/) const { return m_visibleIds.size(); }
 
 QVariant ContactsModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) {
         return {};
     }
 
-    const auto id = m_visibleIds[index.row()];
-    const auto *c = m_controller->findById(id);
+    const auto Id = m_visibleIds[index.row()];
+    const auto *c = m_controller->findById(Id);
 
-    if (!c) {
+    if (c == nullptr) {
         return {};
     }
 
     switch (role) {
     case IdRole:
-        return id;
+        return Id;
     case NameRole:
         return QString::fromStdString(c->getName());
     case SurnameRole:
         return QString::fromStdString(c->getSurname());
     case PhoneRole:
         return QString::fromStdString(c->getPrimaryPhoneNumber().getRawValue());
+    default:
+        break;
     }
 
     return {};
@@ -64,7 +66,7 @@ void ContactsModel::setSearchText(const QString &text) {
 
 void ContactsModel::setContactToSearchText(int row) {
     Contact *c = m_controller->findById(contactIdAt(row));
-    if (!c) {
+    if (c == nullptr) {
         return;
     }
 
@@ -79,10 +81,10 @@ void ContactsModel::import(const QString &text) {
 
 void ContactsModel::makeCall() {
     QString number = searchText();
-    Call(number, "");
+    call(number, "");
 }
 
-void ContactsModel::Call(QString number, QString country) {
+void ContactsModel::call(const QString &number, const QString &country) {
     m_detailedContactModel->setDetailsById(-1);
     if (number.isEmpty()) {
         return;
@@ -90,7 +92,7 @@ void ContactsModel::Call(QString number, QString country) {
     auto opt = m_controller->match(number.toStdString(), country.toStdString());
     if (opt) {
         Contact *c = m_controller->findById(opt.value());
-        if (c) {
+        if (c != nullptr) {
             m_detailedContactModel->setDetailsById(opt.value());
         }
     }

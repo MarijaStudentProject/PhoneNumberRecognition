@@ -14,8 +14,8 @@
 #include <iostream>
 #include <qcoreapplication.h>
 
-#include <QSettings>
 #include <QQuickStyle>
+#include <QSettings>
 
 int main(int argc, char *argv[]) {
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     QString url = demoSettings.value("server/api_url").toString();
 
     IncomingCallListener callPoller(url);
-    callPoller.start(2000);
+    callPoller.start(1000);
 
     QQmlApplicationEngine engine;
 
@@ -56,5 +56,5 @@ int main(int argc, char *argv[]) {
 
     engine.load(QUrl(QStringLiteral("qrc:/PhoneApp/ui/Main.qml")));
 
-    return app.exec();
+    return QGuiApplication::exec();
 }

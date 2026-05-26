@@ -98,7 +98,7 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std
         }
 
     } else { // try international prefix with country code, for example 0011 49 555 555 (australia calling germany)
-            
+
         std::string_view truncNumber;
         if ((strictOrigin && tryParseStrictInternationalPrefix(phoneNumberView, truncNumber, orginCountryIso)) ||
             (!strictOrigin && tryParseAnyInternationalPrefix(phoneNumberView, truncNumber))) {
@@ -123,8 +123,7 @@ PhoneNumber PhoneNormalizer::normalize(const std::string &phoneNumber, const std
     }
 
     return {clPhoneNumber, 0, "", ""};
-
-} 
+}
 
 PhoneNormalizer::PhoneNormalizer(const std::string &metadata_path) { m_repo.loadPlans(metadata_path); }
 

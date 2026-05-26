@@ -70,7 +70,6 @@ class DetailesContactModel : public QObject {
   private:
     void load();
 
-  private:
     ContactsController *m_controller;
     ContactsModel *m_contactsModel;
 

@@ -96,7 +96,7 @@ ApplicationWindow {
 
     function resolveNumber(number, country) {
         detailesContactModel.clear()
-        cppContactsModel.Call(number, country)
+        cppContactsModel.call(number, country)
         var norm = cppContactsModel.normalizeIncoming(number, country)
         callingPhoneNormalized = norm.normalized
         callingPhoneCode = norm.countryCode
@@ -282,7 +282,7 @@ ApplicationWindow {
             activeCall.show(incomingCall.contactName, incomingCall.contactInitials,
                             incomingCall.contactPhone, incomingCall.contactColor, incomingCall.contactCountryCode);
         }
-        onDeclined: console.log("Call declined")
+        onDeclined: callPoller.resumePolling()
         onVisibleChanged: {
                 if (visible)
                     ringtoneSound.play()
@@ -302,14 +302,21 @@ ApplicationWindow {
             }
         }
 
-        onCallEnded: console.log("Call ended")
+        onCallEnded: callPoller.resumePolling()
     }
 
     Connections {
         target: callPoller
         function onCallReceived(number, country) {
             clickSound.play()
-            receiveIncomingCall(number, country)
+            detailesContactModel.clear()
+            cppContactsModel.call(number,country)
+            detailesContactModel.name? incomingCall.show(
+                        detailesContactModel.name + " " + detailesContactModel.surname,
+                        initialsFrom(detailesContactModel.name, detailesContactModel.surname),
+                        detailesContactModel.phoneNumbers[0], "#C4B4E8")
+                    : incomingCall.show("", "", number, "#C4B4E8")
+            
         }
     }
 
