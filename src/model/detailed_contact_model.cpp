@@ -90,7 +90,7 @@ void DetailesContactModel::setStreet(const QString &value) {
 }
 void DetailesContactModel::setDetailsById(int id) {
     auto *c = m_controller->findById(id);
-    if (!c) {
+    if (c == nullptr) {
         m_selectedId = -1;
         return;
     }
@@ -131,7 +131,7 @@ void DetailesContactModel::prepareNew() {
     m_editedStreet.clear();
     m_editedPhoneNumbers.clear();
     m_editedPhoneNumbers.append("");
-    
+
     emit nameChanged();
     emit surnameChanged();
     emit emailChanged();
@@ -146,8 +146,9 @@ void DetailesContactModel::prepareNew() {
 void DetailesContactModel::save() {
     std::vector<std::string> phoneNumbers;
     for (const auto &p : m_editedPhoneNumbers) {
-        if (!p.isEmpty())
+        if (!p.isEmpty()) {
             phoneNumbers.push_back(p.toStdString());
+        }
     }
 
     if (m_isNew) {
@@ -164,7 +165,7 @@ void DetailesContactModel::save() {
         emit countryChanged();
         emit streetChanged();
         emit phoneNumbersChanged();
-        
+
         m_contactsModel->refresh();
         return;
     }
@@ -175,7 +176,7 @@ void DetailesContactModel::save() {
 
     auto *c = m_controller->findById(m_selectedId);
 
-    if (!c) {
+    if (c == nullptr) {
         return;
     }
 
@@ -188,22 +189,26 @@ void DetailesContactModel::save() {
 }
 
 QString DetailesContactModel::getPrimaryNumber() const {
-    if (m_selectedId == -1)
+    if (m_selectedId == -1) {
         return "";
+    }
     const auto *c = m_controller->findById(m_selectedId);
 
-    if (!c || !c->hasPhoneNumbers())
+    if ((c == nullptr) || !c->hasPhoneNumbers()) {
         return "";
+    }
     const auto &p = c->getPrimaryPhoneNumber();
     return QString::fromStdString(p.getRawValue());
 }
 
 int DetailesContactModel::getPrimaryCountryCode() const {
-    if (m_selectedId == -1)
+    if (m_selectedId == -1) {
         return 0;
+    }
     const auto *c = m_controller->findById(m_selectedId);
-    if (!c || !c->hasPhoneNumbers())
+    if ((c == nullptr) || !c->hasPhoneNumbers()) {
         return 0;
+    }
     return c->getPrimaryPhoneNumber().getCountryCode();
 }
 
@@ -228,7 +233,6 @@ void DetailesContactModel::clear() {
     setCity("");
     setCountry("");
     setStreet("");
-
 
     emit nameChanged();
     emit surnameChanged();

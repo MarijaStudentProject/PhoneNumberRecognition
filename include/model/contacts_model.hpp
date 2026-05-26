@@ -35,12 +35,11 @@ class ContactsModel : public QAbstractListModel {
 
     Q_INVOKABLE void makeCall();
 
-    Q_INVOKABLE void Call(QString number, QString country);
+    Q_INVOKABLE void call(const QString &number, const QString &country);
 
     Q_INVOKABLE void select(int row);
 
     Q_INVOKABLE QVariantMap normalizeIncoming(const QString &number, const QString &country = "") const;
-    
 
     void refresh();
   signals:

@@ -6,9 +6,11 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrl>
+#include <utility>
 
-IncomingCallListener::IncomingCallListener(const QString &serverUrl, QObject *parent)
-    : QObject(parent), m_nam(new QNetworkAccessManager(this)), m_timer(new QTimer(this)), m_serverUrl(serverUrl) {
+IncomingCallListener::IncomingCallListener(QString serverUrl, QObject *parent)
+    : QObject(parent), m_nam(new QNetworkAccessManager(this)), m_timer(new QTimer(this)),
+      m_serverUrl(std::move(serverUrl)) {
     connect(m_nam, &QNetworkAccessManager::finished, this, &IncomingCallListener::onReply);
 }
 
@@ -26,10 +28,10 @@ void IncomingCallListener::onReply(QNetworkReply *reply) {
         reply->deleteLater();
         return;
     }
-    const QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    const QJsonDocument Doc = QJsonDocument::fromJson(reply->readAll());
     reply->deleteLater();
-    if (doc.isNull() || !doc.isObject()) {
+    if (Doc.isNull() || !Doc.isObject()) {
         return;
     }
-    emit callReceived(doc["number"].toString(), doc["country"].toString());
+    emit callReceived(Doc["number"].toString(), Doc["country"].toString());
 }

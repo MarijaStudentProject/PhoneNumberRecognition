@@ -10,19 +10,18 @@ class QNetworkReply;
 class IncomingCallListener : public QObject {
     Q_OBJECT
   public:
-    explicit IncomingCallListener(const QString &serverUrl, QObject *parent = nullptr);
+    explicit IncomingCallListener(QString serverUrl, QObject *parent = nullptr);
     void start(int intervalMs = 500);
     void stop();
 
   signals:
     void callReceived(const QString &number, const QString &country);
 
-  private slots:
-    void poll();
-    void onReply(QNetworkReply *reply);
-
   private:
     QNetworkAccessManager *m_nam;
     QTimer *m_timer;
     QString m_serverUrl;
+
+    void poll();
+    void onReply(QNetworkReply *reply);
 };

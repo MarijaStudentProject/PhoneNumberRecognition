@@ -309,7 +309,14 @@ ApplicationWindow {
         target: callPoller
         function onCallReceived(number, country) {
             clickSound.play()
-            receiveIncomingCall(number, country)
+            detailesContactModel.clear()
+            cppContactsModel.call(number,country)
+            detailesContactModel.name? incomingCall.show(
+                        detailesContactModel.name + " " + detailesContactModel.surname,
+                        initialsFrom(detailesContactModel.name, detailesContactModel.surname),
+                        detailesContactModel.phoneNumbers[0], "#C4B4E8")
+                    : incomingCall.show("", "", number, "#C4B4E8")
+            
         }
     }
 

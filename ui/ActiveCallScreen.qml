@@ -209,11 +209,11 @@ Rectangle {
                 delegate: ColumnLayout {
                     spacing: 6
 
-                    property bool active: false  // ← toggle state
+                    property bool active: false  
 
                     Rectangle {
                         width: 60; height: 60; radius: 30
-                        color: active ? "#0d3333" : "#1a5a5a"  // ← darker when active
+                        color: active ? "#0d3333" : "#1a5a5a"  
                         Layout.alignment: Qt.AlignHCenter
 
                         Text {
@@ -221,7 +221,7 @@ Rectangle {
                             text: modelData.icon
                             font.family: fontAwesome.name
                             font.pixelSize: 20
-                            color: active ? "#4db8b8" : "white"  // ← tinted when active
+                            color: active ? "#4db8b8" : "white" 
                         }
 
                         MouseArea {
