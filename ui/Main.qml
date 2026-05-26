@@ -37,21 +37,23 @@ ApplicationWindow {
         id: clickSound
         source: "qrc:/PhoneApp/ui/sounds/click.wav"
     }
-
-    // Dialing tone — loops while calling
     SoundEffect {
         id: keyboardSound
         source: "qrc:/PhoneApp/ui/sounds/keyboard-sound.wav"
     }
-    SoundEffect {
+    AudioOutput { id: ringtoneAudioOutput }
+    MediaPlayer {
         id: ringtoneSound
         source: "qrc:/PhoneApp/ui/sounds/samsung-ringtone.wav"
-        loops: SoundEffect.Infinite
+        loops: MediaPlayer.Infinite
+        audioOutput: ringtoneAudioOutput
     }
-    SoundEffect {
+    AudioOutput { id: dialingAudioOutput }
+    MediaPlayer {
         id: dialingSound
         source: "qrc:/PhoneApp/ui/sounds/dialing-sound.wav"
-        loops: SoundEffect.Infinite
+        loops: MediaPlayer.Infinite
+        audioOutput: dialingAudioOutput
     }
     SoundEffect {
         id: dialPad0
@@ -284,10 +286,12 @@ ApplicationWindow {
         }
         onDeclined: callPoller.resumePolling()
         onVisibleChanged: {
-                if (visible)
-                    ringtoneSound.play()
-                else
+                if (visible) {
                     ringtoneSound.stop()
+                    ringtoneSound.play()
+                } else {
+                    ringtoneSound.stop()
+                }
             }
     }
     ActiveCallScreen {
@@ -296,6 +300,7 @@ ApplicationWindow {
         z: 98
         onVisibleChanged: {
             if(visible) {
+                dialingSound.stop()
                 dialingSound.play();
             } else {
                 dialingSound.stop();
