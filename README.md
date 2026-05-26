@@ -104,27 +104,27 @@ This project uses the following header only library:  [https://github.com/zserge
    - [Ivanenko vCard library](#-vcard-parser)
    
    - Required Qt modules
-      ```bash
-      sudo apt install \
-       qml6-module-qtquick-controls \
-       qml6-module-qtmultimedia \
-       qml6-module-qtquick-dialogs
-      ```
+```bash
+sudo apt install \
+ qml6-module-qtquick-controls \
+ qml6-module-qtmultimedia \
+ qml6-module-qtquick-dialogs
+```
       
 ### 1. Clone the repository:
-     ```bash
-     git clone https://github.com/MarijaStudentProject/PhoneNumberRecognition.git
-     ```
+  ```bash
+  git clone https://github.com/MarijaStudentProject/PhoneNumberRecognition.git
+  ```
 
 ### 2. Build from the command line:
     
-    ```bash
-    cd PhoneNumberRecognition
-    mkdir build && cd build
-    cmake ..
-    make 
-    ./ContactsApp
-    ```
+   ```bash
+   cd PhoneNumberRecognition
+   mkdir build && cd build
+   cmake ..
+   make 
+   ./ContactsApp
+   ```
 #### Build tests
 
    ```bash
